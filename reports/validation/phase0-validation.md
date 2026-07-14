@@ -25,7 +25,7 @@ are not approved recording storage.
 | `python -m uv lock` | PASS; Python 3.12 environment and 82-package universal lock resolved, including platform-gated MMS extra |
 | `scripts/bootstrap.ps1` | PASS; frozen sync, pre-commit install, config check, privacy scan, and all tests completed |
 | `python -m uv run hmong-tts-config-check` | PASS; data, model, train, eval, inference schema v1 parsed |
-| `python -m uv run hmong-tts-privacy-scan` | PASS; 68 Git candidate files, zero findings |
+| `python -m uv run hmong-tts-privacy-scan` | PASS; 70 Git candidate files, zero findings |
 | `python -m uv run ruff check .` | PASS |
 | `python -m uv run ruff format --check .` | PASS; 23 Python files formatted |
 | `python -m uv run mypy src` | PASS; strict mode, 12 source files |

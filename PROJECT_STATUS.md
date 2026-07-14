@@ -50,6 +50,7 @@ Last updated: 2026-07-14
   model-card, and dataset-statement documentation.
 - Decision log, model/license matrix, and native-validation register.
 - Cross-platform environment diagnostics and pinned MMS smoke CLI.
+- Pull-to-validation RTX 4070 machine handoff with explicit pass evidence.
 - Synthetic unit suite and Phase 0 validation report.
 
 ## Active work
@@ -77,8 +78,8 @@ None that can safely close the current gate on this ARM64/no-GPU machine.
 ## Human actions required
 
 Immediate Phase 0 action: make the intended x86-64 RTX 4070 WSL2 environment
-available, then run the exact commands in `docs/mms_smoke_test.md` (the optional
-MMS install is multi-gigabyte) and return the `PASS` line plus environment JSON.
+available, then follow `docs/gpu_machine_handoff.md` from clone/pull through
+evidence return. The optional MMS install is multi-gigabyte.
 
 Before recording: review/adapt and sign the private copy of
 `docs/templates/consent_template.md`, then complete Gates A–D of
@@ -86,12 +87,12 @@ Before recording: review/adapt and sign the private copy of
 
 ## Next executable task
 
-On target hardware, install the locked `mms` extra, run
+On target hardware, execute `docs/gpu_machine_handoff.md`: verify x86-64 WSL2
+and RTX 4070 visibility, install the locked `mms` extra, run
 `hmong-tts-env --require-training`, synthesize the pinned English MMS smoke WAV,
-inspect its header/finite samples, and attach the non-sensitive result to the
-validation report. If it passes, close Phase 0 and begin Phase 1 only with
-native-reviewed inventory/schema work; do not record until signed consent and
-all recording gates pass.
+and return only the listed non-sensitive evidence. If it passes, close Phase 0
+and begin Phase 1 only with native-reviewed inventory/schema work; do not record
+until signed consent and all recording gates pass.
 
 ## Open native-validation items
 

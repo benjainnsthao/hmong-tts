@@ -39,7 +39,9 @@ uv run pytest
 
 Do not install the GPU/model extra until the environment report confirms
 Linux x86-64, CUDA-visible PyTorch, and the expected GPU. The documented MMS
-smoke path is in [`docs/mms_smoke_test.md`](docs/mms_smoke_test.md).
+machine handoff is in
+[`docs/gpu_machine_handoff.md`](docs/gpu_machine_handoff.md); implementation
+details are in [`docs/mms_smoke_test.md`](docs/mms_smoke_test.md).
 
 ## Private-data boundary
 

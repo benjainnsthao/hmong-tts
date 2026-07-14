@@ -4,6 +4,10 @@ This path verifies model download, pinned provenance, tokenizer/model loading,
 deterministic inference, finite samples, and a valid mono WAV. It does not test
 White Hmong pronunciation or authorize recording/training.
 
+For the complete first-checkout-to-evidence procedure on the intended PC, use
+`docs/gpu_machine_handoff.md`. This page documents the smoke implementation and
+its constraints.
+
 ## Preconditions
 
 - x86-64 Ubuntu 24.04, preferably WSL2 on the RTX 4070 machine;
