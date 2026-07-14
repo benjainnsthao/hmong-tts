@@ -1,0 +1,18 @@
+schema_version: 1
+data_root_env: HMONG_TTS_DATA_ROOT
+allow_repository_data: false
+primary_training_speaker_id: spk01
+evaluation_speaker_id: reviewer02
+audio:
+  master_sample_rate_hz: 48000
+  master_bit_depth: 24
+  channels: 1
+  processed_sample_rate_hz: 16000
+  min_duration_seconds: 1.0
+  max_duration_seconds: 12.0
+splits:
+  train: 0.90
+  development: 0.05
+  test: 0.05
+split_key: normalized_prompt_hash_and_feature_group
+real_data_allowed_in_tests: false

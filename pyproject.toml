@@ -1,0 +1,70 @@
+[build-system]
+requires = ["hatchling==1.29.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hmong-tts"
+version = "0.1.0"
+description = "Governance and reproducible tooling for a consented White Hmong TTS MVP"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "pydantic==2.13.4",
+  "PyYAML==6.0.3",
+]
+
+[project.optional-dependencies]
+mms = [
+  "accelerate==1.14.0; sys_platform == 'linux' and platform_machine == 'x86_64'",
+  "safetensors==0.8.0; sys_platform == 'linux' and platform_machine == 'x86_64'",
+  "scipy==1.18.0; sys_platform == 'linux' and platform_machine == 'x86_64'",
+  "torch==2.12.0; sys_platform == 'linux' and platform_machine == 'x86_64'",
+  "transformers==5.13.1; sys_platform == 'linux' and platform_machine == 'x86_64'",
+]
+
+[dependency-groups]
+dev = [
+  "mypy==2.3.0",
+  "pre-commit==4.6.0",
+  "pytest==9.1.1",
+  "pytest-cov==7.1.0",
+  "ruff==0.15.21",
+  "types-PyYAML==6.0.12.20260518",
+]
+
+[project.scripts]
+hmong-tts-config-check = "hmong_tts.config.loader:main"
+hmong-tts-env = "hmong_tts.environment.detect:main"
+hmong-tts-mms-smoke = "hmong_tts.inference.mms_smoke:main"
+hmong-tts-privacy-scan = "hmong_tts.privacy.scan:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hmong_tts"]
+
+[tool.uv]
+required-version = ">=0.11.28,<0.12"
+default-groups = ["dev"]
+
+[tool.pytest.ini_options]
+addopts = "--strict-config --strict-markers -ra"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["hmong_tts"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+packages = ["hmong_tts"]
+
+[[tool.mypy.overrides]]
+module = ["torch", "transformers"]
+ignore_missing_imports = true

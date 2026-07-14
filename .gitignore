@@ -1,0 +1,66 @@
+# Local environments and tooling
+.venv/
+.uv-cache/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+.env
+.env.*
+!.env.example
+
+# Private data must live under HMONG_TTS_DATA_ROOT, never in this repository.
+data/*
+!data/README.md
+private/
+recordings/
+consent_records/
+speaker_records/
+evaluations/private/
+
+# Audio and derived media are forbidden even when placed outside data/.
+*.wav
+*.flac
+*.mp3
+*.m4a
+*.aac
+*.ogg
+*.opus
+*.wma
+*.pdf
+*.doc
+*.docx
+
+# Model/training artifacts and trackers
+*.ckpt
+*.pt
+*.pth
+*.bin
+*.onnx
+*.safetensors
+checkpoints/
+outputs/
+runs/
+mlruns/
+wandb/
+
+# Credentials and completed/signed documents
+*.pem
+*.key
+*.p12
+*.pfx
+*signed*consent*
+*completed*consent*
+*speaker*release*
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,26 @@
+schema_version: 1
+selection_split: development
+sealed_test_use: final_evaluation_only
+principal_evaluator: reviewer02
+systems_blinded: true
+thresholds_status: provisional_pending_native_validation
+sets:
+  novel_sentences: 100
+  diagnostic_items_minimum: 160
+  application_sentences: 30
+  numbers_names_borrowings: 20
+  stress_inputs: 20
+  invalid_api_inputs: 10
+thresholds:
+  normalized_cer_max: 0.10
+  word_accuracy_min: 0.85
+  pronunciation_acceptable_min: 0.90
+  tone_overall_min: 0.90
+  tone_each_category_min: 0.80
+  naturalness_mos_min: 3.5
+  speaker_similarity_mos_min: 4.0
+  catastrophic_failure_rate_max: 0.02
+  long_input_complete_min: 18
+  api_success_rate_min: 0.99
+  gpu_realtime_factor_max: 0.5
+  training_vram_gib_max: 11.5

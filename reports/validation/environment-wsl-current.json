@@ -1,0 +1,49 @@
+{
+  "cuda_toolkit": {
+    "available": false,
+    "version": null
+  },
+  "data_root": {
+    "reason": null,
+    "valid": true
+  },
+  "ffmpeg": {
+    "available": false,
+    "version": null
+  },
+  "git": {
+    "available": true,
+    "version": "git version 2.43.0"
+  },
+  "gpu": {
+    "devices": [],
+    "expected_rtx_4070_present": false,
+    "nvidia_smi": false
+  },
+  "os": {
+    "machine": "aarch64",
+    "release": "6.6.87.2-microsoft-standard-WSL2",
+    "system": "Linux",
+    "wsl": true
+  },
+  "python": {
+    "implementation": "CPython",
+    "supported": true,
+    "version": "3.12.3"
+  },
+  "pytorch": {
+    "error": "ModuleNotFoundError",
+    "installed": false
+  },
+  "training_failures": [
+    "prebuilt CUDA training stack requires x86-64",
+    "FFmpeg is unavailable",
+    "RTX 4070 is not visible to nvidia-smi",
+    "PyTorch is not installed"
+  ],
+  "training_ready": false,
+  "uv": {
+    "available": false,
+    "version": null
+  }
+}

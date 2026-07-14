@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "Citation metadata will be finalized before a public release."
+title: "White Hmong single-speaker TTS"
+type: software
+version: 0.1.0
+date-released: 2026-07-14
+license: proprietary
+abstract: >-
+  Governance and reproducible engineering artifacts for a consented,
+  single-speaker White Hmong TTS research MVP.

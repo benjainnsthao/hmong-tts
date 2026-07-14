@@ -1,0 +1,15 @@
+schema_version: 1
+precision: fp16
+per_device_batch_size: 4
+gradient_accumulation_steps: 8
+max_audio_seconds: 10.0
+length_bucketing: true
+gradient_clip_norm: 1.0
+learning_rate: 1.0e-5
+save_every_optimizer_steps: 500
+evaluate_every_optimizer_steps: 250
+keep_best_checkpoints: 3
+keep_latest_checkpoint: true
+seed: 1234
+tracker_mode: local_or_offline_only
+sealed_test_set_for_selection: false

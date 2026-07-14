@@ -1,0 +1,20 @@
+# Use Linux line endings for cross-platform source and configuration files.
+* text=auto eol=lf
+
+# Windows-native scripts may use CRLF.
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary formats must never be line-ending normalized.
+*.wav binary
+*.flac binary
+*.mp3 binary
+*.png binary
+*.jpg binary
+*.pdf binary
+*.ckpt binary
+*.pt binary
+*.pth binary
+*.onnx binary
+*.safetensors binary

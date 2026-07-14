@@ -1,0 +1,20 @@
+schema_version: 1
+architecture: vits
+implementation: transformers_mms
+primary_initialization:
+  repository: facebook/mms-tts-vie
+  revision: b58928d033932a49aa8e3d6cf11625b25fe928d2
+  license: CC-BY-NC-4.0
+  approved_for_use: true
+control_initialization:
+  repository: facebook/mms-tts-eng
+  revision: c71de0fe7204c83f1c10820a7d696d0b450048ba
+  license: CC-BY-NC-4.0
+  approved_for_use: true
+output_sample_rate_hz: 16000
+single_speaker: true
+tokenizer:
+  type: character
+  lowercase: true
+  preserve_validated_tone_markers: true
+  normalization_status: blocked_pending_native_validation
