@@ -8,8 +8,9 @@ import platform
 import struct
 import sys
 import wave
-from collections.abc import Iterable, Sequence
+from collections.abc import Callable, Iterable, Sequence
 from pathlib import Path
+from typing import cast
 
 from hmong_tts.data.paths import DataBoundaryError, require_under_data_root
 
@@ -98,13 +99,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     revision = APPROVED_MODELS[args.model]
     tokenizer = VitsTokenizer.from_pretrained(args.model, revision=revision)
     model = VitsModel.from_pretrained(args.model, revision=revision)
-    device = "cuda" if args.device == "auto" and torch.cuda.is_available() else args.device
+    device: str = "cuda" if args.device == "auto" and torch.cuda.is_available() else args.device
     if device == "auto":
         device = "cpu"
     if device == "cuda" and not torch.cuda.is_available():
         print("CUDA was requested but PyTorch cannot access it.", file=sys.stderr)
         return 2
-    model = model.to(device)
+    # Transformers decorates this override with Module.to's overloaded signature,
+    # which MyPy exposes as an unbound wrapper even though this is a bound method.
+    move_to_device = cast(Callable[[str], VitsModel], model.to)
+    model = move_to_device(device)
     inputs = tokenizer(text=text, return_tensors="pt").to(device)
     set_seed(args.seed)
     with torch.no_grad():
