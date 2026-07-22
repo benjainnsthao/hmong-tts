@@ -5,9 +5,10 @@ Research/portfolio implementation of the consented, single-speaker MVP in
 training voice is the primary speaker; the second speaker is reserved for
 independent review and evaluation.
 
-The project is in governance/setup. It contains no real recordings, completed
-consent records, speaker identity, or private evaluation data. Language-specific
-choices are not implemented until native-speaker validation is recorded.
+Phase 0 is complete, and Phase 1 has not started. The repository contains no
+real recordings, completed consent records, speaker identity, or private
+evaluation data. Language-specific choices are not implemented until
+native-speaker validation is recorded.
 
 ## Bootstrap
 
@@ -60,3 +61,8 @@ See [`PROJECT_STATUS.md`](PROJECT_STATUS.md). This repository has no public-use
 license yet; no permission to copy, redistribute, deploy, or distribute model
 weights is granted. See [`LICENSE`](LICENSE) and
 [`docs/license_matrix.md`](docs/license_matrix.md).
+
+The next-phase sequence, terminal/outside responsibility map, and copyable
+governance-only Step 1 authorization are in
+[`docs/phase1_governance_handoff.md`](docs/phase1_governance_handoff.md). No
+recording may begin until signed consent and recording-readiness Gates A–D pass.

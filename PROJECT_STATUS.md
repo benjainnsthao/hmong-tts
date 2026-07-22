@@ -95,10 +95,11 @@ items with both speakers, and complete Gates A–D of
 ## Next executable task
 
 After separate authorization, begin only consent/native-validation and
-recording-readiness work: complete the private consent process, resolve NV-001 through
-NV-008 with the two speakers, and complete recording-readiness Gates A–D. No
+recording-readiness work: complete the private consent process, resolve NV-001
+through NV-008 with the two speakers, and complete recording-readiness Gates A–D. No
 dry-run or production recording may begin until signed consent and every
-applicable readiness gate pass.
+applicable readiness gate pass. Follow the ordered handoff and governance-only
+Step 1 authorization in `docs/phase1_governance_handoff.md`.
 
 ## Open native-validation items
 
