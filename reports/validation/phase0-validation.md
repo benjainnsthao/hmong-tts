@@ -1,8 +1,10 @@
 # Phase 0 validation report
 
-Date: 2026-07-14
+Initial validation date: 2026-07-14
+Target-hardware closure date: 2026-07-21
 Milestone: M0 Governance and reproducible environment
-Data: synthetic fixtures and empty temporary external roots only
+Data: synthetic fixtures, a pinned public English MMS checkpoint, and an
+external generated English smoke WAV; no speaker data
 
 ## Environment
 
@@ -17,6 +19,21 @@ Two machine-readable reports were generated without host/user names:
 
 The empty validation roots were in the OS temporary directory and `/tmp`; they
 are not approved recording storage.
+
+### Target-hardware closure on 2026-07-21
+
+Windows PowerShell confirmed that the selected Ubuntu distribution was running
+under WSL version 2. Inside that distribution, `uname -m` reported `x86_64`, and
+`nvidia-smi` reported an NVIDIA GeForce RTX 4070 with 12,282 MiB VRAM.
+
+The pinned `uv` 0.11.28 bootstrap and frozen MMS synchronization passed. The
+external environment report recorded Python 3.12.3, Git and FFmpeg available,
+PyTorch 2.12.0+cu130 with CUDA available, the expected RTX 4070 present, no
+training failures, and `training_ready: true`. The standalone CUDA toolkit was
+not available; this did not prevent the locked CUDA-enabled PyTorch build from
+passing the training-readiness gate. Review confirmed that the report contains
+no private path, username, hostname, IP address, credential, or unexpected
+identifying information.
 
 ## Commands and results
 
@@ -34,6 +51,39 @@ are not approved recording storage.
 | `HMONG_TTS_DATA_ROOT=<repo> python -m uv run hmong-tts-env --require-data-root` | EXPECTED FAIL; repository-local data root rejected |
 | Windows `python -m uv run hmong-tts-mms-smoke --preflight-only` | EXPECTED FAIL; not Linux, ARM64, MMS dependencies absent |
 | WSL `PYTHONPATH=src python3 scripts/smoke_mms_inference.py --preflight-only` | EXPECTED FAIL; ARM64 and MMS dependencies absent |
+
+### Target-hardware commands and results
+
+| Command | Result |
+|---|---|
+| PowerShell `wsl --status` and `wsl -l -v` | PASS; Ubuntu running under WSL version 2 |
+| Ubuntu `uname -m` and `nvidia-smi` | PASS; x86_64 NVIDIA GeForce RTX 4070 with 12,282 MiB VRAM |
+| `bash scripts/bootstrap.sh` | PASS; pinned `uv` 0.11.28, frozen core sync, configuration/privacy checks, and 27 synthetic tests |
+| `uv sync --frozen --extra mms` | PASS; locked MMS and CUDA-enabled PyTorch environment synchronized |
+| `uv run hmong-tts-env --require-training --output <redacted-private-root>/runs/phase0/environment-target.json` | PASS; `training_ready: true`, CUDA-enabled PyTorch, expected RTX 4070 present, no training failures |
+| `uv run hmong-tts-mms-smoke --model facebook/mms-tts-eng --device cuda --output smoke/mms-eng.wav` | PASS; pinned revision, 16 kHz, 33,280 samples |
+| `ffprobe` on `<redacted-private-root>/smoke/mms-eng.wav` | PASS; mono PCM signed 16-bit little-endian WAV, 16 kHz, 2.080000 seconds |
+
+Accepted MMS evidence:
+
+```text
+PASS model=facebook/mms-tts-eng revision=c71de0fe7204c83f1c10820a7d696d0b450048ba rate=16000 samples=33280 output=<redacted-private-root>/smoke/mms-eng.wav
+```
+
+Exact `ffprobe` result:
+
+```text
+codec_name=pcm_s16le
+sample_rate=16000
+channels=1
+duration=2.080000
+```
+
+Validated repository commit:
+
+```text
+246cda2a529237932fdb5621032e85ca503bdcb9
+```
 
 ## Privacy and boundary coverage
 
@@ -67,13 +117,17 @@ contains `eng` and `vie` and contains no exact `mww`, `hnj`, or `hmn` entry.
 Both selected MMS initializations are CC BY-NC 4.0; no commercial or weight
 distribution permission is inferred.
 
-## Unresolved gate
+## Resolved target-hardware gate
 
-Actual MMS waveform generation was not run because both available execution
-contexts are ARM64 and expose no NVIDIA GPU/CUDA/PyTorch. Installing the large
-x86-64 CUDA stack here would not make the absent RTX 4070 visible. The exact
-target command and pinned revisions are in `docs/mms_smoke_test.md`.
+The 2026-07-14 ARM64/no-GPU results remain historical evidence explaining why
+the target-hardware gate could not be completed in the original execution
+contexts. On 2026-07-21, the intended x86-64 WSL2 RTX 4070 machine passed the
+locked environment validation and generated the accepted pinned English MMS
+WAV. P0-HW-001 is resolved, and Phase 0 is complete.
 
-Phase 0 independent engineering checks pass. The milestone remains blocked on
-one target-hardware inference result; Phase 1 has not been advanced because the
-Phase 0 inference gate is not yet closed.
+The WAV, environment report, and Hugging Face/model cache remained below the
+approved private root and outside Git. The target-hardware execution used no
+speaker data and performed no recording, training, Vietnamese or White Hmong
+inference, credential creation or configuration, Phase 1 work, status-file
+update, commit, or push. This documentation closure did not regenerate or alter
+the accepted external evidence.

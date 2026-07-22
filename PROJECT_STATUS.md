@@ -1,16 +1,16 @@
 # Project status
 
-Last updated: 2026-07-14
+Last updated: 2026-07-21
 
 ## Current milestone and phase
 
-- Milestone: **M0 Governance and reproducible environment**
-- Phase: **Phase 0 — independent deliverables complete; target-hardware gate blocked**
+- Milestone: **M0 Governance and reproducible environment — complete**
+- Phase: **Phase 0 — complete**
 - Gate state: all repository/privacy/config/test/provenance requirements pass;
-  actual pinned MMS inference remains unexecuted because the available Windows
-  and WSL environments are ARM64 and expose no RTX 4070/CUDA.
-- Phase 1: not started; the plan forbids advancing while the Phase 0 inference
-  gate is open.
+  pinned English MMS inference produced a validated external WAV on the intended
+  x86-64 WSL2 RTX 4070 machine on 2026-07-21.
+- Phase 1: **not started**; consent, native validation, and recording-readiness
+  work require separate authorization.
 
 ## Phase 0 completion checklist
 
@@ -33,8 +33,8 @@ Last updated: 2026-07-14
   and redistribution status are recorded from current primary sources.
 - [x] Pinned MMS smoke implementation and exact target commands exist; outputs
   are forced below the private root.
-- [ ] Actual MMS checkpoint synthesis produces a validated WAV on the intended
-  x86-64 RTX 4070 WSL environment. **BLOCKED: that environment is not available here.**
+- [x] Actual pinned English MMS checkpoint synthesis produced a validated mono
+  16 kHz PCM WAV on the intended x86-64 RTX 4070 WSL2 environment.
 - [x] 27 synthetic unit tests pass; no real data is used.
 - [x] Privacy, configs, lint, format, strict typing, and ordinary tests pass.
 - [x] No real speaker data, completed consent, identity, private rating,
@@ -51,23 +51,27 @@ Last updated: 2026-07-14
 - Decision log, model/license matrix, and native-validation register.
 - Cross-platform environment diagnostics and pinned MMS smoke CLI.
 - Pull-to-validation RTX 4070 machine handoff with explicit pass evidence.
+- Target-hardware validation with CUDA-enabled PyTorch, pinned English MMS
+  synthesis, and external environment/WAV evidence.
 - Synthetic unit suite and Phase 0 validation report.
 
 ## Active work
 
-None that can safely close the current gate on this ARM64/no-GPU machine.
+Phase 0 is complete. Phase 1 has not started.
 
 ## Failed checks
 
-- MMS preflight on Windows: expected failure (not Linux, ARM64, dependencies absent).
-- MMS preflight on WSL2: expected failure (ARM64, dependencies absent).
+- Historical MMS preflight on the original Windows context: expected failure
+  (not Linux, ARM64, dependencies absent).
+- Historical MMS preflight on the original WSL2 context: expected failure
+  (ARM64, dependencies absent).
+- The historical hardware limitation was resolved by successful execution on
+  the intended x86-64 WSL2 RTX 4070 machine on 2026-07-21.
 - No unresolved ordinary repository check failure. Initial formatting, typing,
   and dependency-group issues were fixed and revalidated.
 
-## Blockers
+## Open blockers
 
-- **P0-HW-001:** intended x86-64 WSL2 RTX 4070 execution environment is not
-  accessible; actual MMS inference cannot be validated here.
 - **P1-CONSENT-001:** signed participant consent is required before any dry-run
   or production recording; completed record must remain outside Git.
 - **P1-NV-001:** NV-001 through NV-008 require the two native speakers before
@@ -75,24 +79,26 @@ None that can safely close the current gate on this ARM64/no-GPU machine.
 - **LICENSE-001:** project code-license selection requires owner approval before
   public redistribution; current state grants no license.
 
+## Closed blockers
+
+- **P0-HW-001 (closed 2026-07-21):** the intended x86-64 WSL2 RTX 4070
+  environment passed CUDA-enabled PyTorch validation and the pinned English MMS
+  inference gate.
+
 ## Human actions required
 
-Immediate Phase 0 action: make the intended x86-64 RTX 4070 WSL2 environment
-available, then follow `docs/gpu_machine_handoff.md` from clone/pull through
-evidence return. The optional MMS install is multi-gigabyte.
-
-Before recording: review/adapt and sign the private copy of
-`docs/templates/consent_template.md`, then complete Gates A–D of
+Before any recording, review/adapt and sign the private copy of
+`docs/templates/consent_template.md`, resolve the applicable native-validation
+items with both speakers, and complete Gates A–D of
 `docs/recording_readiness_checklist.md` outside the repository.
 
 ## Next executable task
 
-On target hardware, execute `docs/gpu_machine_handoff.md`: verify x86-64 WSL2
-and RTX 4070 visibility, install the locked `mms` extra, run
-`hmong-tts-env --require-training`, synthesize the pinned English MMS smoke WAV,
-and return only the listed non-sensitive evidence. If it passes, close Phase 0
-and begin Phase 1 only with native-reviewed inventory/schema work; do not record
-until signed consent and all recording gates pass.
+After separate authorization, begin only consent/native-validation and
+recording-readiness work: complete the private consent process, resolve NV-001 through
+NV-008 with the two speakers, and complete recording-readiness Gates A–D. No
+dry-run or production recording may begin until signed consent and every
+applicable readiness gate pass.
 
 ## Open native-validation items
 
