@@ -2,6 +2,8 @@
 set -euo pipefail
 
 UV_VERSION="0.11.28"
+UV_INSTALL_DIR="${HOME}/.local/bin"
+UV_INSTALLER_URL="https://astral.sh/uv/${UV_VERSION}/install.sh"
 
 if ! command -v python3 >/dev/null 2>&1; then
   echo "Python 3 is required." >&2
@@ -9,12 +11,19 @@ if ! command -v python3 >/dev/null 2>&1; then
 fi
 
 if ! command -v uv >/dev/null 2>&1; then
-  if ! python3 -m pip --version >/dev/null 2>&1; then
-    echo "pip is missing. On Ubuntu run: sudo apt-get install python3-pip" >&2
+  if [[ -x "${UV_INSTALL_DIR}/uv" ]]; then
+    export PATH="${UV_INSTALL_DIR}:${PATH}"
+  elif ! command -v curl >/dev/null 2>&1; then
+    echo "curl is missing. On Ubuntu run: sudo apt-get install curl" >&2
     exit 2
+  else
+    # The versioned standalone installer does not modify the PEP 668-managed
+    # system Python. Unmanaged mode also avoids shell-profile edits and
+    # disables self-updates; the exact binary version is verified below.
+    curl --proto '=https' --tlsv1.2 -LsSf "${UV_INSTALLER_URL}" \
+      | env UV_UNMANAGED_INSTALL="${UV_INSTALL_DIR}" sh
+    export PATH="${UV_INSTALL_DIR}:${PATH}"
   fi
-  python3 -m pip install --user "uv==${UV_VERSION}"
-  export PATH="$(python3 -m site --user-base)/bin:${PATH}"
 fi
 
 actual_uv="$(uv --version | awk '{print $2}')"

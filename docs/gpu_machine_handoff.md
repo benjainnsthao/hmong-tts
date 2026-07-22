@@ -34,7 +34,7 @@ For a first checkout:
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y python3-pip git ffmpeg
+sudo apt-get install -y python3 curl git ffmpeg
 mkdir -p "$HOME/src"
 cd "$HOME/src"
 git clone https://github.com/benjainnsthao/hmong-tts.git
@@ -72,6 +72,12 @@ For later recording, confirm the underlying drive and backups satisfy
 itself approval for speaker data.
 
 ## 4. Bootstrap and run the pre-download gates
+
+The bootstrap installs the exact `uv` version from Astral's versioned
+standalone installer when `uv` is absent. It uses unmanaged mode so it does not
+modify Ubuntu's PEP 668-managed Python installation, edit shell profiles, or
+enable `uv` self-updates. The installed binary version is checked before any
+dependency synchronization.
 
 ```bash
 bash scripts/bootstrap.sh

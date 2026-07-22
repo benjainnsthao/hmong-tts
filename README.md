@@ -17,7 +17,7 @@ RTX 4070. Python 3.12 and `uv` 0.11.x are pinned by `pyproject.toml` and
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y python3-pip git ffmpeg
+sudo apt-get install -y python3 curl git ffmpeg
 cp .env.example .env
 # Set HMONG_TTS_DATA_ROOT to an absolute encrypted/private path outside this repo.
 bash scripts/bootstrap.sh
@@ -26,6 +26,10 @@ uv run hmong-tts-config-check
 uv run hmong-tts-privacy-scan
 uv run pytest
 ```
+
+On Linux, the bootstrap installs the exact pinned `uv` release from Astral's
+versioned standalone installer when needed. It does not write to the
+PEP 668-managed system Python or modify shell profiles.
 
 PowerShell setup for governance and tests is also supported:
 
