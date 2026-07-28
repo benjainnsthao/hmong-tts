@@ -268,43 +268,53 @@ limitations, not incomplete M4 contract work.
 
 ## Milestone M5 — bounded local inference service
 
+Status: **complete**.
+
 Goal: expose the stable adapter through a local API suitable for a future
 application client.
 
 Estimated effort: 8–12 focused hours.
 
-### Endpoints
+### Delivered
 
-- `GET /health`
-- `GET /ready`
-- `GET /v1/models`
-- `POST /v1/synthesize`
-
-Do not add a normalization endpoint while no validated language normalizer
-exists.
-
-### Controls
-
-- Bind to localhost by default.
-- Keep public deployment disabled.
-- Use registry-approved models only.
-- Enforce maximum input length, request timeout, and one bounded inference
-  queue.
-- Keep one explicit model-instance owner.
-- Do not log request text or client IP addresses.
-- Return or reference a run manifest for every successful result.
-- Report `language_quality_status: not_evaluated` in model/API metadata.
-- Provide a clear synthetic-audio and limitations notice.
+- `GET /health`, `GET /ready`, `GET /v1/models`, and
+  `POST /v1/synthesize`; no normalization endpoint.
+- Strict schema-versioned health, readiness, queue, registry metadata,
+  synthesis, success, failure, and local service configuration contracts.
+- One lifespan-owned adapter/model owner, one M3 executor, one bounded FIFO
+  coordinator, and exactly one active inference operation.
+- Deterministic full, closed, pending-expiry, shutdown, and non-preemptive
+  active-operation semantics.
+- Service-owned prompt provenance and UUID output paths below
+  `service/runs`; no caller-controlled path or provider identity.
+- Loopback-literal binding, one Uvicorn worker, model-access acknowledgement,
+  no CORS/public mode, and access/request/client logging disabled.
+- Sanitized FastAPI validation and inference failure mapping with no prompt,
+  backend exception, client address, or absolute path.
+- Offline `schema`, `validate-config`, and `openapi` operations through
+  `tts-workbench-serve`, bringing the active total to eight commands.
+- FastAPI/Starlette/Uvicorn service dependencies and HTTPX in-process testing
+  dependency pinned, licensed, and locked for Python 3.12.
+- Synthetic API, lifecycle, queue, timeout, privacy, CLI, import, OpenAPI, and
+  M1–M4 regression tests. Fakes remain outside the production package.
 
 ### Acceptance criteria
 
-- Fake-adapter API tests require no weight download.
-- Queue overflow, timeout, invalid model, invalid input, and inference failure
-  return stable error contracts.
-- Health and readiness distinguish process health from model readiness.
-- The service cannot enable a public bind through an undocumented setting.
-- No endpoint claims White Hmong support or implements White Hmong
+- PASS: fake-adapter and in-process ASGI tests require no weight download.
+- PASS: overflow, timeout, invalid model/input, readiness, and every M3
+  inference failure have stable sanitized HTTP contracts.
+- PASS: health is independent of model/CUDA state and readiness reports lazy
+  model, runtime, artifact, admission, and queue state separately.
+- PASS: configuration cannot enable non-loopback binding, multiple workers,
+  multiple model owners, multiple active inference calls, public deployment,
+  access logging, request logging, or client-address logging.
+- PASS: aggregate branch-aware coverage remains above 78%; focused service
+  coverage is above 90%.
+- PASS: no endpoint claims White Hmong support or implements White Hmong
   normalization **[NV]**.
+
+No checkpoint, optional ML runtime, network model access, real audio,
+native-language content, or persistent server was used to validate M5.
 
 ## Milestone M6 — reproduction and portfolio evidence
 
@@ -428,12 +438,12 @@ models and present the output as a prototype Hmong voice.
 
 The authoritative itemized risks, required evidence, owners, and closure rules
 are maintained in [`docs/release_risk_register.md`](release_risk_register.md).
-M5 and M6 reduce these risks; M7 is the final disposition gate.
+M5 mitigates the bounded-service risk; M6 produces reproduction evidence. M7
+is the final disposition gate.
 
 ## Next executable task
 
-Begin M5 at the stable M3 inference and M4 capability/report boundaries. Define
-strict bounded local-service request/result/error and readiness contracts before
-selecting an HTTP framework. Do not download or execute model weights, bind
-publicly, or add application or White Hmong language behavior without separate
-authorization.
+Begin M6 from the completed M5 service boundary. Produce fresh-clone
+reproduction instructions, explicit operator gates, and sanitized portfolio
+evidence on separately authorized hardware. Do not make the M7 release
+decision, bind publicly, or add White Hmong language behavior.

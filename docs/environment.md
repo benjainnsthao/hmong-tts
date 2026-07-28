@@ -52,3 +52,18 @@ active contract.
 Readiness means the reported prerequisites were observable at collection time.
 It does not prove model fit, execution success, timing, waveform quality,
 pronunciation, or linguistic correctness.
+
+## M5 service readiness
+
+`GET /ready` exposes only sanitized readiness booleans and bounded queue state.
+It distinguishes service admission, artifact-root readiness, core-environment
+readiness, optional CPU/CUDA runtime readiness, and adapter loaded state. A
+lazy unloaded adapter is not a failure: optional runtime readiness may be false
+while the metadata/control service remains ready to admit work. A later
+synthesis request can still return `dependency_unavailable` or
+`device_unavailable`.
+
+The readiness response does not include OS identity, device name, package
+paths, environment values, the artifact root, hostname, username, or client
+address. `GET /health` is intentionally independent of CUDA, model load, and
+artifact readiness.

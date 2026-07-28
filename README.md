@@ -17,10 +17,9 @@ indexed in
 
 ## Current milestone
 
-Milestone M4 adds non-linguistic waveform QC, deterministic fake-backed
-benchmarking, and generalized environment-capability reporting to the M3
-inference boundary. The distribution is `audited-tts-workbench` 0.3.0 with
-seven `tts-workbench-*` commands.
+Milestone M5 adds a bounded localhost-only FastAPI service around the M3
+inference executor and M4 readiness boundaries. The distribution is
+`audited-tts-workbench` 0.4.0 with eight `tts-workbench-*` commands.
 
 Ordinary imports and CI do not import PyTorch or Transformers. The optional real
 MMS backend imports them only when explicitly loaded; synthetic tests use
@@ -32,6 +31,8 @@ python -m uv run tts-workbench-models list
 python -m uv run tts-workbench-qc schema
 python -m uv run tts-workbench-benchmark schema
 python -m uv run tts-workbench-env --json
+python -m uv run tts-workbench-serve validate-config
+python -m uv run tts-workbench-serve openapi
 ```
 
 The registry accepts only immutable 40-character revisions, audited license
@@ -48,6 +49,21 @@ exclude configured warmups from aggregates, and use deterministic nearest-rank
 p95. No real checkpoint was executed to validate M4. See
 [`docs/waveform_qc.md`](docs/waveform_qc.md) and
 [`docs/benchmarking.md`](docs/benchmarking.md).
+
+The service exposes only `GET /health`, `GET /ready`, `GET /v1/models`, and
+`POST /v1/synthesize`. It accepts no artifact path, repository, revision,
+prompt-provenance override, client identity, or normalization option. One
+bounded FIFO coordinator owns exactly one active inference operation and one
+adapter/model owner. Pending overflow and pre-execution expiry fail without
+calling the adapter or creating artifacts. See
+[`docs/local_service.md`](docs/local_service.md) and
+[`docs/service_threat_model.md`](docs/service_threat_model.md).
+
+Actual serving is blocked unless the operator supplies
+`--acknowledge-model-access`. Configuration accepts only literal loopback
+addresses, one Uvicorn worker, disabled access/request/client logging, and
+public deployment disabled. Localhost is a development boundary, not a
+complete authentication system.
 
 ## Reproducible core
 
@@ -80,6 +96,11 @@ See [`docs/inference_contract.md`](docs/inference_contract.md).
 M4 analyzes WAVs and writes QC or benchmark JSON only through separate
 artifact-root-relative, collision-rejecting atomic report transactions. QC
 never changes whether an M3 artifact is committed.
+
+M5 generates collision-resistant output names below the configured
+`service/runs` prefix. Successful HTTP responses contain only the existing
+root-relative WAV and manifest references. Rejected, full, expired, invalid,
+or failed requests publish no success artifact.
 
 ## Licensing
 

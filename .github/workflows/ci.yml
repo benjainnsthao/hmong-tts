@@ -28,6 +28,9 @@ jobs:
         run: |
           uv run tts-workbench-config
           uv run tts-workbench-models validate
+          uv run tts-workbench-models list
+          uv run tts-workbench-serve validate-config
+          uv run tts-workbench-serve openapi > /dev/null
       - name: Lint and format
         run: |
           uv run ruff check .
@@ -35,4 +38,6 @@ jobs:
       - name: Type check
         run: uv run mypy src
       - name: Test synthetic fixtures
-        run: uv run pytest --cov=tts_workbench --cov-report=term-missing
+        run: >-
+          uv run pytest --cov=tts_workbench --cov-branch
+          --cov-report=term-missing --cov-fail-under=78

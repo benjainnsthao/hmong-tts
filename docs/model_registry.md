@@ -55,6 +55,19 @@ smoke prompt. The Vietnamese entry still requires an artifact-root-relative,
 independently audited public prompt file. M4 validation uses only the synthetic
 test registry and does not execute either real entry.
 
+## M5 service routing
+
+`GET /v1/models` lists only registry entries and copies immutable identity,
+provenance, license/use/redistribution policy, prompt-set reference, and
+`language_quality_status: not_evaluated`. It performs no checkpoint or model
+host access.
+
+`POST /v1/synthesize` resolves the caller's model ID before coordinator
+admission or adapter load. The service supplies the registered prompt
+reference to the internal M3 request; callers cannot override prompt
+provenance, repository, revision, provider settings, or output location. An
+unknown model returns a sanitized 404 before inference.
+
 ## Registered models
 
 - `mms-eng`: public English MMS/VITS checkpoint. Its built-in input is a
@@ -73,6 +86,7 @@ evidence about White Hmong.
 tts-workbench-models validate
 tts-workbench-models list
 tts-workbench-models list --json
+tts-workbench-serve openapi
 ```
 
 An alternate local registry may be checked with `--registry PATH`. Validation

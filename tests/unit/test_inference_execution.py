@@ -316,7 +316,7 @@ def test_collision_is_rejected_without_overwriting_successful_run(tmp_path: Path
 
     assert second.status == "failure"
     assert second.failure is not None
-    assert second.failure.category == FailureCategory.ARTIFACT_WRITE_FAILURE
+    assert second.failure.category == FailureCategory.ARTIFACT_COLLISION
     assert (tmp_path / first.wav_path).read_bytes() == wav_before
     assert (tmp_path / first.manifest_path).read_bytes() == manifest_before
 

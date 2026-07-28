@@ -1,14 +1,18 @@
 # License and provenance matrix
 
-Audit date: 2026-07-14
+Audit date: 2026-07-28
 Status meanings: **approved** means eligible only for the scoped local use;
 **blocked** means it must not be downloaded/used for this project yet. This is
 an engineering audit, not legal advice.
 
 | Artifact | Exact revision/version | Code license | Weight/model license | Known training-data lineage/restrictions | Output restrictions | Redistribution status | Use status |
 |---|---|---|---|---|---|---|---|
-| This repository | working tree, `audited-tts-workbench` v0.3.0 | No license granted; all rights reserved pending owner decision | n/a | Synthetic fixtures and public metadata only; no speaker data | n/a | Not permitted | Local development only |
+| This repository | working tree, `audited-tts-workbench` v0.4.0 | No license granted; all rights reserved pending owner decision | n/a | Synthetic fixtures and public metadata only; no speaker data | n/a | Not permitted | Local development only |
 | Workbench model registry | schema v1, `configs/models/registry.yaml` | Project code-license status above | n/a | Metadata transcribed from the audited primary sources below; contains no weights | No language-quality claim; every active entry is `not_evaluated` | Metadata only; third-party weights are not bundled | Approved active control |
+| FastAPI service framework | `fastapi==0.136.3` | MIT | Does not change checkpoint license | Runtime framework; no training data or model weights | Determined by checkpoint/consent, not framework | Code per MIT; no cloud/standard extra installed | Approved for bounded local service |
+| Starlette ASGI framework | `starlette==1.0.0` | BSD-3-Clause | Does not change checkpoint license | Direct compatibility pin for FastAPI; no training data or model weights | Determined by checkpoint/consent | Code per BSD-3-Clause | Approved for bounded local service |
+| Uvicorn ASGI server | `uvicorn==0.46.0` | BSD-3-Clause | Does not change checkpoint license | Local loopback server; no training data or model weights | Determined by checkpoint/consent | Code per BSD-3-Clause; standard extra not installed | Approved for one-worker local service |
+| HTTPX in-process test client | `httpx==0.28.1` | BSD-3-Clause | n/a | Development/test dependency only; no external network used by M5 tests | n/a | Code per BSD-3-Clause | Approved for in-process ASGI tests |
 | Transformers MMS/VITS runtime | `transformers==5.13.1` | Apache-2.0 | Does not change checkpoint license | Runtime library; no training data | Determined by checkpoint/consent, not library alone | Code per Apache-2.0 | Approved for pinned smoke path |
 | PyTorch runtime | `torch==2.12.0` | BSD-style | Does not change checkpoint license | Runtime library; no training data | Determined by checkpoint/consent | Code per upstream license | Approved for x86-64 Linux smoke path |
 | Meta MMS collection/full training checkpoints | `facebook/mms-tts@44cc7fb408064ef9ea6e7c59130d88cac1274671` | The MMS-specific README states CC BY-NC 4.0 for MMS code and weights; the surrounding Fairseq repository is MIT | CC BY-NC 4.0 | MMS paper describes a dataset based on readings of publicly available religious texts. Source-recording rights are not itemized per TTS checkpoint in the model card; treat lineage as non-commercial and incomplete for commercial clearance. | No project claim that raw outputs are automatically relicensed; workbench use remains non-commercial. | Attribution required; commercial use prohibited; the workbench does not redistribute weights | Approved as collection-level provenance; training use is deferred |
@@ -42,6 +46,22 @@ uses separate per-language checkpoints rather than a single universal TTS model.
 - XTTS-v2 CPML text: https://huggingface.co/coqui/XTTS-v2/blob/v2.0.3/LICENSE.txt
 - OpenVoice V2 README/license statement: https://github.com/myshell-ai/OpenVoice
 - PyTorch install/platform guidance and pinned-version commands: https://pytorch.org/get-started/locally/ and https://pytorch.org/get-started/previous-versions/
+
+## M5 service sources (accessed 2026-07-28)
+
+- FastAPI 0.136.3 package metadata, Python compatibility, dependencies, and
+  MIT license: https://github.com/fastapi/fastapi/blob/0.136.3/pyproject.toml
+  and https://github.com/fastapi/fastapi/blob/0.136.3/LICENSE
+- Starlette 1.0.0 package metadata, Python compatibility, and BSD-3-Clause
+  license: https://github.com/Kludex/starlette/blob/1.0.0/pyproject.toml and
+  https://github.com/Kludex/starlette/blob/1.0.0/LICENSE.md
+- Uvicorn 0.46.0 package metadata, Python compatibility, and BSD-3-Clause
+  license: https://github.com/Kludex/uvicorn/blob/0.46.0/pyproject.toml and
+  https://github.com/Kludex/uvicorn/blob/0.46.0/LICENSE.md
+- Uvicorn release notes: https://www.uvicorn.org/release-notes/
+- HTTPX 0.28.1 package metadata, Python 3.12 classifier, and BSD-3-Clause
+  license: https://github.com/encode/httpx/blob/0.28.1/pyproject.toml and
+  https://github.com/encode/httpx/blob/0.28.1/LICENSE.md
 
 ## Audit rule
 

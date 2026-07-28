@@ -57,6 +57,19 @@ or linguistic-quality conclusions.
 
 Synthetic test WAVs and reports exist only under pytest temporary directories.
 
+## M5 service transactions
+
+The caller never supplies an artifact path. The service generates a UUID and
+builds a normalized path below the configured `service/runs` prefix, then
+delegates to the unchanged M3 atomic WAV/manifest transaction. A successful
+HTTP response returns only root-relative WAV and manifest references.
+
+Malformed, unknown-model, not-ready, full-queue, expired, dependency/device,
+load, synthesis, waveform, boundary, collision, and write failures return no
+success artifact reference. Work that expires while queued never calls the M3
+executor. An in-flight operation is not force-cancelled; it either completes
+the normal atomic transaction or returns a structured failure.
+
 ## Temporary legacy-variable policy
 
 For the 0.2 migration window only:

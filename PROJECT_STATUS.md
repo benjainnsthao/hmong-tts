@@ -6,8 +6,7 @@ Last updated: 2026-07-28
 
 - Project: audited pretrained multi-language TTS inference, benchmarking, and
   local-deployment workbench.
-- Milestone: **M4 waveform QC, benchmarking, and environment capabilities —
-  complete**.
+- Milestone: **M5 bounded local inference service — complete**.
 - Active branch: `rescope/audited-tts-workbench`.
 - Preserved baseline: `archive/white-hmong-single-speaker-tts-v0.1` at
   `fd1756485b1e1b75fd1efee5e37519fa8e255415`.
@@ -176,6 +175,49 @@ deferred **[NV]**.
   audio, native-language content, FastAPI, HTTP, queue/concurrency, UI,
   perceptual/linguistic scoring, or M5 code was used or added.
 
+## M5 deliverables
+
+- Frozen, extra-forbid service configuration and health, readiness, queue,
+  model, synthesis, success, and sanitized-failure contracts.
+- FastAPI application factory with lifespan-owned registry, one lazy
+  `MmsVitsAdapter`, one M3 `InferenceExecutor`, and one bounded coordinator.
+- `GET /health`, `GET /ready`, `GET /v1/models`, and
+  `POST /v1/synthesize`; no normalization endpoint.
+- One bounded FIFO pending queue, exactly one active inference operation,
+  deterministic full/closed/expiry states, and non-preemptive in-flight
+  shutdown.
+- Registry-owned prompt provenance and service-owned root-relative output
+  names; callers cannot supply paths, repositories, revisions, provider
+  settings, or identity metadata.
+- Sanitized validation and runtime errors with stable HTTP mappings and no raw
+  prompt, backend exception, client address, or absolute path.
+- Loopback-literal host validation, one Uvicorn worker, no CORS, no access log,
+  no request/client logging, no public deployment setting, and an explicit
+  model-access acknowledgement gate.
+- `tts-workbench-serve` metadata-only `schema`, `validate-config`, and
+  `openapi` operations, bringing the active total to eight commands.
+- FastAPI 0.136.3, Starlette 1.0.0, Uvicorn 0.46.0, and test-only HTTPX
+  0.28.1, all pinned and audited for Python 3.12 and permissive code licenses.
+- Test fakes remain outside the production package; no production fake-model
+  mode exists.
+
+## M5 validation
+
+- Frozen lock and frozen offline core synchronization: PASS.
+- Formatting, Ruff, and strict source MyPy: PASS.
+- Active configuration, registry metadata-only listing, privacy/artifact scan,
+  package import, OpenAPI, and eight-command help gates: PASS.
+- Complete synthetic suite and aggregate branch-aware coverage: PASS; see
+  `reports/validation/m5_service_validation.md`.
+- Focused service branch coverage: PASS; application/error mapping,
+  coordinator, contracts, CLI, and in-process ASGI tests exceed the M5 gate.
+- Full pre-commit, release-package inspection, tracked-audio/weight/cache,
+  old-identity, historical-evidence, deferred-NV, and Git whitespace checks:
+  PASS.
+- No checkpoint, optional ML runtime, model-host access, persistent public
+  server, real audio, external/native-language content, CORS, UI, M6
+  demonstration, or M7 release decision was used.
+
 ## Preserved historical work
 
 The completed White Hmong single-speaker Phase 0 validation remains unchanged
@@ -188,8 +230,9 @@ future-work evidence in `docs/deferred/white_hmong_native_validation.md`.
 
 ## Explicitly not started
 
-- M5 local inference API or service.
-- New checkpoint or dependency downloads.
+- M6 real-checkpoint reproduction and portfolio demonstrations.
+- M7 final risk disposition or release decision.
+- Optional MMS dependency installation or checkpoint/model-cache access.
 - White Hmong text handling, prompts, normalization, adaptation, or evaluation.
 - Recording, private speaker data, consent execution, or training.
 
@@ -204,20 +247,21 @@ The authoritative register is
 - real-checkpoint/intended-hardware and portability evidence;
 - cross-device reproducibility limitations;
 - QC-versus-language-quality claim boundaries;
-- M5 service security/resource controls;
+- final M7 audit of the mitigated M5 service controls;
 - removal of the legacy artifact-root variable;
 - dependency/model-host drift and final supply-chain review;
 - release artifact/report privacy; and
 - the explicitly deferred White Hmong/community-validation boundary **[NV]**.
 
-M5 and M6 mitigate or produce evidence for these risks. M7 is the final
-risk-disposition and release-decision milestone. A public reusable release
-remains blocked until its release-blocking items are closed.
+M5 mitigates the bounded-service risk; M6 produces runtime and reproduction
+evidence. M7 is the final risk-disposition and release-decision milestone. A
+public reusable release remains blocked until its release-blocking items are
+closed.
 
 ## Next executable task
 
-Begin M5 by defining a bounded, fake-adapter local service contract around the
-stable M3 inference and M4 capability/report boundaries. Start with strict
-request/result/error and readiness schemas before adding any HTTP framework.
-Do not download or execute model weights, bind publicly, or add application or
-White Hmong language behavior without separate authorization.
+Begin M6 from the frozen M5 service boundary by writing fresh-clone
+reproduction instructions and an explicit authorized-hardware evidence
+procedure. Real checkpoint access, the English demonstration, and the
+independently audited Vietnamese prompt remain separate operator gates. Do not
+make an M7 release decision or add White Hmong language behavior.

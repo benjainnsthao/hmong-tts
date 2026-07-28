@@ -151,7 +151,7 @@ class InferenceExecutor:
         except ArtifactCollisionError:
             return self._failure(
                 run_id,
-                FailureCategory.ARTIFACT_WRITE_FAILURE,
+                FailureCategory.ARTIFACT_COLLISION,
                 "artifact destination already exists",
             )
         except (ArtifactBoundaryError, OSError, ValueError):
@@ -265,7 +265,7 @@ class InferenceExecutor:
         except ArtifactCollisionError:
             return self._failure(
                 run_id,
-                FailureCategory.ARTIFACT_WRITE_FAILURE,
+                FailureCategory.ARTIFACT_COLLISION,
                 "artifact destination already exists",
             )
         except InvalidWaveformError:

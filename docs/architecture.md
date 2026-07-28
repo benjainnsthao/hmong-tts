@@ -1,116 +1,123 @@
-# Workbench architecture — milestone M4
+# Workbench architecture — milestone M5
 
-The repository has a provider-neutral inference data plane plus an M4
-evaluation plane. It remains a library/CLI workbench, not an HTTP service.
+The repository has a provider-neutral M3 inference data plane, an M4
+engineering-evidence plane, and a bounded M5 localhost service. The service is
+an application boundary around the existing executor; it is not a public
+deployment or language-learning application.
 
 ```text
-public repository
-  audited-tts-workbench / tts_workbench
-  configs/models/registry.yaml
+caller on the same host
+  |
+  +--> GET /health
+  +--> GET /ready
+  +--> GET /v1/models -------> audited ModelRegistry (metadata only)
+  +--> POST /v1/synthesize
              |
-             v
-  strict schema + policy validation
+             +--> strict SynthesisRequest
+             |      no path/repository/revision/provenance override
              |
-             +--> models validate / models list
+             +--> registry lookup + service-owned output UUID
              |
-             +--> InferenceRequest
-                       |
-                       v
-                 InferenceExecutor
-                 | registry lookup + prompt hash + timing
-                 |
-                 +--> TTSAdapter protocol
-                 |      |
-                 |      +--> MmsVitsAdapter
-                 |             |
-                 |             +--> injected fake backend (tests)
-                 |             +--> lazy optional Transformers backend
-                 |
-                 +--> structural waveform validation
-                 |
-                 +--> AtomicArtifactStore
-                              |
-                              +--> WAV (published first)
-                              +--> success manifest (commit marker, last)
-                              |
-                              +--> WaveformQcAnalyzer (separate read-only pass)
-                                      |
-                                      +--> AtomicJsonReportStore
-
-  ModelRegistry + TTSAdapter
-             |
-             +--> BenchmarkRunner
-                    injected clock / resource observer / environment collector
+             +--> BoundedInferenceCoordinator
+                    pending FIFO capacity: configured and finite
+                    active operations: exactly one
                     |
-                    +--> cold load
-                    +--> excluded warmups
-                    +--> measured warm synthesis + aggregate JSON
+                    +--> InferenceExecutor
+                           registry/prompt check + prompt hash + timing
+                           |
+                           +--> one TTSAdapter owner
+                           |      |
+                           |      +--> MmsVitsAdapter
+                           |             +--> test fake backend (tests only)
+                           |             +--> lazy optional real backend
+                           |
+                           +--> structural waveform validation
+                           |
+                           +--> AtomicArtifactStore
+                                  WAV first
+                                  success manifest last (commit marker)
+
+M4 side paths
+  committed WAV --> WaveformQcAnalyzer --> AtomicJsonReportStore
+  registry + adapter --> BenchmarkRunner --> AtomicJsonReportStore
 
 external artifact root
-  TTS_WORKBENCH_ARTIFACT_ROOT
-  model cache / weights / generated WAV + manifests / QC + benchmarks
+  TTS_WORKBENCH_ARTIFACT_ROOT/
+    service/runs/<uuid>.wav
+    service/runs/<uuid>.manifest.json
+    qc/*.json
+    benchmarks/*.json
 ```
 
-The registry, license matrix, environment report, and artifact boundary remain
-separate controls:
+## Ownership and lifecycle
 
-- the registry decides which immutable artifacts are eligible for scoped use;
-- the license matrix records the supporting audit and limitations;
-- environment detection establishes what the local machine can execute; and
-- the external boundary prevents weights and generated audio from entering Git.
+`create_app` performs no module-level registry, model, CUDA, or provider
+initialization. Its lifespan factory creates one registry view, one
+`MmsVitsAdapter`, one `InferenceExecutor`, and one
+`BoundedInferenceCoordinator`. The adapter remains unloaded until the first
+accepted synthesis request.
 
-The adapter protocol exposes only identity, lifecycle state, load, synthesize,
-and unload. Callers never receive tokenizer, model, tensor, or Transformers
-objects. Each `MmsVitsAdapter` owns at most one loaded backend. Loading a
-different model or changing the requested device unloads the old backend first;
-loading the same model/device pair reuses the owned backend.
+Startup opens coordinator admission. Shutdown closes admission first, rejects
+pending work with a sanitized service failure, waits for an active synchronous
+backend call to return, then unloads the adapter. The service never claims to
+cancel an in-flight GPU/model operation. This non-preemptive shutdown prevents
+concurrent ownership and avoids publishing a misleading cancellation result.
 
-The executor rejects registry-invalid or unknown model IDs, prompt-reference
-mismatches, and invalid artifact destinations before backend loading. The
-MMS/VITS backend resolves repository and immutable revision only from the
-validated registry. PyTorch and Transformers imports remain inside its explicit
-load method.
+The coordinator has one background owner task, a finite FIFO pending queue, and
+at most one active executor call. Queue capacity counts pending work, not the
+active item. A queued deadline is checked by both a timer seam and immediately
+before execution. Expired queued work never reaches `InferenceExecutor` and
+therefore cannot create an artifact.
 
-The artifact writer creates closed temporary files beside their destinations,
-reopens and validates the mono PCM WAV, serializes a strict schema-version-1
-manifest, replaces the WAV, and replaces the manifest last. A failed
-serialization, validation, or replacement removes temporary files and any WAV
-owned by that failed transaction.
+## API and execution boundaries
 
-Repository-root detection requires the neutral committed markers
-`pyproject.toml` and `configs/models/registry.yaml`; it does not depend on the
-archived White Hmong project-plan pointer.
+The external request contains only model ID, text, requested device, seed, and
+the three existing MMS/VITS generation settings. The service derives prompt
+provenance from the registry and generates the output path under its configured
+root-relative prefix. Callers cannot supply a path, URL, repository, revision,
+credential, provider object, environment value, language-normalization option,
+or client identity.
 
-M3 still performs structural commit-safety validation only: finite non-empty
-samples, positive sample rate, mono 16-bit PCM, successful reopen, and matching
-positive frame metadata. M4 QC is a separate read-only analysis. It can label a
-structurally valid committed artifact `qc_failing`, but it does not alter the
-M3 transaction or success manifest.
+The internal `InferenceRequest`, `InferenceResult`, adapter lifecycle, run
+manifest, waveform validation, and atomic transaction remain the M3 contracts.
+M5 adds `artifact_collision` so HTTP can distinguish a safe 409 collision from
+an internal write failure without exposing filesystem details.
 
-`WaveformQcAnalyzer` accepts an in-memory `WaveformResult` or reopens an
-artifact-root-relative WAV. The fixed rule order and configured thresholds
-produce engineering-sanity-check evidence only. The generic JSON report store
-serializes deterministically into a closed neighboring temporary file, rejects
-collisions, and atomically replaces the destination.
+`GET /health` reports application process health only. `GET /ready` separately
+reports admission, artifact-root, core-environment, optional-runtime, lazy model
+state, and queue state. An unloaded lazy model is not a readiness failure.
+`GET /v1/models` copies registry identity and policy without model access.
+Provider language tags remain provenance metadata and never become workbench
+quality claims.
 
-`BenchmarkRunner` selects exactly one registry entry before adapter load.
-Clock, adapter, registry, environment collector, and point-in-time resource
-observer are injected. Cold load is timed separately; warmups execute but are
-excluded from measured median and nearest-rank p95. No production fake, thread,
-queue, process, HTTP lifecycle, or continuous telemetry exists.
+## Privacy and local security
 
-Environment collection now builds a strict sanitized report with independent
-core, CPU-inference, and CUDA-inference readiness. CUDA absence is not a core
-failure, and no GPU product name is required. PyTorch and Transformers remain
-lazy optional imports.
+The service configuration accepts only literal loopback IP addresses, exactly
+one Uvicorn worker, one model owner, one active operation, disabled public
+deployment, disabled access logging, and disabled request/client logging. The
+application installs no CORS, cookie, session, authentication database,
+analytics, telemetry, browser, tunnel, or deployment middleware.
 
-M4 contracts and report stores expose no raw prompt, absolute artifact root,
-host/user/client identity, credential, private identifier, or model-cache path.
-The M5 service/application layer remains unimplemented.
+Default validation errors are replaced because framework validation details can
+contain submitted input. Every service error has a stable category, generic
+message, and documented HTTP status. Responses and logs do not echo prompts,
+backend exceptions, client addresses, absolute paths, environment values, or
+cache locations.
 
-No runtime success or manifest field is linguistic-quality evidence. No
-application layer may embed White Hmong normalization or capability rules while
+Loopback binding is a development boundary, not authentication. Other local
+processes or users may be able to reach a loopback port. The operator must use
+host OS controls and must not expose the port through a proxy, tunnel,
+container mapping, or firewall rule. See `docs/service_threat_model.md`.
+
+## Preserved M3/M4 boundaries
+
+The adapter exposes only identity, state, load, synthesize, and unload.
+PyTorch/Transformers imports remain inside explicit real-backend loading. The
+manifest is published after the WAV and remains the success commit marker.
+M4 QC remains a separate engineering-sanity pass and never changes M3 commit
+status.
+
+No runtime, HTTP, manifest, QC, or benchmark success is linguistic-quality
+evidence. M5 used only fakes and pytest-temporary synthetic WAVs. It provides no
+real-model performance result and establishes no White Hmong capability.
 NV-001 through NV-008 remain deferred **[NV]**.
-
-The ordered delivery plan and milestone acceptance criteria are in
-`docs/implementation_roadmap.md`.

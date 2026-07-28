@@ -113,15 +113,22 @@ identify the approving human; a commit message alone is not approval.
 
 ### REL-SERVICE-001 — bounded local-service security and exhaustion
 
-- Current status: `open` until M5.
-- Risk: model lifecycle, concurrency, queue capacity, timeouts, input limits,
-  local binding, logging, and resource exhaustion are not yet service-tested.
-- Required closure: complete M5 contracts, threat model, fake-backed failure
-  tests, localhost default, bounded ownership/concurrency, and privacy-safe
-  logging.
-- Evidence: M5 validation report, configuration schema, API tests, threat
-  model, and negative binding/resource tests.
-- Release rule: no network-service release before closure.
+- Current status: `mitigated` by M5, pending the final M7 release audit.
+- Implemented control: strict service/configuration contracts, literal
+  loopback-only binding, one worker/model owner/active inference operation,
+  finite FIFO pending capacity, pre-execution expiry, non-preemptive active
+  semantics, input limits, service-owned paths, sanitized errors, disabled
+  access/request/client logging, and no CORS/public-deployment mode.
+- Evidence: `docs/local_service.md`, `docs/service_threat_model.md`,
+  `reports/validation/m5_service_validation.md`, schema/OpenAPI/configuration
+  gates, focused branch coverage, in-process ASGI tests, queue/shutdown tests,
+  and negative binding/privacy/package scans.
+- Residual limitation: loopback is not authentication; another local process
+  may reach the port, long native/model calls are not safely preemptible, and
+  repeated local calls can still consume resources.
+- M7 closure rule: re-audit the exact release commit and dependency advisories;
+  confirm intended release mode and claims. Any public/non-loopback deployment
+  requires a new security design and is not approved by M5.
 
 ### REL-COMPAT-001 — legacy artifact-root variable
 

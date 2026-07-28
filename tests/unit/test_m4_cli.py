@@ -17,6 +17,7 @@ from tts_workbench.inference.mms_smoke import main as mms_smoke_main
 from tts_workbench.models.registry import main as models_main
 from tts_workbench.privacy.scan import main as privacy_main
 from tts_workbench.qc import cli as qc_cli
+from tts_workbench.service import cli as service_cli
 
 
 @pytest.mark.parametrize(
@@ -29,9 +30,10 @@ from tts_workbench.qc import cli as qc_cli
         models_main,
         privacy_main,
         qc_cli.main,
+        service_cli.main,
     ],
 )
-def test_all_seven_cli_help_paths_are_offline_and_do_not_import_optional_ml(
+def test_all_eight_cli_help_paths_are_offline_and_do_not_import_optional_ml(
     main: Callable[[list[str]], int],
 ) -> None:
     sys.modules.pop("torch", None)

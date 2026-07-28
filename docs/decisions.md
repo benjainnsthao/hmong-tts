@@ -263,3 +263,48 @@
 - Consequences: the project has a bounded final milestone that can produce
   `release`, `preview`, or `do_not_release`. A public release cannot silently
   inherit unresolved risks from M5/M6.
+
+## D-0012 — One-owner bounded localhost service
+
+- Date: 2026-07-28
+- Decision: project the M3 executor through a FastAPI application factory with
+  one lifespan-owned registry/adapter/executor/coordinator. Accept only literal
+  loopback binding, one Uvicorn worker, one model owner, one active inference
+  operation, and a finite FIFO pending queue.
+- External boundary: accept only model ID, bounded text, device, seed, and the
+  existing MMS/VITS generation settings. Derive prompt provenance from the
+  audited registry and generate artifact-root-relative UUID paths inside the
+  service. Do not expose path, repository, revision, provider, normalization,
+  identity, or public-deployment fields.
+- Configuration migration: advance `configs/inference/local.yaml` from schema
+  version 1 to 2. Remove the unused normalization token limit, replace
+  `gpu_queue_concurrency` with provider-neutral
+  `active_inference_operations: 1`, split queue/request deadlines, and add
+  explicit queue capacity, access-log control, and service-owned artifact
+  prefix.
+- Deadline/shutdown rule: expire only queued work; do not invoke the adapter or
+  create artifacts for expired requests. Once synchronous backend execution
+  starts, do not claim safe cancellation. Shutdown closes admission, rejects
+  pending work, waits for the active call, then unloads the adapter.
+- Privacy rule: override framework validation details, use fixed sanitized
+  failures, disable Uvicorn access logging and request/client logging, and
+  exclude raw prompts, backend exceptions, absolute paths, headers, client
+  addresses, and machine identity from responses and manifests.
+- Dependency decision: pin FastAPI 0.136.3 (MIT), Starlette 1.0.0
+  (BSD-3-Clause), Uvicorn 0.46.0 (BSD-3-Clause), and test-only HTTPX 0.28.1
+  (BSD-3-Clause). Use no FastAPI standard/cloud extra and no Uvicorn standard
+  extra.
+- Alternatives: unbounded task creation; multiple Uvicorn workers; an
+  asyncio cancellation claim for synchronous model/GPU execution; caller-owned
+  output paths; module-level model initialization; a production fake mode; a
+  public bind/CORS/browser surface.
+- Evidence: deterministic fake-backed coordinator and lifecycle tests,
+  in-process ASGI integration, strict schema/OpenAPI tests, M3 atomic artifact
+  integration, lazy-import checks, package/privacy scans, focused branch
+  coverage, and `reports/validation/m5_service_validation.md`.
+- Security consequence: loopback is a development boundary, not
+  authentication. Public/non-loopback deployment requires a new design. M5
+  mitigates REL-SERVICE-001, subject to final M7 audit.
+- Native-validation status: **[NV]** unchanged. M5 adds no White Hmong prompt,
+  tag, rule, normalization, evaluation, or capability claim. HTTP success does
+  not establish linguistic quality; NV-001 through NV-008 remain deferred.

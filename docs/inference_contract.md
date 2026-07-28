@@ -1,9 +1,9 @@
 # Inference contract — schema version 1
 
-Milestone M3 defines the unchanged library-level, provider-neutral TTS
-execution contract. M4 consumes its adapter and waveform boundaries without
-changing request, result, manifest, registry, or lifecycle semantics. Neither
-milestone defines an HTTP API, background service, or language-quality
+Milestone M3 defines the library-level, provider-neutral TTS execution
+contract. M4 consumes its adapter and waveform boundaries. M5 projects the
+same executor through a bounded local API without exposing caller-controlled
+artifact or provider fields. None of these milestones is a language-quality
 evaluator.
 
 ## Request and result boundary
@@ -115,6 +115,7 @@ transaction. Existing destinations are rejected and not overwritten.
 - `model_load_failure`
 - `synthesis_failure`
 - `invalid_waveform`
+- `artifact_collision`
 - `artifact_write_failure`
 
 Failures do not produce success manifests or partial WAVs. Returned messages
@@ -142,6 +143,28 @@ model.
 Seed, device, dtype, generation settings, and runtime versions are recorded to
 support same-environment reproduction. M3 does not promise byte-identical
 waveforms across different devices or runtime versions.
+
+## M5 service projection
+
+The external `SynthesisRequest` is narrower than `InferenceRequest`. It accepts
+only registered model ID, non-empty bounded text, requested device, seed, and
+existing `GenerationSettings`. The service derives the prompt-set reference
+from the registry and creates a UUID-based path below its configured
+artifact-root-relative prefix. Callers cannot submit an output path,
+repository, revision, prompt reference, provider configuration, identity
+metadata, or normalization option.
+
+One bounded FIFO coordinator serializes accepted requests through one
+`InferenceExecutor`. Full, closed, invalid, unknown-model, and expired queued
+requests do not invoke the executor. Once execution begins, a synchronous
+backend call is non-preemptive: request or shutdown logic does not claim that
+an in-flight model/GPU call was cancelled.
+
+Service responses expose only a run ID and root-relative WAV/manifest
+references on success, or a stable sanitized category/message on failure.
+Framework validation details are overridden so malformed requests cannot echo
+the submitted text. HTTP status mappings and lifecycle details are defined in
+`docs/local_service.md`.
 
 The registered language tags are provider metadata. Runtime success, waveform
 structure, and a manifest do not establish pronunciation, naturalness,

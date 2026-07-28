@@ -38,6 +38,7 @@ class FailureCategory(StrEnum):
     MODEL_LOAD_FAILURE = "model_load_failure"
     SYNTHESIS_FAILURE = "synthesis_failure"
     INVALID_WAVEFORM = "invalid_waveform"
+    ARTIFACT_COLLISION = "artifact_collision"
     ARTIFACT_WRITE_FAILURE = "artifact_write_failure"
 
 
