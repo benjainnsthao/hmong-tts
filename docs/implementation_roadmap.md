@@ -1,6 +1,6 @@
 # Audited TTS workbench implementation roadmap
 
-Status: approved direction; milestone M2 complete
+Status: approved direction; milestone M3 complete
 
 ## Purpose
 
@@ -119,19 +119,30 @@ inference engine.
 
 Estimated effort: 10–16 focused hours.
 
-### Work
+Status: **complete**
 
-- Define a typed `TTSAdapter` protocol.
-- Implement `MmsVitsAdapter` as the first adapter.
-- Define typed `InferenceRequest` and `InferenceResult` models.
-- Select models only through the audited registry.
-- Add lazy load, explicit unload, and predictable model-instance ownership.
-- Support explicit `cpu`, `cuda`, and `auto` device selection.
-- Record seed, dtype, and generation settings.
-- Enforce input-length and output-path limits.
-- Write WAV and manifest artifacts atomically.
-- Avoid logging raw prompt text, client addresses, or external absolute paths.
-- Use fake tokenizer/model implementations for ordinary tests.
+### Delivered
+
+- Typed, frozen, extra-forbid request, result, adapter identity/state, waveform,
+  and success-manifest contracts use schema version 1.
+- The provider-neutral `TTSAdapter` protocol exposes only identity, lifecycle,
+  load, synthesize, and unload.
+- `MmsVitsAdapter` selects repository/revision only through the schema-version-1
+  audited registry and owns at most one loaded model/backend.
+- PyTorch and Transformers imports occur only inside the optional real backend's
+  explicit load method.
+- Explicit `cpu`, `cuda`, and `auto` requests, seed, dtype, MMS/VITS generation
+  settings, and optional backend versions are preserved.
+- Registry lookup, prompt-provenance matching, and artifact validation happen
+  before backend loading.
+- The existing MMS smoke command now consumes the adapter and execution
+  contracts and writes a WAV plus manifest.
+- WAV and manifest publication is atomic, collision-rejecting, and
+  rollback-tested; the manifest is published last as the commit marker.
+- Raw prompt text, client/machine identity, and absolute paths are excluded from
+  returned results, logs, and manifests.
+- Ordinary tests use test-only fake adapters/backends and temporary synthetic
+  WAVs.
 
 ### Run-manifest contract
 
@@ -149,7 +160,7 @@ Every successful synthesis should record:
 - WAV checksum and artifact-root-relative path; and
 - pass/fail status plus a structured failure category.
 
-The manifest should not copy prompt content by default.
+The manifest does not copy prompt content.
 
 ### Acceptance criteria
 
@@ -162,6 +173,13 @@ The manifest should not copy prompt content by default.
 - Unit tests require no network, GPU, PyTorch, Transformers, or weights.
 - Optional real-checkpoint tests remain explicitly marked and disabled by
   default.
+
+Validation passed with a frozen lock, offline frozen core sync, formatting,
+Ruff, strict MyPy, active configuration and registry commands, privacy scanning,
+123 synthetic tests, 74% branch-aware aggregate coverage, full pre-commit,
+package/lazy-import checks, five CLI help checks, and old-identity/preservation
+audits. No real-checkpoint automated test exists; the optional smoke command
+still requires separately authorized dependencies, weights, and execution.
 
 ## Milestone M4 — waveform QC, benchmarking, and environment capabilities
 
@@ -343,7 +361,8 @@ models and present the output as a prototype Hmong voice.
 
 ## Next executable task
 
-After M2 review and separate authorization, begin M3 with the smallest
-fake-backed provider-neutral inference-adapter contract and an atomic
-run-manifest writer. Do not download or execute weights, add waveform QC or
-benchmarking, or begin FastAPI in the synthetic M3 entry slice.
+Begin M4 with M3's committed `RunManifest` and `WaveformResult` boundaries:
+define non-linguistic waveform QC report schemas and synthetic defect fixtures,
+then add benchmark/environment capability contracts. Do not download or execute
+weights without separate authorization, and do not begin FastAPI or application
+work during M4.

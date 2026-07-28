@@ -17,10 +17,15 @@ indexed in
 
 ## Current milestone
 
-Milestone M2 establishes the neutral `tts_workbench` Python package, the
-`audited-tts-workbench` 0.2.0 distribution, the `tts-workbench-*` CLI namespace,
-and a canonical external artifact boundary. The completed model registry remains
-metadata-only and never downloads model weights.
+Milestone M3 establishes a provider-neutral, fake-testable inference engine.
+It includes strict schema-versioned request/result contracts, an explicitly
+loaded one-model-at-a-time adapter lifecycle, the first MMS/VITS adapter, and an
+atomic WAV plus run-manifest transaction. The distribution remains
+`audited-tts-workbench` 0.2.0 with the five `tts-workbench-*` commands.
+
+Ordinary imports and CI do not import PyTorch or Transformers. The optional real
+MMS backend imports them only when explicitly loaded; synthetic tests use
+dependency-injected fakes and do not access weights or a network.
 
 ```powershell
 python -m uv run tts-workbench-models validate
@@ -30,6 +35,10 @@ python -m uv run tts-workbench-models list
 The registry accepts only immutable 40-character revisions, audited license
 metadata, approved local non-commercial inference, no project redistribution
 of weights, and `language_quality_status: not_evaluated`.
+
+Both registry lookup and prompt-provenance matching occur before backend load.
+Unknown models, path escapes, and prompt-reference mismatches therefore fail
+without invoking an ML runtime.
 
 ## Reproducible core
 
@@ -52,6 +61,12 @@ outside Git. `TTS_WORKBENCH_ARTIFACT_ROOT` is canonical. A legacy variable is
 accepted with a visible deprecation warning for the 0.2 migration window only;
 conflicting values fail closed. See
 [`artifacts/README.md`](artifacts/README.md).
+
+Each successful M3 inference transaction writes a mono PCM WAV and publishes
+its `.manifest.json` last as the commit marker. Manifests contain a SHA-256
+prompt hash, audited model/runtime metadata, structural audio facts, and only
+artifact-root-relative paths. They exclude raw prompts and machine identity.
+See [`docs/inference_contract.md`](docs/inference_contract.md).
 
 ## Licensing
 

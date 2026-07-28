@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from tts_workbench.inference.mms_smoke import write_pcm16_wave
+from tts_workbench.artifacts.transaction import write_pcm16_wave
 
 
 def test_wav_writer_creates_valid_mono_pcm(tmp_path: Path) -> None:

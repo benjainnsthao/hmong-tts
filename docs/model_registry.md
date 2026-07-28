@@ -5,7 +5,7 @@ checkpoint identity and workbench-use policy. Registry commands validate
 metadata only; they do not contact a model host or download weights.
 
 The registry is loaded through `tts_workbench.models` and is unchanged by the
-0.2 namespace migration. Its schema version remains 1.
+0.2 namespace migration and M3 inference work. Its schema version remains 1.
 
 ## Required fields and policy
 
@@ -23,6 +23,24 @@ Every entry records:
 Unknown license placeholders, mutable revisions, duplicate model IDs, duplicate
 repository/revision pairs, unapproved uses, extra capability fields, and
 positive language-quality claims fail validation.
+
+## M3 inference boundary
+
+`InferenceExecutor` looks up a request's model ID in this registry before any
+adapter load. `MmsVitsAdapter` performs its own registry lookup and supplies
+only the registered repository and immutable revision to the optional backend.
+Repository aliases or caller-supplied revisions are not accepted.
+
+A request's `prompt_set_reference` must exactly match its registry entry.
+The built-in English reference identifies only the existing project-authored
+synthetic smoke fixture. The Vietnamese entry still requires an external,
+independently audited public prompt; M3 adds no Vietnamese prompt content.
+
+Successful run manifests copy the eligible entry's model ID, provider,
+repository, revision, architecture, documented language tag, license/use/
+redistribution fields, prompt reference, and
+`language_quality_status: not_evaluated`. This is provenance, not evidence of
+pronunciation or linguistic quality.
 
 ## Registered models
 

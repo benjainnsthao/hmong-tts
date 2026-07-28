@@ -148,3 +148,36 @@
 - Consequences: active users must import `tts_workbench` and use the new CLI
   names. The legacy artifact-root variable must be removed in a later breaking
   release after the warning window.
+
+## D-0009 — Provider-neutral inference and manifest commit marker
+
+- Date: 2026-07-28
+- Decision: define strict schema-version-1 inference contracts and a
+  provider-neutral `TTSAdapter` lifecycle. Implement MMS/VITS behind that
+  boundary, with PyTorch and Transformers imported only by the optional backend
+  during explicit load.
+- Ownership: one adapter instance owns at most one loaded backend/model.
+  Switching model or requested device unloads old state first. Repository and
+  immutable revision come only from the audited registry.
+- Artifact decision: publish the validated WAV first and its strict success
+  manifest last. The manifest is the commit marker; a failed validation,
+  serialization, or replacement removes temporary files and any WAV owned by
+  the failed transaction.
+- Privacy decision: manifests retain a SHA-256 prompt hash and
+  artifact-root-relative paths, but exclude raw prompts, absolute paths, machine
+  identity, addresses, credentials, and private identifiers. This supports
+  provenance without turning manifests or logs into content/location records.
+- Test strategy: ordinary tests use dependency-injected synthetic fake backends
+  and pytest temporary WAVs. This exercises registry routing, lifecycle,
+  failures, device/seed/settings forwarding, WAV structure, checksums, and
+  rollback without network, weights, PyTorch, Transformers, CUDA, real audio,
+  or native-language content.
+- Alternatives: retain a monolithic Transformers smoke function; expose
+  provider objects to callers; write the manifest before audio; store prompt
+  text and absolute paths for convenience; use a real checkpoint in CI.
+- Native-validation status: **[NV]** unchanged. Infrastructure execution and
+  structural WAV validity provide no White Hmong capability, pronunciation,
+  naturalness, linguistic-correctness, or learning-application evidence.
+- Consequences: M4 can add waveform QC and benchmarking against a stable
+  manifest boundary. M5 service work remains blocked until those library
+  contracts are reviewed.

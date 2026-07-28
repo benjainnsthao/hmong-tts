@@ -3,20 +3,20 @@
 from __future__ import annotations
 
 import argparse
-import math
 import platform
-import struct
 import sys
-import wave
-from collections.abc import Callable, Iterable, Sequence
+from collections.abc import Sequence
 from pathlib import Path
-from typing import cast
 
 from tts_workbench.artifacts.paths import (
     ArtifactBoundaryError,
     get_artifact_root,
     require_under_artifact_root,
 )
+from tts_workbench.artifacts.transaction import AtomicArtifactStore
+from tts_workbench.inference.contracts import InferenceRequest
+from tts_workbench.inference.execution import InferenceExecutor
+from tts_workbench.inference.mms_vits import MmsVitsAdapter
 from tts_workbench.models.registry import load_model_registry
 from tts_workbench.models.schema import ModelRegistry
 
@@ -37,19 +37,6 @@ def preflight_failures() -> list[str]:
     except (ImportError, OSError) as exc:
         failures.append(f"MMS dependencies are unavailable ({type(exc).__name__})")
     return failures
-
-
-def write_pcm16_wave(path: Path, samples: Iterable[float], sample_rate: int) -> None:
-    values = list(samples)
-    if not values or not all(math.isfinite(value) for value in values):
-        raise ValueError("waveform must contain finite samples")
-    pcm = b"".join(struct.pack("<h", round(max(-1.0, min(1.0, value)) * 32767)) for value in values)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with wave.open(str(path), "wb") as handle:
-        handle.setnchannels(1)
-        handle.setsampwidth(2)
-        handle.setframerate(sample_rate)
-        handle.writeframes(pcm)
 
 
 def build_parser(registry: ModelRegistry) -> argparse.ArgumentParser:
@@ -93,47 +80,55 @@ def main(argv: Sequence[str] | None = None) -> int:
             file=sys.stderr,
         )
         return 2
-    text = args.text_file.read_text(encoding="utf-8").strip() if args.text_file else builtin_text
-    if not text:
-        print("Smoke-test text is empty.", file=sys.stderr)
-        return 2
     try:
         artifact_root = get_artifact_root()
         output_path = require_under_artifact_root(args.output, artifact_root=artifact_root)
+        text_path = (
+            require_under_artifact_root(args.text_file, artifact_root=artifact_root)
+            if args.text_file
+            else None
+        )
     except ArtifactBoundaryError as exc:
         print(f"ARTIFACT BOUNDARY ERROR: {exc}", file=sys.stderr)
         return 2
-    output_display = output_path.relative_to(artifact_root).as_posix()
-
-    import torch
-    from transformers import VitsModel, VitsTokenizer, set_seed
-
-    repository = model_entry.repository
-    revision = model_entry.revision
-    tokenizer = VitsTokenizer.from_pretrained(repository, revision=revision)
-    model = VitsModel.from_pretrained(repository, revision=revision)
-    device: str = "cuda" if args.device == "auto" and torch.cuda.is_available() else args.device
-    if device == "auto":
-        device = "cpu"
-    if device == "cuda" and not torch.cuda.is_available():
-        print("CUDA was requested but PyTorch cannot access it.", file=sys.stderr)
+    try:
+        text = text_path.read_text(encoding="utf-8").strip() if text_path else builtin_text
+    except (OSError, UnicodeError):
+        print("Smoke-test prompt file could not be read as UTF-8.", file=sys.stderr)
         return 2
-    # Transformers decorates this override with Module.to's overloaded signature,
-    # which MyPy exposes as an unbound wrapper even though this is a bound method.
-    move_to_device = cast(Callable[[str], VitsModel], model.to)
-    model = move_to_device(device)
-    inputs = tokenizer(text=text, return_tensors="pt").to(device)
-    set_seed(args.seed)
-    with torch.no_grad():
-        waveform = model(**inputs).waveform[0].detach().float().cpu()
-    samples = waveform.tolist()
-    write_pcm16_wave(output_path, samples, model.config.sampling_rate)
-    with wave.open(str(output_path), "rb") as handle:
-        if handle.getnchannels() != 1 or handle.getnframes() <= 0:
-            raise RuntimeError("generated WAV failed structural validation")
+    if not text:
+        print("Smoke-test text is empty.", file=sys.stderr)
+        return 2
+    output_display = output_path.relative_to(artifact_root).as_posix()
+    request = InferenceRequest(
+        model_id=args.model,
+        text=text,
+        prompt_set_reference=model_entry.prompt_set_reference,
+        requested_device=args.device,
+        seed=args.seed,
+        output_wav_path=output_display,
+    )
+    adapter = MmsVitsAdapter(registry)
+    executor = InferenceExecutor(
+        registry=registry,
+        adapter=adapter,
+        artifact_store=AtomicArtifactStore(artifact_root),
+    )
+    try:
+        result = executor.execute(request)
+    finally:
+        adapter.unload()
+    if result.status == "failure":
+        assert result.failure is not None
+        print(
+            f"MMS smoke failed: category={result.failure.category.value}",
+            file=sys.stderr,
+        )
+        return 2
     print(
-        f"PASS model_id={args.model} repository={repository} revision={revision} "
-        f"rate={model.config.sampling_rate} samples={len(samples)} output={output_display}"
+        f"PASS model_id={args.model} repository={model_entry.repository} "
+        f"revision={model_entry.revision} output={result.wav_path} "
+        f"manifest={result.manifest_path}"
     )
     return 0
 

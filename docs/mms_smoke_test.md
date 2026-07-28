@@ -1,8 +1,10 @@
 # Registry-pinned MMS inference smoke test
 
-This retained path verifies optional dependency availability, audited registry
-lookup, tokenizer/model loading at an immutable revision, seeded inference,
-finite samples, and a valid mono WAV outside Git.
+This retained command now uses the M3 provider-neutral request, adapter,
+execution, structural waveform, and atomic artifact contracts. It verifies
+optional dependency availability, audited registry lookup, tokenizer/model
+loading at an immutable revision, seeded inference, and a valid mono WAV plus
+success manifest outside Git.
 
 It does not test pronunciation, naturalness, language correctness, or White
 Hmong support. It does not train or redistribute a model.
@@ -40,6 +42,17 @@ uv run tts-workbench-mms-smoke \
 The built-in English input is a project-authored synthetic runtime fixture. It
 is not a pronunciation or language-quality evaluation prompt.
 
+On success, the command creates:
+
+```text
+smoke/mms-eng.wav
+smoke/mms-eng.manifest.json
+```
+
+The manifest contains the prompt's SHA-256 hash, not the prompt text. It is
+published after the WAV and acts as the transaction commit marker. Reusing the
+same output path is rejected rather than overwritten.
+
 ## Vietnamese external-prompt policy
 
 The workbench contains no invented Vietnamese text. A future authorized run
@@ -53,8 +66,14 @@ uv run tts-workbench-mms-smoke \
   --output smoke/mms-vie.wav
 ```
 
-The current smoke CLI does not yet create a complete prompt/run manifest; that
-belongs to the reusable inference-adapter milestone.
+The text file remains external to the repository and its contents are not
+logged or copied into the manifest.
+
+## Ordinary synthetic validation
+
+Unit tests inject fake backends and generate WAVs only inside pytest temporary
+directories. They require no optional ML dependency, CUDA device, network,
+model weight, external prompt, native-language content, or real audio.
 
 ## Historical evidence
 

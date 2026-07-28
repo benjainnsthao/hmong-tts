@@ -11,8 +11,29 @@ $TTS_WORKBENCH_ARTIFACT_ROOT/
 ├── cache/models/
 ├── smoke/
 ├── runs/
+│   ├── <run>.wav
+│   └── <run>.manifest.json
 └── benchmarks/
 ```
+
+## M3 inference transaction
+
+Inference output paths are normalized artifact-root-relative POSIX paths and
+must end in `.wav`. The paired success manifest uses the same name with
+`.manifest.json`. Absolute paths, `..` escapes, repository-local roots,
+symlinked roots, and existing WAV/manifest destinations fail closed.
+
+The writer creates temporary files beside the final destinations and closes
+them before replacement for Windows compatibility. It structurally validates
+the WAV, computes its SHA-256 checksum, serializes the strict manifest, commits
+the WAV, and publishes the success manifest last. The manifest is therefore the
+transaction commit marker. If validation, serialization, or replacement fails,
+temporary files and any WAV committed by that failed transaction are removed.
+An existing successful run is never overwritten.
+
+Manifests expose only artifact-root-relative paths. They do not contain the
+absolute artifact root, raw prompt text, user or host identity, client
+addresses, credentials, or private identifiers.
 
 ## Temporary legacy-variable policy
 

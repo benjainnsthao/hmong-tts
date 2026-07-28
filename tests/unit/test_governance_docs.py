@@ -59,3 +59,12 @@ def test_white_hmong_native_decisions_remain_deferred(repository_root: Path) -> 
     for decision_number in range(1, 9):
         assert f"NV-{decision_number:03}" in text
     assert "No row is approved" in text
+
+
+def test_m3_contract_documentation_preserves_scope_boundary(repository_root: Path) -> None:
+    text = (repository_root / "docs/inference_contract.md").read_text(encoding="utf-8")
+
+    assert "manifest the commit marker" in text
+    assert "Raw prompt text" in text
+    assert "do not establish" in text
+    assert "NV-001 through NV-008 remain" in text

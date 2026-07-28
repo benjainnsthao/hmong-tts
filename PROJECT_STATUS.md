@@ -6,12 +6,10 @@ Last updated: 2026-07-28
 
 - Project: audited pretrained multi-language TTS inference, benchmarking, and
   local-deployment workbench.
-- Milestone: **M2 active identity and artifact namespace — complete**.
+- Milestone: **M3 reusable inference adapter and run manifest — complete**.
 - Active branch: `rescope/audited-tts-workbench`.
 - Preserved baseline: `archive/white-hmong-single-speaker-tts-v0.1` at
   `fd1756485b1e1b75fd1efee5e37519fa8e255415`.
-- M2 changes remain local; no M2 commit, branch update, merge, or tag has been
-  pushed.
 
 ## Approved scope
 
@@ -84,6 +82,48 @@ deferred **[NV]**.
 - No model weights, model cache, audio, network model access, M3 adapter,
   benchmark, service, or application code was used or added.
 
+## M3 deliverables
+
+- Frozen, extra-forbid schema-version-1 inference request, generation setting,
+  result, adapter identity/state, waveform, and success-manifest contracts.
+- Provider-neutral `TTSAdapter` lifecycle with explicit load, synthesize,
+  unload, observable state, and one owned model/backend per instance.
+- Registry-owned `MmsVitsAdapter` with lazy PyTorch/Transformers imports and an
+  injected fake-testable backend protocol.
+- Explicit `auto`, `cpu`, and `cuda` handling with stable dependency, device,
+  load, synthesis, waveform, boundary, and artifact failure categories.
+- Request validation, registry/prompt-provenance lookup, prompt SHA-256 hashing,
+  execution timing, structural validation, and result orchestration.
+- Atomic mono PCM WAV and schema-version-1 success-manifest transaction with
+  Windows-safe closed temporaries, manifest-last commit semantics, collision
+  rejection, and rollback after validation/serialization/replacement failures.
+- Root-relative manifest paths and no raw prompt, absolute root, client,
+  machine, credential, private-identifier, or linguistic-quality fields.
+- Existing `tts-workbench-mms-smoke` command refactored onto M3 contracts.
+- Test-only deterministic fake adapter/backends and pytest-temporary synthetic
+  WAVs; no production fake API.
+- Active contract, architecture, registry, environment, smoke, artifact, status,
+  roadmap, and decision documentation.
+
+## M3 validation
+
+- Frozen lock validation and offline frozen core synchronization: PASS.
+- Formatting and Ruff lint: PASS.
+- Strict source typing: PASS; 21 source files.
+- Active configuration validation: PASS.
+- Model-registry validation/listing: PASS; schema version 1, two unchanged
+  entries.
+- Privacy/artifact scan: PASS.
+- Complete synthetic suite: PASS; 123 tests, 74% branch-aware aggregate
+  coverage.
+- Full pre-commit suite: PASS.
+- Package and inference-contract imports: PASS without importing PyTorch or
+  Transformers.
+- CLI help: PASS for all five `tts-workbench-*` commands; no old package or CLI
+  entry point exists.
+- No weights, model cache, external audio, network model access, FastAPI,
+  service, M4 QC/benchmarking, or application code was used or added.
+
 ## Preserved historical work
 
 The completed White Hmong single-speaker Phase 0 validation remains unchanged
@@ -96,8 +136,8 @@ future-work evidence in `docs/deferred/white_hmong_native_validation.md`.
 
 ## Explicitly not started
 
-- Reusable inference-engine milestone.
-- Benchmark runner or metrics.
+- M4 waveform QC beyond structural commit validation.
+- Benchmark runner, benchmark metrics, or generalized inference readiness.
 - Local inference API or service.
 - New checkpoint or dependency downloads.
 - White Hmong text handling, prompts, normalization, adaptation, or evaluation.
@@ -115,10 +155,13 @@ future-work evidence in `docs/deferred/white_hmong_native_validation.md`.
 - Environment readiness remains training-oriented and RTX-4070-specific; a
   general CPU/GPU inference capability report is a later milestone.
 - No registered model has language quality evidence from this workbench.
+- The optional real MMS backend is contract-tested through fakes but has not
+  downloaded or executed either registered checkpoint during M3.
 
 ## Next executable task
 
-After M2 review and separate authorization, begin M3 by defining a fake-backed
-provider-neutral inference adapter and atomic run-manifest contract. Do not
-download or execute model weights, add waveform benchmarking, or begin a local
-service during the synthetic M3 entry slice.
+Begin M4 at the committed `WaveformResult` and `RunManifest` boundaries. Add
+non-linguistic waveform QC schemas and synthetic defect fixtures first, followed
+by benchmark and generalized environment-capability contracts. Do not download
+or execute model weights without separate authorization, and do not begin M5
+service or application work.
