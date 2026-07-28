@@ -13,7 +13,10 @@ $TTS_WORKBENCH_ARTIFACT_ROOT/
 ├── runs/
 │   ├── <run>.wav
 │   └── <run>.manifest.json
+├── qc/
+│   └── <report>.json
 └── benchmarks/
+    └── <report>.json
 ```
 
 ## M3 inference transaction
@@ -34,6 +37,25 @@ An existing successful run is never overwritten.
 Manifests expose only artifact-root-relative paths. They do not contain the
 absolute artifact root, raw prompt text, user or host identity, client
 addresses, credentials, or private identifiers.
+
+## M4 JSON report transactions
+
+QC input WAVs and QC/benchmark output reports use normalized
+artifact-root-relative paths only. Reports are serialized deterministically to
+a closed temporary file beside the destination, then published by atomic
+replacement. Existing destinations are rejected; there is no default
+overwrite. Serialization and replacement failures remove temporary and
+transaction-owned destination files, so callers never receive partial success.
+
+QC reports contain effective thresholds, measured waveform facts, stable rule
+results, and only the root-relative source WAV name. Benchmark reports contain
+the prompt SHA-256, immutable registry identity, adapter/runtime/settings,
+environment capabilities, timings, aggregates, and optional point-in-time
+memory. Neither report contains raw prompts, absolute paths, machine/client
+identity, credentials, environment values, private identifiers, cache paths,
+or linguistic-quality conclusions.
+
+Synthetic test WAVs and reports exist only under pytest temporary directories.
 
 ## Temporary legacy-variable policy
 

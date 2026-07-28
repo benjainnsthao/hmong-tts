@@ -17,11 +17,10 @@ indexed in
 
 ## Current milestone
 
-Milestone M3 establishes a provider-neutral, fake-testable inference engine.
-It includes strict schema-versioned request/result contracts, an explicitly
-loaded one-model-at-a-time adapter lifecycle, the first MMS/VITS adapter, and an
-atomic WAV plus run-manifest transaction. The distribution remains
-`audited-tts-workbench` 0.2.0 with the five `tts-workbench-*` commands.
+Milestone M4 adds non-linguistic waveform QC, deterministic fake-backed
+benchmarking, and generalized environment-capability reporting to the M3
+inference boundary. The distribution is `audited-tts-workbench` 0.3.0 with
+seven `tts-workbench-*` commands.
 
 Ordinary imports and CI do not import PyTorch or Transformers. The optional real
 MMS backend imports them only when explicitly loaded; synthetic tests use
@@ -30,6 +29,9 @@ dependency-injected fakes and do not access weights or a network.
 ```powershell
 python -m uv run tts-workbench-models validate
 python -m uv run tts-workbench-models list
+python -m uv run tts-workbench-qc schema
+python -m uv run tts-workbench-benchmark schema
+python -m uv run tts-workbench-env --json
 ```
 
 The registry accepts only immutable 40-character revisions, audited license
@@ -40,6 +42,13 @@ Both registry lookup and prompt-provenance matching occur before backend load.
 Unknown models, path escapes, and prompt-reference mismatches therefore fail
 without invoking an ML runtime.
 
+QC thresholds are conservative engineering sanity checks, not language-quality
+criteria. Benchmark reports separate cold model loading from warm synthesis,
+exclude configured warmups from aggregates, and use deterministic nearest-rank
+p95. No real checkpoint was executed to validate M4. See
+[`docs/waveform_qc.md`](docs/waveform_qc.md) and
+[`docs/benchmarking.md`](docs/benchmarking.md).
+
 ## Reproducible core
 
 ```powershell
@@ -47,7 +56,7 @@ python -m uv sync --frozen
 python -m uv run tts-workbench-config
 python -m uv run tts-workbench-models validate
 python -m uv run tts-workbench-privacy-scan
-python -m uv run pytest
+python -m uv run pytest --cov=tts_workbench --cov-branch
 ```
 
 The optional MMS stack is large and remains platform-gated. Registry validation
@@ -67,6 +76,10 @@ its `.manifest.json` last as the commit marker. Manifests contain a SHA-256
 prompt hash, audited model/runtime metadata, structural audio facts, and only
 artifact-root-relative paths. They exclude raw prompts and machine identity.
 See [`docs/inference_contract.md`](docs/inference_contract.md).
+
+M4 analyzes WAVs and writes QC or benchmark JSON only through separate
+artifact-root-relative, collision-rejecting atomic report transactions. QC
+never changes whether an M3 artifact is committed.
 
 ## Licensing
 

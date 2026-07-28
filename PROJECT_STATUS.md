@@ -6,7 +6,8 @@ Last updated: 2026-07-28
 
 - Project: audited pretrained multi-language TTS inference, benchmarking, and
   local-deployment workbench.
-- Milestone: **M3 reusable inference adapter and run manifest — complete**.
+- Milestone: **M4 waveform QC, benchmarking, and environment capabilities —
+  complete**.
 - Active branch: `rescope/audited-tts-workbench`.
 - Preserved baseline: `archive/white-hmong-single-speaker-tts-v0.1` at
   `fd1756485b1e1b75fd1efee5e37519fa8e255415`.
@@ -124,6 +125,57 @@ deferred **[NV]**.
 - No weights, model cache, external audio, network model access, FastAPI,
   service, M4 QC/benchmarking, or application code was used or added.
 
+## M4 deliverables
+
+- Frozen, extra-forbid, schema-version-1 QC threshold, rule, report, benchmark,
+  resource-observation, environment-capability, and M4 failure contracts.
+- Deterministic in-memory and artifact-WAV QC for readable mono PCM16 input,
+  structural facts, finite samples, peak/clipping, RMS, DC offset, and
+  leading/trailing/total near-silence.
+- Strict active `configs/qc/default.yaml` thresholds, included verbatim in
+  every QC report and labeled `engineering_sanity_check`.
+- Separate M3 commit safety and M4 QC: a committed WAV is never accepted or
+  rejected retroactively by QC.
+- Atomic artifact-root-relative JSON report storage with closed neighboring
+  temporary files, collision rejection, deterministic serialization, and
+  rollback after serialization or replacement failure.
+- Provider-neutral benchmark orchestration with injected clocks, adapters,
+  registry, environment collector, and resource observer.
+- Separate cold-load timing; excluded warmups; measured median, nearest-rank
+  p95, generated duration, real-time factor, and structured failure counts.
+- Strict small local `configs/benchmark/default.yaml`, prompt hashing, exact
+  immutable registry identity, runtime/device/settings metadata, and no raw
+  prompt.
+- Optional point-in-time CPU/CUDA memory observations; unavailable values are
+  `unavailable`, never zero, and no telemetry is collected.
+- Generalized `core_ready`, `cpu_inference_ready`, and
+  `cuda_inference_ready` environment report with no RTX-model requirement.
+  The old `--require-training` behavior is an explicit deprecated alias for
+  CUDA-inference readiness.
+- `tts-workbench-qc` and `tts-workbench-benchmark`, bringing the active total
+  to seven offline-help-safe commands.
+- Synthetic M4 defect, timing, memory, readiness, privacy, CLI, schema, and
+  atomicity tests. Test fakes remain outside the production package.
+
+## M4 validation
+
+- Frozen lock validation and offline frozen core synchronization: PASS.
+- Formatting, Ruff, and strict source MyPy: PASS.
+- Active QC, benchmark, inference, and registry configuration/metadata
+  validation: PASS.
+- Privacy/artifact scan: PASS.
+- Complete synthetic suite: PASS; 180 tests and 78% aggregate branch-aware
+  coverage.
+- Focused new-core branch coverage: PASS; 44 tests and 96% branch-aware
+  coverage across QC calculation, benchmark orchestration, and environment
+  readiness calculation.
+- Full pre-commit, package import, lazy optional-import, seven-command help,
+  old-identity, tracked-audio/weight, historical-evidence, deferred-NV, and Git
+  whitespace checks: PASS.
+- No weights, model cache, network model access, optional ML runtime, real
+  audio, native-language content, FastAPI, HTTP, queue/concurrency, UI,
+  perceptual/linguistic scoring, or M5 code was used or added.
+
 ## Preserved historical work
 
 The completed White Hmong single-speaker Phase 0 validation remains unchanged
@@ -136,9 +188,7 @@ future-work evidence in `docs/deferred/white_hmong_native_validation.md`.
 
 ## Explicitly not started
 
-- M4 waveform QC beyond structural commit validation.
-- Benchmark runner, benchmark metrics, or generalized inference readiness.
-- Local inference API or service.
+- M5 local inference API or service.
 - New checkpoint or dependency downloads.
 - White Hmong text handling, prompts, normalization, adaptation, or evaluation.
 - Recording, private speaker data, consent execution, or training.
@@ -152,16 +202,20 @@ future-work evidence in `docs/deferred/white_hmong_native_validation.md`.
   the project invents none.
 - The legacy artifact-root variable remains accepted only for the documented
   0.2 migration window and must be removed in a later breaking release.
-- Environment readiness remains training-oriented and RTX-4070-specific; a
-  general CPU/GPU inference capability report is a later milestone.
+- CPU/CUDA inference readiness is capability evidence only; it does not prove a
+  model will fit or execute successfully for every prompt or runtime build.
+- QC defaults are conservative project sanity checks, not universal audio
+  quality thresholds.
+- Fake-backed benchmark tests validate orchestration and arithmetic, not
+  real-device performance.
 - No registered model has language quality evidence from this workbench.
 - The optional real MMS backend is contract-tested through fakes but has not
   downloaded or executed either registered checkpoint during M3.
 
 ## Next executable task
 
-Begin M4 at the committed `WaveformResult` and `RunManifest` boundaries. Add
-non-linguistic waveform QC schemas and synthetic defect fixtures first, followed
-by benchmark and generalized environment-capability contracts. Do not download
-or execute model weights without separate authorization, and do not begin M5
-service or application work.
+Begin M5 by defining a bounded, fake-adapter local service contract around the
+stable M3 inference and M4 capability/report boundaries. Start with strict
+request/result/error and readiness schemas before adding any HTTP framework.
+Do not download or execute model weights, bind publicly, or add application or
+White Hmong language behavior without separate authorization.

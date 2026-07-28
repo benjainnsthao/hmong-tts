@@ -1,0 +1,13 @@
+schema_version: 1
+warmup_iterations: 1
+measured_repetitions: 3
+maximum_repetitions: 10
+seed: 555
+generation_settings:
+  noise_scale: 0.667
+  noise_scale_duration: 0.8
+  speaking_rate: 1.0
+requested_device: auto
+observe_memory: true
+report_output_path: benchmarks/latest.json
+failure_handling: continue

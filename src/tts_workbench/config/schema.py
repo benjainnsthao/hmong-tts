@@ -6,6 +6,9 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from tts_workbench.benchmark.contracts import BenchmarkSettings
+from tts_workbench.qc.contracts import QcThresholds
+
 
 class StrictModel(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
@@ -28,6 +31,8 @@ class InferenceConfig(StrictModel):
     log_client_ip: Literal[False]
 
 
-CONFIG_MODELS: dict[str, type[StrictModel]] = {
+CONFIG_MODELS: dict[str, type[BaseModel]] = {
+    "benchmark": BenchmarkSettings,
     "inference": InferenceConfig,
+    "qc": QcThresholds,
 }

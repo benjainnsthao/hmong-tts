@@ -7,7 +7,7 @@ an engineering audit, not legal advice.
 
 | Artifact | Exact revision/version | Code license | Weight/model license | Known training-data lineage/restrictions | Output restrictions | Redistribution status | Use status |
 |---|---|---|---|---|---|---|---|
-| This repository | working tree, `audited-tts-workbench` v0.2.0 | No license granted; all rights reserved pending owner decision | n/a | Synthetic fixtures and public metadata only; no speaker data | n/a | Not permitted | Local development only |
+| This repository | working tree, `audited-tts-workbench` v0.3.0 | No license granted; all rights reserved pending owner decision | n/a | Synthetic fixtures and public metadata only; no speaker data | n/a | Not permitted | Local development only |
 | Workbench model registry | schema v1, `configs/models/registry.yaml` | Project code-license status above | n/a | Metadata transcribed from the audited primary sources below; contains no weights | No language-quality claim; every active entry is `not_evaluated` | Metadata only; third-party weights are not bundled | Approved active control |
 | Transformers MMS/VITS runtime | `transformers==5.13.1` | Apache-2.0 | Does not change checkpoint license | Runtime library; no training data | Determined by checkpoint/consent, not library alone | Code per Apache-2.0 | Approved for pinned smoke path |
 | PyTorch runtime | `torch==2.12.0` | BSD-style | Does not change checkpoint license | Runtime library; no training data | Determined by checkpoint/consent | Code per upstream license | Approved for x86-64 Linux smoke path |

@@ -181,3 +181,54 @@
 - Consequences: M4 can add waveform QC and benchmarking against a stable
   manifest boundary. M5 service work remains blocked until those library
   contracts are reviewed.
+
+## D-0010 — M4 engineering evidence, deterministic benchmarks, and readiness
+
+- Date: 2026-07-28
+- Evidence scope: every QC rule and QC/benchmark report is explicitly
+  `engineering_sanity_check`. Structural validity and configured QC pass/fail
+  are not linguistic, pronunciation, intelligibility, naturalness, perceptual,
+  or learning-application evidence.
+- Threshold decision: use strict schema-version-1 configuration and embed the
+  complete effective thresholds in every report. PCM16 is normalized by signed
+  sample divided by 32768. Clipping and near-silence sample membership are
+  inclusive; configured maxima pass at `<=` and minima pass at `>=`.
+- Threshold alternatives: hardcode values, omit thresholds from results, or
+  describe defaults as universal TTS quality limits. These were rejected
+  because results must remain reproducible and the numeric defaults have no
+  universal linguistic or perceptual authority.
+- Timing decision: measure `adapter.load` alone as cold load and each
+  `adapter.synthesize` call alone as warm synthesis. Execute configured warmups
+  but exclude them from aggregates. Compute p95 by deterministic nearest rank,
+  `sorted[ceil(0.95*N)-1]`; use successful measured observations only.
+- Test strategy: injected clocks, adapters, waveforms, registry, environment
+  collectors, memory observations, and report failures validate benchmark/QC
+  behavior without sleeping, network access, weights, optional ML libraries,
+  real audio, or production fake modes.
+- Resource decision: collect point-in-time CPU peak resident memory through
+  standard-library facilities where available and CUDA allocation/reservation
+  only from an already-imported runtime. Report missing values as
+  `unavailable`, never zero; collect no continuous telemetry.
+- Readiness decision: replace active RTX/training-oriented readiness with
+  independent `core_ready`, `cpu_inference_ready`, and
+  `cuda_inference_ready`. CUDA and a particular GPU name are not core
+  requirements. Retain `--require-training` only as a warning-emitting
+  deprecated alias for CUDA-inference readiness; preserve historical hardware
+  reports unchanged.
+- Privacy decision: QC and benchmark reports use only artifact-root-relative
+  paths and SHA-256 prompt provenance. They exclude raw prompts, absolute
+  roots/cache paths, users, hosts, addresses, credentials, environment values,
+  private identifiers, and linguistic conclusions. JSON reports use
+  collision-rejecting atomic external-artifact transactions.
+- Alternatives: place QC in the M3 commit transaction, use a real checkpoint
+  for implementation tests, use interpolation-based percentiles, require GPU
+  telemetry, or preserve RTX 4070 as a universal gate. These were rejected to
+  preserve M3 compatibility, offline determinism, clear timing semantics,
+  optional dependencies, and generalized capability reporting.
+- Native-validation status: **[NV]** NV-001 through NV-008 remain deferred and
+  unchanged. M4 contains no White Hmong prompt, text rule, tag, normalization,
+  pronunciation rule, or capability finding.
+- Consequences: M4 provides reproducible systems-level contracts for a future
+  bounded local service. It establishes no Hmong capability and provides no
+  real-model performance result. M5 may begin at these stable interfaces but
+  must not treat QC or benchmark completion as language-quality evidence.

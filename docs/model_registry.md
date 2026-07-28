@@ -5,7 +5,7 @@ checkpoint identity and workbench-use policy. Registry commands validate
 metadata only; they do not contact a model host or download weights.
 
 The registry is loaded through `tts_workbench.models` and is unchanged by the
-0.2 namespace migration and M3 inference work. Its schema version remains 1.
+0.2 namespace migration and M3/M4 execution work. Its schema version remains 1.
 
 ## Required fields and policy
 
@@ -41,6 +41,19 @@ repository, revision, architecture, documented language tag, license/use/
 redistribution fields, prompt reference, and
 `language_quality_status: not_evaluated`. This is provenance, not evidence of
 pronunciation or linguistic quality.
+
+## M4 benchmark routing
+
+`BenchmarkRunner` accepts one explicit model ID and resolves it through the same
+registry before adapter loading. Prompt provenance must exactly match the
+entry. Benchmark reports copy the same immutable model/policy identity used by
+M3 manifests and retain only a SHA-256 prompt hash.
+
+`tts-workbench-benchmark run` fails closed without
+`--acknowledge-model-access`. The English entry may use its existing synthetic
+smoke prompt. The Vietnamese entry still requires an artifact-root-relative,
+independently audited public prompt file. M4 validation uses only the synthetic
+test registry and does not execute either real entry.
 
 ## Registered models
 

@@ -1,6 +1,6 @@
 # Audited TTS workbench implementation roadmap
 
-Status: approved direction; milestone M3 complete
+Status: approved direction; milestone M4 complete
 
 ## Purpose
 
@@ -252,6 +252,19 @@ The RTX 4070 result remains historical evidence, not a universal requirement.
 - Runtime and waveform results are labeled as non-linguistic evidence.
 - Metadata reports may enter Git; generated audio and weights may not.
 
+M4 completed these criteria with strict schema-versioned QC, benchmark,
+resource, failure, and capability contracts; deterministic in-memory/PCM16
+analysis; atomic external JSON reports; an injected provider-neutral benchmark
+runner; generalized readiness calculation; and seven offline-help-safe CLI
+entry points. Synthetic fixtures cover every required defect and timing path.
+No real checkpoint, optional ML runtime, network, external audio, or
+native-language content was used.
+
+The real-model execution gate remains closed. English execution still requires
+explicit model-access acknowledgement, and Vietnamese execution still requires
+an independently audited external public prompt. Those gates are runtime
+limitations, not incomplete M4 contract work.
+
 ## Milestone M5 — bounded local inference service
 
 Goal: expose the stable adapter through a local API suitable for a future
@@ -361,8 +374,8 @@ models and present the output as a prototype Hmong voice.
 
 ## Next executable task
 
-Begin M4 with M3's committed `RunManifest` and `WaveformResult` boundaries:
-define non-linguistic waveform QC report schemas and synthetic defect fixtures,
-then add benchmark/environment capability contracts. Do not download or execute
-weights without separate authorization, and do not begin FastAPI or application
-work during M4.
+Begin M5 at the stable M3 inference and M4 capability/report boundaries. Define
+strict bounded local-service request/result/error and readiness contracts before
+selecting an HTTP framework. Do not download or execute model weights, bind
+publicly, or add application or White Hmong language behavior without separate
+authorization.

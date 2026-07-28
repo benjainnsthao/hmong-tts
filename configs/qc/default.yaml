@@ -1,0 +1,15 @@
+schema_version: 1
+expected_channel_count: 1
+expected_sample_width_bytes: 2
+allowed_sample_rates_hz:
+  - 16000
+clipping_amplitude: 0.999
+maximum_clipping_ratio: 0.001
+minimum_rms_amplitude: 0.01
+maximum_absolute_dc_offset: 0.05
+near_silence_amplitude: 0.005
+maximum_leading_silence_ratio: 0.20
+maximum_trailing_silence_ratio: 0.20
+maximum_total_near_silence_ratio: 0.60
+minimum_frame_count: 160
+minimum_duration_seconds: 0.01

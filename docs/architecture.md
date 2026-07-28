@@ -1,8 +1,7 @@
-# Workbench architecture — milestone M3
+# Workbench architecture — milestone M4
 
-The repository now has a provider-neutral inference data plane alongside the
-M2 metadata control plane and external artifact boundary. It remains a
-library/CLI workbench, not an HTTP service.
+The repository has a provider-neutral inference data plane plus an M4
+evaluation plane. It remains a library/CLI workbench, not an HTTP service.
 
 ```text
 public repository
@@ -33,10 +32,23 @@ public repository
                               |
                               +--> WAV (published first)
                               +--> success manifest (commit marker, last)
+                              |
+                              +--> WaveformQcAnalyzer (separate read-only pass)
+                                      |
+                                      +--> AtomicJsonReportStore
+
+  ModelRegistry + TTSAdapter
+             |
+             +--> BenchmarkRunner
+                    injected clock / resource observer / environment collector
+                    |
+                    +--> cold load
+                    +--> excluded warmups
+                    +--> measured warm synthesis + aggregate JSON
 
 external artifact root
   TTS_WORKBENCH_ARTIFACT_ROOT
-  model cache / weights / generated WAV + manifest / future benchmarks
+  model cache / weights / generated WAV + manifests / QC + benchmarks
 ```
 
 The registry, license matrix, environment report, and artifact boundary remain
@@ -69,10 +81,32 @@ Repository-root detection requires the neutral committed markers
 `pyproject.toml` and `configs/models/registry.yaml`; it does not depend on the
 archived White Hmong project-plan pointer.
 
-M3 performs structural commit-safety validation only: finite non-empty samples,
-positive sample rate, mono 16-bit PCM, successful reopen, and matching positive
-frame metadata. Waveform QC, benchmarks, generalized environment readiness, and
-service/application layers remain future milestones.
+M3 still performs structural commit-safety validation only: finite non-empty
+samples, positive sample rate, mono 16-bit PCM, successful reopen, and matching
+positive frame metadata. M4 QC is a separate read-only analysis. It can label a
+structurally valid committed artifact `qc_failing`, but it does not alter the
+M3 transaction or success manifest.
+
+`WaveformQcAnalyzer` accepts an in-memory `WaveformResult` or reopens an
+artifact-root-relative WAV. The fixed rule order and configured thresholds
+produce engineering-sanity-check evidence only. The generic JSON report store
+serializes deterministically into a closed neighboring temporary file, rejects
+collisions, and atomically replaces the destination.
+
+`BenchmarkRunner` selects exactly one registry entry before adapter load.
+Clock, adapter, registry, environment collector, and point-in-time resource
+observer are injected. Cold load is timed separately; warmups execute but are
+excluded from measured median and nearest-rank p95. No production fake, thread,
+queue, process, HTTP lifecycle, or continuous telemetry exists.
+
+Environment collection now builds a strict sanitized report with independent
+core, CPU-inference, and CUDA-inference readiness. CUDA absence is not a core
+failure, and no GPU product name is required. PyTorch and Transformers remain
+lazy optional imports.
+
+M4 contracts and report stores expose no raw prompt, absolute artifact root,
+host/user/client identity, credential, private identifier, or model-cache path.
+The M5 service/application layer remains unimplemented.
 
 No runtime success or manifest field is linguistic-quality evidence. No
 application layer may embed White Hmong normalization or capability rules while

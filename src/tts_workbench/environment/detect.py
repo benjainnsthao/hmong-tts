@@ -1,37 +1,70 @@
-"""Detect whether a machine satisfies the Phase 0 and training prerequisites."""
+"""Collect sanitized core, CPU-inference, and CUDA-inference capabilities."""
 
 from __future__ import annotations
 
 import argparse
+import importlib
+import importlib.metadata
 import json
 import os
 import platform
 import shutil
 import subprocess
 import sys
-from collections.abc import Sequence
-from dataclasses import asdict, dataclass
+import warnings
+from collections.abc import Callable, Sequence
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from tts_workbench.artifacts.paths import (
     ARTIFACT_ROOT_ENV,
+    LEGACY_ARTIFACT_ROOT_ENV,
     ArtifactBoundaryError,
     find_repository_root,
     get_artifact_root,
 )
+from tts_workbench.environment.contracts import (
+    ArtifactRootCapability,
+    CommandCapability,
+    CudaCapability,
+    DeviceCapability,
+    DTypeName,
+    EnvironmentCapabilityReport,
+    OptionalPackageCapability,
+    OsCapability,
+    PythonCapability,
+)
+from tts_workbench.environment.readiness import build_environment_report
 
 
 @dataclass(frozen=True)
-class CommandState:
-    available: bool
-    version: str | None
+class RuntimeSnapshot:
+    """Sanitized optional-runtime facts returned by an injectable collector."""
+
+    pytorch: OptionalPackageCapability
+    transformers: OptionalPackageCapability
+    cuda: CudaCapability
 
 
-def _run_version(command: Sequence[str]) -> CommandState:
+CommandCollector = Callable[[Sequence[str]], CommandCapability]
+SystemCollector = Callable[[], tuple[PythonCapability, OsCapability]]
+ArtifactCollector = Callable[[Path], ArtifactRootCapability]
+RuntimeCollector = Callable[[], RuntimeSnapshot]
+
+
+def _safe_version_line(value: str, fallback: str = "unreadable") -> str:
+    line = value.strip().splitlines()[0].strip() if value.strip() else fallback
+    lowered = line.casefold()
+    if any(marker in lowered for marker in (":\\", "/home/", "\\users\\", "file://")):
+        return fallback
+    return line[:160] or fallback
+
+
+def _run_version(command: Sequence[str]) -> CommandCapability:
     executable = shutil.which(command[0])
     if executable is None:
-        return CommandState(False, None)
+        return CommandCapability(available=False)
     try:
         result = subprocess.run(
             [executable, *command[1:]],
@@ -41,152 +74,210 @@ def _run_version(command: Sequence[str]) -> CommandState:
             timeout=10,
         )
     except (OSError, subprocess.SubprocessError):
-        return CommandState(True, "unreadable")
-    output = (result.stdout or result.stderr).strip().splitlines()
-    return CommandState(True, output[0] if output else "unknown")
-
-
-def _gpu_state() -> dict[str, Any]:
-    executable = shutil.which("nvidia-smi")
-    if executable is None:
-        return {"nvidia_smi": False, "devices": [], "expected_rtx_4070_present": False}
-    result = subprocess.run(
-        [
-            executable,
-            "--query-gpu=name,memory.total,driver_version",
-            "--format=csv,noheader,nounits",
-        ],
-        check=False,
-        capture_output=True,
-        text=True,
-        timeout=10,
+        return CommandCapability(available=True, version="unreadable")
+    return CommandCapability(
+        available=True,
+        version=_safe_version_line(result.stdout or result.stderr),
     )
-    devices = []
-    for line in result.stdout.splitlines():
-        parts = [part.strip() for part in line.split(",")]
-        if len(parts) == 3:
-            devices.append({"name": parts[0], "memory_mib": parts[1], "driver": parts[2]})
-    return {
-        "nvidia_smi": result.returncode == 0,
-        "devices": devices,
-        "expected_rtx_4070_present": any("RTX 4070" in item["name"] for item in devices),
-    }
 
 
-def _torch_state() -> dict[str, Any]:
+def _system_state() -> tuple[PythonCapability, OsCapability]:
+    release = platform.release()[:120] or "unknown"
+    is_wsl = "microsoft" in release.casefold() or bool(os.environ.get("WSL_DISTRO_NAME"))
+    python = PythonCapability(
+        version=platform.python_version(),
+        implementation=platform.python_implementation(),
+        supported=sys.version_info[:2] == (3, 12),
+    )
+    operating_system = OsCapability(
+        system=platform.system()[:40] or "unknown",
+        release=release,
+        architecture=platform.machine().casefold()[:40] or "unknown",
+        is_wsl=is_wsl,
+    )
+    return python, operating_system
+
+
+def _artifact_state(repository_root: Path) -> ArtifactRootCapability:
     try:
-        import torch
-    except (ImportError, OSError) as exc:
-        return {"installed": False, "error": type(exc).__name__}
-    cuda_available = bool(torch.cuda.is_available())
-    devices = []
-    if cuda_available:
-        for index in range(torch.cuda.device_count()):
-            properties = torch.cuda.get_device_properties(index)
-            devices.append(
-                {
-                    "name": properties.name,
-                    "memory_mib": round(properties.total_memory / (1024**2)),
-                }
+        get_artifact_root(repository_root=repository_root)
+    except ArtifactBoundaryError:
+        configured = bool(
+            os.environ.get(ARTIFACT_ROOT_ENV, "").strip()
+            or os.environ.get(LEGACY_ARTIFACT_ROOT_ENV, "").strip()
+        )
+        return ArtifactRootCapability(
+            valid=False,
+            failure_reason="invalid" if configured else "not_configured",
+        )
+    return ArtifactRootCapability(valid=True)
+
+
+def _distribution_version(name: str) -> str | None:
+    try:
+        return importlib.metadata.version(name)[:80]
+    except (importlib.metadata.PackageNotFoundError, OSError, ValueError):
+        return None
+
+
+def _device_capabilities(torch: Any) -> tuple[DeviceCapability, ...]:
+    devices: list[DeviceCapability] = []
+    for index in range(int(torch.cuda.device_count())):
+        properties = torch.cuda.get_device_properties(index)
+        dtypes: list[DTypeName] = ["float32", "float16"]
+        if bool(torch.cuda.is_bf16_supported()):
+            dtypes.append("bfloat16")
+        devices.append(
+            DeviceCapability(
+                name=str(properties.name)[:120],
+                memory_mib=max(1, round(int(properties.total_memory) / (1024**2))),
+                supported_dtypes=tuple(dtypes),
             )
-    return {
-        "installed": True,
-        "version": torch.__version__,
-        "cuda_build": torch.version.cuda,
-        "cuda_available": cuda_available,
-        "devices": devices,
-    }
+        )
+    return tuple(devices)
 
 
-def collect_environment(*, repository_root: Path | None = None) -> dict[str, Any]:
-    root = repository_root or find_repository_root()
-    is_wsl = "microsoft" in platform.release().lower() or bool(os.environ.get("WSL_DISTRO_NAME"))
-    python_version = platform.python_version()
-    python_supported = sys.version_info[:2] == (3, 12)
-    machine = platform.machine().lower()
-    system = platform.system()
-    artifact_root: dict[str, Any]
+def _optional_runtime_state() -> RuntimeSnapshot:
+    torch_version = _distribution_version("torch")
+    transformers_version = _distribution_version("transformers")
+    transformers_available = False
+    if transformers_version is not None:
+        try:
+            importlib.import_module("transformers")
+        except (ImportError, OSError, RuntimeError):
+            pass
+        else:
+            transformers_available = True
+    if torch_version is None:
+        return RuntimeSnapshot(
+            pytorch=OptionalPackageCapability(available=False),
+            transformers=OptionalPackageCapability(
+                available=transformers_available,
+                version=transformers_version if transformers_available else None,
+            ),
+            cuda=CudaCapability(available=False),
+        )
     try:
-        get_artifact_root(repository_root=root)
-    except ArtifactBoundaryError as exc:
-        artifact_root = {"valid": False, "reason": str(exc)}
-    else:
-        artifact_root = {"valid": True, "reason": None}
+        torch = importlib.import_module("torch")
+    except (ImportError, OSError, RuntimeError):
+        return RuntimeSnapshot(
+            pytorch=OptionalPackageCapability(available=False),
+            transformers=OptionalPackageCapability(
+                available=transformers_available,
+                version=transformers_version if transformers_available else None,
+            ),
+            cuda=CudaCapability(available=False),
+        )
 
-    uv_command = os.environ.get("UV", "uv")
-    uv_state = _run_version((uv_command, "--version"))
-    return {
-        "os": {
-            "system": system,
-            "release": platform.release(),
-            "machine": machine,
-            "wsl": is_wsl,
-        },
-        "python": {
-            "version": python_version,
-            "supported": python_supported,
-            "implementation": platform.python_implementation(),
-        },
-        "uv": asdict(uv_state),
-        "git": asdict(_run_version(("git", "--version"))),
-        "ffmpeg": asdict(_run_version(("ffmpeg", "-version"))),
-        "cuda_toolkit": asdict(_run_version(("nvcc", "--version"))),
-        "gpu": _gpu_state(),
-        "pytorch": _torch_state(),
-        "artifact_root": artifact_root,
-    }
+    try:
+        cuda_available = bool(torch.cuda.is_available())
+    except (AttributeError, RuntimeError, TypeError, ValueError):
+        cuda_available = False
+    cuda_build = getattr(getattr(torch, "version", None), "cuda", None)
+    cuda = CudaCapability(
+        available=False,
+        build_version=str(cuda_build)[:40] if cuda_build else None,
+    )
+    if cuda_available:
+        try:
+            devices = _device_capabilities(torch)
+        except (AttributeError, RuntimeError, TypeError, ValueError):
+            devices = ()
+        if devices:
+            cuda = CudaCapability(
+                available=True,
+                build_version=str(cuda_build or "unknown")[:40],
+                devices=devices,
+            )
+    return RuntimeSnapshot(
+        pytorch=OptionalPackageCapability(available=True, version=torch_version),
+        transformers=OptionalPackageCapability(
+            available=transformers_available,
+            version=transformers_version if transformers_available else None,
+        ),
+        cuda=cuda,
+    )
 
 
-def training_failures(report: dict[str, Any]) -> list[str]:
-    failures = []
-    if report["os"]["system"] != "Linux":
-        failures.append("training target requires Linux/WSL2")
-    if report["os"]["machine"] not in {"x86_64", "amd64"}:
-        failures.append("prebuilt CUDA training stack requires x86-64")
-    if not report["os"]["wsl"] and report["os"]["system"] == "Linux":
-        # Native Linux is supported even though WSL2 is the documented default.
-        pass
-    if not report["python"]["supported"]:
-        failures.append("Python 3.12 is required")
-    if not report["git"]["available"]:
-        failures.append("Git is unavailable")
-    if not report["ffmpeg"]["available"]:
-        failures.append("FFmpeg is unavailable")
-    if not report["gpu"]["expected_rtx_4070_present"]:
-        failures.append("RTX 4070 is not visible to nvidia-smi")
-    torch_state = report["pytorch"]
-    if not torch_state.get("installed"):
-        failures.append("PyTorch is not installed")
-    elif not torch_state.get("cuda_available"):
-        failures.append("PyTorch cannot access CUDA")
-    if not report["artifact_root"]["valid"]:
-        failures.append(f"{ARTIFACT_ROOT_ENV} is not a valid external directory")
-    return failures
+def collect_environment(
+    *,
+    repository_root: Path | None = None,
+    command_collector: CommandCollector = _run_version,
+    system_collector: SystemCollector = _system_state,
+    artifact_collector: ArtifactCollector = _artifact_state,
+    runtime_collector: RuntimeCollector = _optional_runtime_state,
+) -> EnvironmentCapabilityReport:
+    """Collect an injectable report without hostnames, usernames, or absolute paths."""
+
+    root = repository_root or find_repository_root()
+    python, operating_system = system_collector()
+    git = command_collector(("git", "--version"))
+    ffmpeg = command_collector(("ffmpeg", "-version"))
+    artifact_root = artifact_collector(root)
+    runtime = runtime_collector()
+    return build_environment_report(
+        python=python,
+        operating_system=operating_system,
+        git=git,
+        ffmpeg=ffmpeg,
+        artifact_root=artifact_root,
+        pytorch=runtime.pytorch,
+        transformers=runtime.transformers,
+        cuda=runtime.cuda,
+    )
+
+
+def training_failures(report: EnvironmentCapabilityReport) -> list[str]:
+    """Deprecated compatibility view of CUDA-inference readiness."""
+
+    warnings.warn(
+        "training readiness was replaced by generalized CUDA-inference readiness",
+        FutureWarning,
+        stacklevel=2,
+    )
+    return list(report.cuda_inference.failure_reasons)
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--json", action="store_true", help="emit JSON only")
-    parser.add_argument("--output", type=Path, help="write the JSON report to this path")
+    parser.add_argument("--json", action="store_true", help="emit the capability report as JSON")
+    parser.add_argument("--output", type=Path, help="write the sanitized JSON report")
     parser.add_argument("--require-artifact-root", action="store_true")
-    parser.add_argument("--require-training", action="store_true")
+    parser.add_argument("--require-core", action="store_true")
+    parser.add_argument("--require-cpu-inference", action="store_true")
+    parser.add_argument("--require-cuda-inference", action="store_true")
+    parser.add_argument(
+        "--require-training",
+        action="store_true",
+        help="deprecated alias for --require-cuda-inference",
+    )
     return parser
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     report = collect_environment()
-    failures = training_failures(report)
-    payload = {**report, "training_ready": not failures, "training_failures": failures}
-    rendered = json.dumps(payload, indent=2, sort_keys=True)
+    rendered = json.dumps(report.model_dump(mode="json"), indent=2, sort_keys=True)
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(rendered + "\n", encoding="utf-8")
     print(rendered)
-    if args.require_artifact_root and not report["artifact_root"]["valid"]:
+    if args.require_artifact_root and not report.artifact_root.valid:
         return 2
-    if args.require_training and failures:
+    if args.require_core and not report.core_ready:
         return 2
+    if args.require_cpu_inference and not report.cpu_inference_ready:
+        return 2
+    if args.require_cuda_inference and not report.cuda_inference_ready:
+        return 2
+    if args.require_training:
+        warnings.warn(
+            "--require-training is deprecated; use --require-cuda-inference",
+            FutureWarning,
+            stacklevel=1,
+        )
+        if not report.cuda_inference_ready:
+            return 2
     return 0
 
 

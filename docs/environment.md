@@ -1,32 +1,54 @@
-# Workbench environment
+# Workbench environment capabilities
 
-Registry validation, configuration checks, privacy/artifact scanning, linting,
-typing, and synthetic tests require only the locked Python 3.12 core
-environment. They do not require PyTorch, Transformers, CUDA, network access,
-or model downloads.
+Registry validation, configuration checks, privacy scanning, QC, benchmark
+contract tests, linting, typing, and the synthetic suite require only the
+locked Python 3.12 core environment. They do not require PyTorch, Transformers,
+CUDA, network access, model downloads, or real audio.
 
-The optional MMS dependency group remains restricted to Linux x86-64. Historical
-RTX 4070 validation evidence is retained in `reports/validation/` and the
-original handoff is archived in
-`docs/history/white_hmong_single_speaker/gpu_machine_handoff_phase0.md`.
+The optional MMS dependency group remains restricted to Linux x86-64.
+Historical RTX 4070 reports remain unchanged under `reports/validation/`; they
+are evidence about one machine, not an active readiness requirement.
 
-M3 inference contracts, orchestration, structural WAV handling, registry
-selection, and synthetic fake tests use only the core environment. Importing
-`tts_workbench`, `tts_workbench.inference.contracts`, or the MMS/VITS adapter
-module does not import PyTorch or Transformers. The optional real backend loads
-those packages lazily only after an explicit approved-model request.
+## Readiness levels
 
-The adapter preserves `auto`, `cpu`, and `cuda` requests. `auto` resolves to
-CUDA only when the optional runtime reports it available and otherwise resolves
-to CPU. An explicit unavailable CUDA request fails with a stable
-`device_unavailable` category. This minimal runtime decision is not the
-generalized environment-readiness work deferred to M4.
+`tts-workbench-env` emits strict sanitized schema version 1:
 
-The current `tts-workbench-env --require-training` report is a retained Phase 0
-diagnostic. General `core_ready`, `cpu_inference_ready`, and
-`cuda_inference_ready` capability reporting is deferred to a later workbench
-milestone.
+- `core_ready` requires supported Python 3.12 and Git;
+- `cpu_inference_ready` additionally requires a valid external artifact root
+  and importable optional PyTorch and Transformers runtimes; and
+- `cuda_inference_ready` additionally requires an observable CUDA runtime and
+  at least one device.
 
-Use `--require-artifact-root` when the canonical external artifact boundary is
-required. Reports include only artifact-root validity and an identifier-only
-failure reason; they never include the resolved absolute root.
+FFmpeg status is reported but is not a core or MMS inference prerequisite.
+CUDA absence does not fail core or CPU readiness. No RTX 4070 or other device
+model name is required.
+
+The report includes Python implementation/version/support, OS/release/
+architecture and WSL state, Git and FFmpeg availability/version, artifact-root
+validity, optional package versions, CUDA build/device/memory facts where
+observable, and supported dtype labels. It excludes artifact paths, usernames,
+hostnames, addresses, process arguments, environment values, credentials, and
+model-cache paths.
+
+Collectors are injected in tests. Production optional imports are lazy and run
+only when environment capability collection is explicitly invoked. Ordinary
+contract imports and every CLI `--help` path leave PyTorch and Transformers
+unimported.
+
+## Commands and exit gates
+
+```text
+tts-workbench-env --json
+tts-workbench-env --require-artifact-root
+tts-workbench-env --require-core
+tts-workbench-env --require-cpu-inference
+tts-workbench-env --require-cuda-inference
+```
+
+The retained `--require-training` option is a deprecated, warning-emitting alias
+for `--require-cuda-inference`. Training readiness is no longer the primary
+active contract.
+
+Readiness means the reported prerequisites were observable at collection time.
+It does not prove model fit, execution success, timing, waveform quality,
+pronunciation, or linguistic correctness.

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "audited-tts-workbench"
-version = "0.2.0"
+version = "0.3.0"
 description = "Audited public-checkpoint TTS inference and benchmarking workbench"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
@@ -38,6 +38,8 @@ tts-workbench-env = "tts_workbench.environment.detect:main"
 tts-workbench-mms-smoke = "tts_workbench.inference.mms_smoke:main"
 tts-workbench-privacy-scan = "tts_workbench.privacy.scan:main"
 tts-workbench-models = "tts_workbench.models.registry:main"
+tts-workbench-qc = "tts_workbench.qc.cli:main"
+tts-workbench-benchmark = "tts_workbench.benchmark.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/tts_workbench"]

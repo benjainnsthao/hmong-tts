@@ -1,8 +1,10 @@
 # Inference contract — schema version 1
 
-Milestone M3 defines a library-level, provider-neutral TTS execution contract.
-It is not an HTTP API, background service, benchmark runner, or language
-quality evaluator.
+Milestone M3 defines the unchanged library-level, provider-neutral TTS
+execution contract. M4 consumes its adapter and waveform boundaries without
+changing request, result, manifest, registry, or lifecycle semantics. Neither
+milestone defines an HTTP API, background service, or language-quality
+evaluator.
 
 ## Request and result boundary
 
@@ -119,16 +121,23 @@ Failures do not produce success manifests or partial WAVs. Returned messages
 are generic and do not include prompt text, backend exception content, or
 absolute paths.
 
-## Deliberate limitations
+## M4 consumers and deliberate limitations
 
 M3 checks only the structure needed to commit a WAV safely: non-empty finite
 samples, positive sample rate, mono PCM output, successful reopen, positive
 frames, and expected rate/channel metadata.
 
-It does not calculate clipping, RMS, silence, loudness, DC offset, SNR,
-perceptual, ASR, latency, throughput, memory, or real-time-factor metrics. Those
-belong to M4. It does not download or execute a model during ordinary
-development or CI.
+M4 separately calculates configured peak/clipping, RMS, DC offset, and
+near-silence engineering checks through `WaveformQcAnalyzer`; those results do
+not participate in artifact commitment. M4 also reuses `TTSAdapter` for an
+explicitly invoked one-model benchmark. It reports cold load, excluded warmups,
+warm synthesis latency, generated duration, real-time factor, measured median,
+nearest-rank p95, failure counts, and optional point-in-time memory.
+
+Neither layer calculates loudness, LUFS, SNR, PESQ, STOI, MOS, ASR,
+pronunciation, intelligibility, naturalness, linguistic correctness, or
+perceptual scores. Ordinary development and CI do not download or execute a
+model.
 
 Seed, device, dtype, generation settings, and runtime versions are recorded to
 support same-environment reproduction. M3 does not promise byte-identical
