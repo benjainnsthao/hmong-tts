@@ -11,7 +11,12 @@ from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
-from hmong_tts.data.paths import DataBoundaryError, find_repository_root, get_data_root
+from tts_workbench.artifacts.paths import (
+    ARTIFACT_ROOT_ENV,
+    ArtifactBoundaryError,
+    find_repository_root,
+    get_artifact_root,
+)
 
 FORBIDDEN_EXTENSIONS = {
     ".aac",
@@ -115,19 +120,20 @@ def candidate_files(root: Path) -> list[Path]:
 
 
 def load_private_identifiers(root: Path) -> list[str]:
-    denylist_value = os.environ.get("HMONG_TTS_PII_DENYLIST", "").strip()
+    denylist_variable = "TTS_WORKBENCH_PII_DENYLIST"
+    denylist_value = os.environ.get(denylist_variable, "").strip()
     if not denylist_value:
         return []
     denylist_path = Path(denylist_value).expanduser()
     if not denylist_path.is_absolute():
-        raise DataBoundaryError("HMONG_TTS_PII_DENYLIST must be an absolute path")
+        raise ArtifactBoundaryError(f"{denylist_variable} must be an absolute path")
     resolved = denylist_path.resolve(strict=True)
     try:
         resolved.relative_to(root.resolve())
     except ValueError:
         pass
     else:
-        raise DataBoundaryError("HMONG_TTS_PII_DENYLIST must stay outside the repository")
+        raise ArtifactBoundaryError(f"{denylist_variable} must stay outside the repository")
     return [
         line.strip()
         for line in resolved.read_text(encoding="utf-8").splitlines()
@@ -194,9 +200,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("paths", nargs="*", type=Path, help="Specific files to scan")
     parser.add_argument("--repo", type=Path, help="Repository root (auto-detected by default)")
     parser.add_argument(
-        "--require-data-root",
+        "--require-artifact-root",
         action="store_true",
-        help="also fail unless HMONG_TTS_DATA_ROOT is a valid external directory",
+        help=f"also fail unless {ARTIFACT_ROOT_ENV} resolves to a valid external directory",
     )
     return parser
 
@@ -204,16 +210,16 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     root = (args.repo or find_repository_root()).resolve()
-    if args.require_data_root:
+    if args.require_artifact_root:
         try:
-            get_data_root(repository_root=root)
-        except DataBoundaryError as exc:
-            print(f"DATA BOUNDARY ERROR: {exc}", file=sys.stderr)
+            get_artifact_root(repository_root=root)
+        except ArtifactBoundaryError as exc:
+            print(f"ARTIFACT BOUNDARY ERROR: {exc}", file=sys.stderr)
             return 2
     paths = [path.resolve() for path in args.paths] if args.paths else candidate_files(root)
     try:
         findings = scan_paths(paths, root=root)
-    except (DataBoundaryError, OSError) as exc:
+    except (ArtifactBoundaryError, OSError) as exc:
         print(f"PRIVACY SCAN ERROR: {exc}", file=sys.stderr)
         return 2
     if findings:

@@ -7,8 +7,8 @@ unlicensed prompts, or unsupported language-capability claims.
 Local changes must pass:
 
 ```bash
-uv run hmong-tts-privacy-scan
-uv run hmong-tts-config-check
+uv run tts-workbench-privacy-scan
+uv run tts-workbench-config
 uv run tts-workbench-models validate
 uv run ruff check .
 uv run ruff format --check .

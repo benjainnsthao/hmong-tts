@@ -4,7 +4,7 @@ import pytest
 import yaml
 from pydantic import ValidationError
 
-from hmong_tts.config.loader import DEFAULT_CONFIG_FILES, load_all_configs, load_config
+from tts_workbench.config.loader import DEFAULT_CONFIG_FILES, load_all_configs, load_config
 
 
 def test_all_committed_configs_parse(repository_root: Path) -> None:

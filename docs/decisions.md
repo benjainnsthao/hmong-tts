@@ -114,3 +114,37 @@
   unknown license placeholders, and positive language-quality claims fail
   validation. New licenses and use categories require an explicit schema and
   audit decision.
+
+## D-0008 — Neutral active identity with a bounded artifact-root migration
+
+- Date: 2026-07-28
+- Decision: rename the active `hmong_tts` package to `tts_workbench`, the
+  distribution to `audited-tts-workbench` version 0.2.0, and every active CLI
+  to the `tts-workbench-*` namespace. Make
+  `TTS_WORKBENCH_ARTIFACT_ROOT` canonical and rename the active boundary API
+  from `data.paths`/`DataBoundaryError` to
+  `artifacts.paths`/`ArtifactBoundaryError`.
+- Compatibility: `HMONG_TTS_DATA_ROOT` is accepted for the 0.2 migration window
+  only. Legacy-only configuration warns; matching canonical/legacy values use
+  the canonical value and warn; conflicting resolved values fail closed. No
+  active Python import or CLI compatibility alias is provided.
+- Repository identity: active root detection requires both `pyproject.toml` and
+  `configs/models/registry.yaml`, not the archived White Hmong project-plan
+  pointer.
+- Alternatives: retain the misleading active namespace; provide permanent
+  import and CLI aliases; remove the artifact-root legacy variable without a
+  migration window; rewrite all historical examples.
+- Evidence: inference, benchmarking, and service surfaces will multiply active
+  names, so the breaking migration is least costly before M3. A short
+  environment-variable bridge protects existing external artifact locations
+  without preserving a misleading code API.
+- Historical policy: archived documents and validation reports retain their
+  original terminology so they remain accurate snapshots of the work that
+  produced them. They are not active instructions.
+- Native-validation status: **[NV]** unchanged. Neutral naming is an
+  infrastructure correction and does not establish White Hmong support,
+  pronunciation accuracy, linguistic correctness, or learning-application
+  readiness.
+- Consequences: active users must import `tts_workbench` and use the new CLI
+  names. The legacy artifact-root variable must be removed in a later breaking
+  release after the warning window.

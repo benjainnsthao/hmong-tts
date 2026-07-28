@@ -20,18 +20,18 @@ tts-workbench-models list
 
 - Linux x86-64;
 - the locked `mms` dependency group;
-- a valid external `HMONG_TTS_DATA_ROOT`;
+- a valid external `TTS_WORKBENCH_ARTIFACT_ROOT`;
 - acceptance of the registered checkpoint license and download size; and
 - explicit authorization for weight download and inference.
 
-The artifact-root variable retains its legacy name during the first rescope
-milestone. Model caches and generated audio must stay outside Git.
+The canonical artifact-root variable was introduced in milestone M2. Model
+caches and generated audio must stay outside Git.
 
 ## English synthetic smoke fixture
 
 ```bash
 uv sync --frozen --extra mms
-uv run hmong-tts-mms-smoke \
+uv run tts-workbench-mms-smoke \
   --model mms-eng \
   --device cuda \
   --output smoke/mms-eng.wav
@@ -46,9 +46,9 @@ The workbench contains no invented Vietnamese text. A future authorized run
 must provide a public prompt with independently reviewed license/provenance:
 
 ```bash
-uv run hmong-tts-mms-smoke \
+uv run tts-workbench-mms-smoke \
   --model mms-vie \
-  --text-file "$HMONG_TTS_DATA_ROOT/smoke/audited-vie-prompt.txt" \
+  --text-file "$TTS_WORKBENCH_ARTIFACT_ROOT/smoke/audited-vie-prompt.txt" \
   --device cuda \
   --output smoke/mms-vie.wav
 ```

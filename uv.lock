@@ -77,6 +77,56 @@ wheels = [
 ]
 
 [[package]]
+name = "audited-tts-workbench"
+version = "0.2.0"
+source = { editable = "." }
+dependencies = [
+    { name = "pydantic" },
+    { name = "pyyaml" },
+]
+
+[package.optional-dependencies]
+mms = [
+    { name = "accelerate", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
+    { name = "safetensors", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
+    { name = "scipy", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
+    { name = "torch", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
+    { name = "transformers", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "mypy" },
+    { name = "pre-commit" },
+    { name = "pytest" },
+    { name = "pytest-cov" },
+    { name = "ruff" },
+    { name = "types-pyyaml" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "accelerate", marker = "platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'mms'", specifier = "==1.14.0" },
+    { name = "pydantic", specifier = "==2.13.4" },
+    { name = "pyyaml", specifier = "==6.0.3" },
+    { name = "safetensors", marker = "platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'mms'", specifier = "==0.8.0" },
+    { name = "scipy", marker = "platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'mms'", specifier = "==1.18.0" },
+    { name = "torch", marker = "platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'mms'", specifier = "==2.12.0" },
+    { name = "transformers", marker = "platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'mms'", specifier = "==5.13.1" },
+]
+provides-extras = ["mms"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "mypy", specifier = "==2.3.0" },
+    { name = "pre-commit", specifier = "==4.6.0" },
+    { name = "pytest", specifier = "==9.1.1" },
+    { name = "pytest-cov", specifier = "==7.1.0" },
+    { name = "ruff", specifier = "==0.15.21" },
+    { name = "types-pyyaml", specifier = "==6.0.12.20260518" },
+]
+
+[[package]]
 name = "certifi"
 version = "2026.6.17"
 source = { registry = "https://pypi.org/simple" }
@@ -242,56 +292,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/4b/2d/57fd21d84d93efb4b
 wheels = [
     { url = "https://files.pythonhosted.org/packages/de/cc/f99f4bc7295023d7bd9ebbfd51f75cc530ca262c1227666268b8208f4b77/hf_xet-1.5.1-cp37-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:892e3a3a3aecc12aded8b93cf4f9cd059282c7de0732f7d55026f3abdf474350", size = 4514864, upload-time = "2026-06-08T23:02:44.497Z" },
     { url = "https://files.pythonhosted.org/packages/fb/d1/90a498d05447980b977b1669246eeeeae4cfb0ea3e7a286eaba627f91bf9/hf_xet-1.5.1-cp37-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:6208adb15d192b90e4c2ad2a27ed864359b2cb0f2494eb6d7c7f3699ac02e2bf", size = 4719498, upload-time = "2026-06-08T23:02:49.268Z" },
-]
-
-[[package]]
-name = "hmong-tts"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "pydantic" },
-    { name = "pyyaml" },
-]
-
-[package.optional-dependencies]
-mms = [
-    { name = "accelerate", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
-    { name = "safetensors", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
-    { name = "scipy", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
-    { name = "torch", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
-    { name = "transformers", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "mypy" },
-    { name = "pre-commit" },
-    { name = "pytest" },
-    { name = "pytest-cov" },
-    { name = "ruff" },
-    { name = "types-pyyaml" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "accelerate", marker = "platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'mms'", specifier = "==1.14.0" },
-    { name = "pydantic", specifier = "==2.13.4" },
-    { name = "pyyaml", specifier = "==6.0.3" },
-    { name = "safetensors", marker = "platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'mms'", specifier = "==0.8.0" },
-    { name = "scipy", marker = "platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'mms'", specifier = "==1.18.0" },
-    { name = "torch", marker = "platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'mms'", specifier = "==2.12.0" },
-    { name = "transformers", marker = "platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'mms'", specifier = "==5.13.1" },
-]
-provides-extras = ["mms"]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "mypy", specifier = "==2.3.0" },
-    { name = "pre-commit", specifier = "==4.6.0" },
-    { name = "pytest", specifier = "==9.1.1" },
-    { name = "pytest-cov", specifier = "==7.1.0" },
-    { name = "ruff", specifier = "==0.15.21" },
-    { name = "types-pyyaml", specifier = "==6.0.12.20260518" },
 ]
 
 [[package]]

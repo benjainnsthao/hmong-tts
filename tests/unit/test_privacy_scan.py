@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from hmong_tts.privacy.scan import scan_file
+from tts_workbench.privacy.scan import scan_file
 
 
 def write_fixture(tmp_path: Path, name: str, content: bytes) -> Path:

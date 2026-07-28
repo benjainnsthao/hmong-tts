@@ -23,10 +23,10 @@ jobs:
       - name: Install locked core and development dependencies
         run: uv sync --frozen
       - name: Enforce privacy boundary
-        run: uv run hmong-tts-privacy-scan
+        run: uv run tts-workbench-privacy-scan
       - name: Validate configurations
         run: |
-          uv run hmong-tts-config-check
+          uv run tts-workbench-config
           uv run tts-workbench-models validate
       - name: Lint and format
         run: |
@@ -35,4 +35,4 @@ jobs:
       - name: Type check
         run: uv run mypy src
       - name: Test synthetic fixtures
-        run: uv run pytest --cov=hmong_tts --cov-report=term-missing
+        run: uv run pytest --cov=tts_workbench --cov-report=term-missing

@@ -3,8 +3,8 @@ requires = ["hatchling==1.29.0"]
 build-backend = "hatchling.build"
 
 [project]
-name = "hmong-tts"
-version = "0.1.0"
+name = "audited-tts-workbench"
+version = "0.2.0"
 description = "Audited public-checkpoint TTS inference and benchmarking workbench"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
@@ -33,14 +33,14 @@ dev = [
 ]
 
 [project.scripts]
-hmong-tts-config-check = "hmong_tts.config.loader:main"
-hmong-tts-env = "hmong_tts.environment.detect:main"
-hmong-tts-mms-smoke = "hmong_tts.inference.mms_smoke:main"
-hmong-tts-privacy-scan = "hmong_tts.privacy.scan:main"
-tts-workbench-models = "hmong_tts.models.registry:main"
+tts-workbench-config = "tts_workbench.config.loader:main"
+tts-workbench-env = "tts_workbench.environment.detect:main"
+tts-workbench-mms-smoke = "tts_workbench.inference.mms_smoke:main"
+tts-workbench-privacy-scan = "tts_workbench.privacy.scan:main"
+tts-workbench-models = "tts_workbench.models.registry:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/hmong_tts"]
+packages = ["src/tts_workbench"]
 
 [tool.uv]
 required-version = ">=0.11.28,<0.12"
@@ -52,7 +52,7 @@ testpaths = ["tests"]
 
 [tool.coverage.run]
 branch = true
-source = ["hmong_tts"]
+source = ["tts_workbench"]
 
 [tool.ruff]
 line-length = 100
@@ -64,7 +64,7 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 [tool.mypy]
 python_version = "3.12"
 strict = true
-packages = ["hmong_tts"]
+packages = ["tts_workbench"]
 
 [[tool.mypy.overrides]]
 module = ["torch", "transformers"]

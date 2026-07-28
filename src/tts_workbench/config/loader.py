@@ -9,8 +9,8 @@ from pathlib import Path
 
 import yaml
 
-from hmong_tts.config.schema import CONFIG_MODELS, StrictModel
-from hmong_tts.data.paths import find_repository_root
+from tts_workbench.artifacts.paths import find_repository_root
+from tts_workbench.config.schema import CONFIG_MODELS, StrictModel
 
 DEFAULT_CONFIG_FILES = {
     "inference": Path("configs/inference/local.yaml"),

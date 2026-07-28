@@ -12,13 +12,13 @@ test:
 	uv run pytest
 
 privacy:
-	uv run hmong-tts-privacy-scan
+	uv run tts-workbench-privacy-scan
 
 config:
-	uv run hmong-tts-config-check
+	uv run tts-workbench-config
 
 models:
 	uv run tts-workbench-models validate
 
 env:
-	uv run hmong-tts-env
+	uv run tts-workbench-env

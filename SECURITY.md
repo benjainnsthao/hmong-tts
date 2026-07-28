@@ -7,4 +7,4 @@ established private channel.
 
 For exposed credentials, revoke and rotate them immediately. For accidentally
 published weights, generated audio, prompts, or caches, disable access, stop
-distribution, and follow `docs/threat_model.md` and `data/README.md`.
+distribution, and follow `docs/threat_model.md` and `artifacts/README.md`.

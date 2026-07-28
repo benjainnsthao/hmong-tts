@@ -11,8 +11,8 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from hmong_tts.data.paths import find_repository_root
-from hmong_tts.models.schema import ModelRegistry
+from tts_workbench.artifacts.paths import find_repository_root
+from tts_workbench.models.schema import ModelRegistry
 
 DEFAULT_MODEL_REGISTRY_FILE = Path("configs/models/registry.yaml")
 

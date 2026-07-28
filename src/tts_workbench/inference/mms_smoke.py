@@ -12,9 +12,13 @@ from collections.abc import Callable, Iterable, Sequence
 from pathlib import Path
 from typing import cast
 
-from hmong_tts.data.paths import DataBoundaryError, require_under_data_root
-from hmong_tts.models.registry import load_model_registry
-from hmong_tts.models.schema import ModelRegistry
+from tts_workbench.artifacts.paths import (
+    ArtifactBoundaryError,
+    get_artifact_root,
+    require_under_artifact_root,
+)
+from tts_workbench.models.registry import load_model_registry
+from tts_workbench.models.schema import ModelRegistry
 
 BUILTIN_SYNTHETIC_PROMPTS = {
     "builtin:project-synthetic-eng-smoke-v1": "this is a synthetic inference test",
@@ -94,10 +98,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         print("Smoke-test text is empty.", file=sys.stderr)
         return 2
     try:
-        output_path = require_under_data_root(args.output)
-    except DataBoundaryError as exc:
-        print(f"DATA BOUNDARY ERROR: {exc}", file=sys.stderr)
+        artifact_root = get_artifact_root()
+        output_path = require_under_artifact_root(args.output, artifact_root=artifact_root)
+    except ArtifactBoundaryError as exc:
+        print(f"ARTIFACT BOUNDARY ERROR: {exc}", file=sys.stderr)
         return 2
+    output_display = output_path.relative_to(artifact_root).as_posix()
 
     import torch
     from transformers import VitsModel, VitsTokenizer, set_seed
@@ -127,7 +133,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             raise RuntimeError("generated WAV failed structural validation")
     print(
         f"PASS model_id={args.model} repository={repository} revision={revision} "
-        f"rate={model.config.sampling_rate} samples={len(samples)} output={output_path}"
+        f"rate={model.config.sampling_rate} samples={len(samples)} output={output_display}"
     )
     return 0
 

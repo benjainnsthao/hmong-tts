@@ -10,7 +10,11 @@ RTX 4070 validation evidence is retained in `reports/validation/` and the
 original handoff is archived in
 `docs/history/white_hmong_single_speaker/gpu_machine_handoff_phase0.md`.
 
-The current `hmong-tts-env --require-training` report is a retained Phase 0
+The current `tts-workbench-env --require-training` report is a retained Phase 0
 diagnostic. General `core_ready`, `cpu_inference_ready`, and
 `cuda_inference_ready` capability reporting is deferred to a later workbench
 milestone.
+
+Use `--require-artifact-root` when the canonical external artifact boundary is
+required. Reports include only artifact-root validity and an identifier-only
+failure reason; they never include the resolved absolute root.

@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "Citation metadata will be finalized before a public release."
 title: "Audited pretrained TTS workbench"
 type: software
-version: 0.1.0
+version: 0.2.0
 license: proprietary
 abstract: >-
   Audited registry and reproducible engineering infrastructure for public

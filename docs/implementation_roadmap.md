@@ -1,6 +1,6 @@
 # Audited TTS workbench implementation roadmap
 
-Status: approved direction; milestone M1 complete
+Status: approved direction; milestone M2 complete
 
 ## Purpose
 
@@ -80,18 +80,22 @@ Goal: remove misleading legacy names before the code surface grows.
 
 Estimated effort: 3–5 focused hours.
 
-### Work
+Status: **complete**
 
-- Rename the Python package from `hmong_tts` to `tts_workbench`.
-- Rename the distribution to `audited-tts-workbench`.
-- Rename active CLI commands to the `tts-workbench-*` namespace.
-- Replace repository-root detection based on the archived White Hmong plan with
-  a neutral project marker.
-- Introduce `TTS_WORKBENCH_ARTIFACT_ROOT`.
-- If useful for one migration window, accept `HMONG_TTS_DATA_ROOT` only as a
-  deprecated alias with an explicit warning.
-- Update imports, scripts, CI, tests, and active documentation.
-- Preserve historical paths and terminology inside the archive.
+### Delivered
+
+- The active Python package is `tts_workbench`.
+- The distribution is `audited-tts-workbench` version 0.2.0.
+- Active commands use the `tts-workbench-*` namespace.
+- Neutral repository detection requires `pyproject.toml` and
+  `configs/models/registry.yaml`.
+- `TTS_WORKBENCH_ARTIFACT_ROOT` is canonical.
+- The legacy artifact-root variable is accepted only for one migration window
+  and always emits an explicit warning.
+- Imports, scripts, CI, tests, and active documentation use the neutral
+  namespace.
+- Historical paths and terminology remain unchanged inside the archive and
+  validation evidence.
 
 ### Acceptance criteria
 
@@ -102,6 +106,11 @@ Estimated effort: 3–5 focused hours.
 - Registry, configuration, privacy, lint, typing, and all synthetic tests pass.
 - Historical validation reports and the preservation branch remain unchanged.
 - No model or optional inference dependency is downloaded.
+
+Validation passed with a frozen lock, offline frozen core sync, formatting,
+lint, strict typing, active configuration and registry checks, privacy/artifact
+scanning, 68 synthetic tests, 61% branch-aware aggregate coverage, full
+pre-commit, package/CLI smoke tests, and an obsolete-identifier audit.
 
 ## Milestone M3 — reusable inference adapter and run manifest
 
@@ -334,15 +343,7 @@ models and present the output as a prototype Hmong voice.
 
 ## Next executable task
 
-Implement milestone M2 as a documentation-and-code identity migration:
-
-1. Rename the active package and CLI namespace.
-2. Introduce the neutral artifact-root variable with a deliberate compatibility
-   policy.
-3. Replace the White-Hmong-plan repository-root marker.
-4. Update active imports, scripts, CI, and tests.
-5. Run the complete no-download validation suite.
-
-After M2 review, begin M3 with a fake-backed `TTSAdapter` and atomic run-manifest
-writer. Do not download weights or begin FastAPI in M2 or the synthetic portion
-of M3.
+After M2 review and separate authorization, begin M3 with the smallest
+fake-backed provider-neutral inference-adapter contract and an atomic
+run-manifest writer. Do not download or execute weights, add waveform QC or
+benchmarking, or begin FastAPI in the synthetic M3 entry slice.

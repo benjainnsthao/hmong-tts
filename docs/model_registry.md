@@ -4,6 +4,9 @@
 checkpoint identity and workbench-use policy. Registry commands validate
 metadata only; they do not contact a model host or download weights.
 
+The registry is loaded through `tts_workbench.models` and is unchanged by the
+0.2 namespace migration. Its schema version remains 1.
+
 ## Required fields and policy
 
 Every entry records:

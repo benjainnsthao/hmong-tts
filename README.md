@@ -17,8 +17,10 @@ indexed in
 
 ## Current milestone
 
-The first rescoping milestone introduces a strict, versioned model registry.
-It contains metadata only and never downloads model weights.
+Milestone M2 establishes the neutral `tts_workbench` Python package, the
+`audited-tts-workbench` 0.2.0 distribution, the `tts-workbench-*` CLI namespace,
+and a canonical external artifact boundary. The completed model registry remains
+metadata-only and never downloads model weights.
 
 ```powershell
 python -m uv run tts-workbench-models validate
@@ -31,15 +33,11 @@ of weights, and `language_quality_status: not_evaluated`.
 
 ## Reproducible core
 
-The current package still uses the transitional `hmong_tts` import and legacy
-CLI names so the first rescope remains reviewable. Package and artifact-root
-renaming are deferred to a later migration.
-
 ```powershell
 python -m uv sync --frozen
-python -m uv run hmong-tts-config-check
+python -m uv run tts-workbench-config
 python -m uv run tts-workbench-models validate
-python -m uv run hmong-tts-privacy-scan
+python -m uv run tts-workbench-privacy-scan
 python -m uv run pytest
 ```
 
@@ -50,8 +48,10 @@ access, or downloaded weights.
 ## Artifact boundary
 
 Generated audio, model weights, model caches, and benchmark artifacts stay
-outside Git. The legacy `HMONG_TTS_DATA_ROOT` variable continues to enforce
-that boundary during this milestone; see [`data/README.md`](data/README.md).
+outside Git. `TTS_WORKBENCH_ARTIFACT_ROOT` is canonical. A legacy variable is
+accepted with a visible deprecation warning for the 0.2 migration window only;
+conflicting values fail closed. See
+[`artifacts/README.md`](artifacts/README.md).
 
 ## Licensing
 

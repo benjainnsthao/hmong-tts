@@ -1,10 +1,12 @@
-# Workbench architecture — rescope milestone 1
+# Workbench architecture — milestone M2
 
-The current vertical slice establishes a metadata control plane. It does not
-implement the future local service.
+The current repository establishes a neutral identity, metadata control plane,
+and external artifact boundary. It does not implement the future reusable
+inference adapter or local service.
 
 ```text
 public repository
+  audited-tts-workbench / tts_workbench
   configs/models/registry.yaml
              |
              v
@@ -16,6 +18,7 @@ public repository
                                       generated WAV + future run manifest
 
 external artifact root
+  TTS_WORKBENCH_ARTIFACT_ROOT
   model cache / weights / generated audio / future benchmark artifacts
 ```
 
@@ -26,6 +29,10 @@ separate controls:
 - the license matrix records the supporting audit and limitations;
 - environment detection establishes what the local machine can execute; and
 - the external boundary prevents weights and generated audio from entering Git.
+
+Repository-root detection requires the neutral committed markers
+`pyproject.toml` and `configs/models/registry.yaml`; it does not depend on the
+archived White Hmong project-plan pointer.
 
 Future milestones may add provider-neutral inference adapters, benchmark/QC
 reports, and a bounded local API. No application layer may embed White Hmong

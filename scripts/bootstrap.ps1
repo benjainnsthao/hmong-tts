@@ -18,7 +18,7 @@ if ($ActualUv -ne $UvVersion) {
 
 uv sync --frozen
 uv run pre-commit install
-uv run hmong-tts-config-check
+uv run tts-workbench-config
 uv run tts-workbench-models validate
-uv run hmong-tts-privacy-scan
+uv run tts-workbench-privacy-scan
 uv run pytest

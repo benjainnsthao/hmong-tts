@@ -8,9 +8,9 @@ import pytest
 import yaml
 from pydantic import ValidationError
 
-from hmong_tts.inference.mms_smoke import build_parser
-from hmong_tts.models.registry import load_model_registry, main
-from hmong_tts.models.schema import ModelRegistry
+from tts_workbench.inference.mms_smoke import build_parser
+from tts_workbench.models.registry import load_model_registry, main
+from tts_workbench.models.schema import ModelRegistry
 
 REVISION = "1" * 40
 

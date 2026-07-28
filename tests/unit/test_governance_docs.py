@@ -1,6 +1,26 @@
 from pathlib import Path
 
 
+def test_historical_white_hmong_materials_remain_archived(repository_root: Path) -> None:
+    archive = repository_root / "docs/history/white_hmong_single_speaker"
+    required = {
+        "PROJECT_STATUS-v0.1.md",
+        "WHITE_HMONG_TTS_PROJECT_PLAN.md",
+        "consent_template.md",
+        "dataset_statement.md",
+        "model_card_untrained.md",
+        "phase1_governance_handoff.md",
+        "private_data_layout.md",
+        "recording_readiness_checklist.md",
+        "configs/data_private_mvp.yaml",
+        "configs/eval_mvp.yaml",
+        "configs/model_mms_vits.yaml",
+        "configs/train_mvp.yaml",
+    }
+
+    assert all((archive / relative_path).is_file() for relative_path in required)
+
+
 def test_consent_template_contains_required_independent_choices(repository_root: Path) -> None:
     text = (
         repository_root / "docs/history/white_hmong_single_speaker/consent_template.md"

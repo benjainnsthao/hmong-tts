@@ -15,9 +15,10 @@ dist/
 .env.*
 !.env.example
 
-# Private data must live under HMONG_TTS_DATA_ROOT, never in this repository.
-data/*
-!data/README.md
+# Generated artifacts must stay below the external artifact root, never here.
+artifacts/*
+!artifacts/README.md
+data/
 private/
 recordings/
 consent_records/

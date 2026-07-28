@@ -14,7 +14,12 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
-from hmong_tts.data.paths import DataBoundaryError, find_repository_root, get_data_root
+from tts_workbench.artifacts.paths import (
+    ARTIFACT_ROOT_ENV,
+    ArtifactBoundaryError,
+    find_repository_root,
+    get_artifact_root,
+)
 
 
 @dataclass(frozen=True)
@@ -100,13 +105,13 @@ def collect_environment(*, repository_root: Path | None = None) -> dict[str, Any
     python_supported = sys.version_info[:2] == (3, 12)
     machine = platform.machine().lower()
     system = platform.system()
-    data_root: dict[str, Any]
+    artifact_root: dict[str, Any]
     try:
-        get_data_root(repository_root=root)
-    except DataBoundaryError as exc:
-        data_root = {"valid": False, "reason": str(exc)}
+        get_artifact_root(repository_root=root)
+    except ArtifactBoundaryError as exc:
+        artifact_root = {"valid": False, "reason": str(exc)}
     else:
-        data_root = {"valid": True, "reason": None}
+        artifact_root = {"valid": True, "reason": None}
 
     uv_command = os.environ.get("UV", "uv")
     uv_state = _run_version((uv_command, "--version"))
@@ -128,7 +133,7 @@ def collect_environment(*, repository_root: Path | None = None) -> dict[str, Any
         "cuda_toolkit": asdict(_run_version(("nvcc", "--version"))),
         "gpu": _gpu_state(),
         "pytorch": _torch_state(),
-        "data_root": data_root,
+        "artifact_root": artifact_root,
     }
 
 
@@ -154,8 +159,8 @@ def training_failures(report: dict[str, Any]) -> list[str]:
         failures.append("PyTorch is not installed")
     elif not torch_state.get("cuda_available"):
         failures.append("PyTorch cannot access CUDA")
-    if not report["data_root"]["valid"]:
-        failures.append("HMONG_TTS_DATA_ROOT is not a valid external directory")
+    if not report["artifact_root"]["valid"]:
+        failures.append(f"{ARTIFACT_ROOT_ENV} is not a valid external directory")
     return failures
 
 
@@ -163,7 +168,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--json", action="store_true", help="emit JSON only")
     parser.add_argument("--output", type=Path, help="write the JSON report to this path")
-    parser.add_argument("--require-data-root", action="store_true")
+    parser.add_argument("--require-artifact-root", action="store_true")
     parser.add_argument("--require-training", action="store_true")
     return parser
 
@@ -178,7 +183,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(rendered + "\n", encoding="utf-8")
     print(rendered)
-    if args.require_data_root and not report["data_root"]["valid"]:
+    if args.require_artifact_root and not report["artifact_root"]["valid"]:
         return 2
     if args.require_training and failures:
         return 2
