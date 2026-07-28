@@ -72,3 +72,45 @@
 - Native-validation status: **[NV]** open items NV-001 through NV-008.
 - Consequences: Phase 1 schema work may proceed, but prompts, golden cases, and
   production normalization cannot pass until native review is recorded.
+
+## D-0006 — Rescope to an audited public-checkpoint TTS workbench
+
+- Date: 2026-07-28
+- Decision: preserve the completed single-speaker White Hmong TTS Phase 0 and
+  rescope active development to inference, evaluation, benchmarking, and local
+  deployment infrastructure using properly licensed public non-Hmong
+  checkpoints. The original repository state is preserved on local branch
+  `archive/white-hmong-single-speaker-tts-v0.1` at commit
+  `fd1756485b1e1b75fd1efee5e37519fa8e255415`.
+- Alternatives: continue immediately into consent/recording/training; reduce the
+  repository to a provenance audit; abandon the prior work.
+- Evidence: recording, private-data coordination, training, and native
+  listening evaluation exceed the revised solo-development constraints, while
+  the existing MMS inference, configuration, environment, boundary, privacy,
+  CI, and test work directly supports an inference workbench.
+- Native-validation status: **[NV]** NV-001 through NV-008 remain deferred and
+  unresolved. The workbench makes no White Hmong support or correctness claim.
+- Consequences: historical recording/training material is non-operative;
+  generated audio, weights, and caches remain external; a future Hmong learning
+  application requires a separately authorized, community-validated phase.
+
+## D-0007 — Fail-closed audited model registry
+
+- Date: 2026-07-28
+- Decision: replace hardcoded eligible MMS checkpoint references with schema
+  version 1 of a metadata-only registry. Active entries require immutable
+  40-character revisions, primary-source provenance, an audited license,
+  `local_noncommercial_inference`, `weights_not_redistributed`, and
+  `language_quality_status: not_evaluated`.
+- Alternatives: keep a Python dictionary; allow mutable tags or branches; infer
+  license/capability status from a provider name; download first and audit later.
+- Evidence: the Phase 0 license matrix already treats immutable identity,
+  license, lineage, and use scope as independent gates. A strict registry makes
+  those gates executable without downloading weights.
+- Native-validation status: not applicable to registry mechanics. Registered
+  English and Vietnamese language tags are provider metadata, not quality
+  findings and not evidence about White Hmong.
+- Consequences: missing provenance, duplicate identities, unapproved use,
+  unknown license placeholders, and positive language-quality claims fail
+  validation. New licenses and use categories require an explicit schema and
+  audit decision.

@@ -1,34 +1,29 @@
-# Voice and data misuse threat model
+# Workbench threat model
 
 ## Protected assets
 
-Speaker identity, consent choices, raw and processed voice, transcripts,
-evaluation responses, checkpoints, credentials, and the ability to synthesize
-the participant’s voice.
+Checkpoint provenance, license metadata, generated audio, model caches, prompt
+sources, benchmark integrity, credentials, and the accuracy of public
+capability claims.
 
 ## Principal threats
 
-- accidental Git, tracker, log, or cloud exposure;
-- unauthorized insiders or compromised accounts accessing private storage;
-- model or sample distribution beyond consent or upstream licenses;
-- voice impersonation, fraud, deceptive media/politics, harassment, or consent bypass;
-- prompt abuse, denial of service, or extraction through a public demo;
-- inability to recall third-party downloads after withdrawal;
-- misleading claims about language accuracy from unvalidated automation.
+- mutable or substituted model revisions;
+- weights used beyond audited license scope or accidentally redistributed;
+- generated audio, weights, caches, or credentials entering Git;
+- unlicensed or untraceable prompt material;
+- prompt or client metadata leaking through logs in a future service;
+- resource exhaustion from unbounded model loading or inference requests;
+- runtime metrics being misrepresented as pronunciation or language quality;
+- public claims of White Hmong support without community validation **[NV]**.
 
-## Phase 0 controls
+## Current controls
 
-External encrypted data root, separate identity/consent storage, pseudonymous
-IDs, scanner/pre-commit/CI gates, local/offline tracking, audited pinned model
-revisions, no public deployment, no weights, no real test data, and explicit
-native-validation blocks.
+Strict registry validation, immutable revisions, primary-source provenance,
+non-commercial-use and no-redistribution policy fields, an external artifact
+root, privacy/artifact scanning, offline synthetic tests, and
+`language_quality_status: not_evaluated`.
 
-## Required pre-demo controls
-
-Prominent “synthetic voice, used with consent” notice; model-card prohibited
-uses; input/rate limits; one worker and GPU queue; request timeout; no
-unnecessary prompt or IP logging; abuse reporting; kill switch; short documented
-retention; WAV provenance metadata; and a demo-first/no-download release order.
-
-No blocklist, watermark, or technical control may be represented as eliminating
-misuse risk.
+The current milestone downloads no weights and exposes no service. Future
+inference and deployment milestones require separate model-lifecycle,
+concurrency, timeout, logging, and abuse controls.

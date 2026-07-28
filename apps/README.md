@@ -1,5 +1,8 @@
 # Applications
 
-The Gradio client is deferred until the inference API exists. UI code must call
-the shared normalization/inference package and must never embed a second
-normalizer or load private recordings.
+The local application and inference service milestones have not started.
+Future clients must use the shared registry and inference adapters, preserve
+model provenance, and display language-quality limitations.
+
+No client may claim White Hmong support or embed White Hmong normalization
+while NV-001 through NV-008 remain deferred **[NV]**.

@@ -44,8 +44,8 @@ SKIP_DIRECTORIES = {
     "__pycache__",
 }
 ALLOWED_CONSENT_DOCUMENTATION = {
-    "docs/privacy_and_consent.md",
-    "docs/templates/consent_template.md",
+    "docs/history/white_hmong_single_speaker/consent_template.md",
+    "docs/history/white_hmong_single_speaker/privacy_and_consent.md",
 }
 AUDIO_MAGIC = (b"fLaC", b"ID3", b"OggS")
 

@@ -13,10 +13,6 @@ from hmong_tts.config.schema import CONFIG_MODELS, StrictModel
 from hmong_tts.data.paths import find_repository_root
 
 DEFAULT_CONFIG_FILES = {
-    "data": Path("configs/data/private_mvp.yaml"),
-    "model": Path("configs/model/mms_vits.yaml"),
-    "train": Path("configs/train/mvp.yaml"),
-    "eval": Path("configs/eval/mvp.yaml"),
     "inference": Path("configs/inference/local.yaml"),
 }
 

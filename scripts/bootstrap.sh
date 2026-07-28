@@ -35,5 +35,6 @@ fi
 uv sync --frozen
 uv run pre-commit install
 uv run hmong-tts-config-check
+uv run tts-workbench-models validate
 uv run hmong-tts-privacy-scan
 uv run pytest

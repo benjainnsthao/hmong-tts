@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "hmong-tts"
 version = "0.1.0"
-description = "Governance and reproducible tooling for a consented White Hmong TTS MVP"
+description = "Audited public-checkpoint TTS inference and benchmarking workbench"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
@@ -37,6 +37,7 @@ hmong-tts-config-check = "hmong_tts.config.loader:main"
 hmong-tts-env = "hmong_tts.environment.detect:main"
 hmong-tts-mms-smoke = "hmong_tts.inference.mms_smoke:main"
 hmong-tts-privacy-scan = "hmong_tts.privacy.scan:main"
+tts-workbench-models = "hmong_tts.models.registry:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/hmong_tts"]

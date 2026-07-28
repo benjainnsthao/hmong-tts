@@ -1,0 +1,37 @@
+schema_version: 1
+models:
+  - model_id: mms-eng
+    provider: Meta
+    repository: facebook/mms-tts-eng
+    revision: c71de0fe7204c83f1c10820a7d696d0b450048ba
+    documented_language_tag: eng
+    language_tag_standard: ISO 639-3
+    architecture: vits
+    weight_license: CC-BY-NC-4.0
+    approved_use: local_noncommercial_inference
+    redistribution_status: weights_not_redistributed
+    prompt_set_reference: builtin:project-synthetic-eng-smoke-v1
+    language_quality_status: not_evaluated
+    provenance:
+      model_card_url: https://huggingface.co/facebook/mms-tts-eng/tree/c71de0fe7204c83f1c10820a7d696d0b450048ba
+      license_url: https://huggingface.co/facebook/mms-tts/blob/44cc7fb408064ef9ea6e7c59130d88cac1274671/README.md
+      audit_reference: docs/license_matrix.md
+      audited_on: 2026-07-14
+
+  - model_id: mms-vie
+    provider: Meta
+    repository: facebook/mms-tts-vie
+    revision: b58928d033932a49aa8e3d6cf11625b25fe928d2
+    documented_language_tag: vie
+    language_tag_standard: ISO 639-3
+    architecture: vits
+    weight_license: CC-BY-NC-4.0
+    approved_use: local_noncommercial_inference
+    redistribution_status: weights_not_redistributed
+    prompt_set_reference: external:audited-public-vie-prompt-required
+    language_quality_status: not_evaluated
+    provenance:
+      model_card_url: https://huggingface.co/facebook/mms-tts-vie/tree/b58928d033932a49aa8e3d6cf11625b25fe928d2
+      license_url: https://huggingface.co/facebook/mms-tts/blob/44cc7fb408064ef9ea6e7c59130d88cac1274671/README.md
+      audit_reference: docs/license_matrix.md
+      audited_on: 2026-07-14

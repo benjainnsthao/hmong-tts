@@ -1,10 +1,9 @@
 cff-version: 1.2.0
 message: "Citation metadata will be finalized before a public release."
-title: "White Hmong single-speaker TTS"
+title: "Audited pretrained TTS workbench"
 type: software
 version: 0.1.0
-date-released: 2026-07-14
 license: proprietary
 abstract: >-
-  Governance and reproducible engineering artifacts for a consented,
-  single-speaker White Hmong TTS research MVP.
+  Audited registry and reproducible engineering infrastructure for public
+  non-Hmong TTS checkpoints. White Hmong adaptation remains deferred.

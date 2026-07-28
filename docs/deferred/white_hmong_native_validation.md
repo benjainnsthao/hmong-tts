@@ -1,5 +1,9 @@
 # Native-validation register
 
+Deferred **[NV]** during the audited TTS workbench scope. This register is
+preserved for a possible future community-validated Hmong learning application;
+it is not a workbench model capability record.
+
 No row is approved. Proposed options describe review outcomes, not language
 rules; the reviewers must supply the actual language evidence.
 

@@ -1,4 +1,4 @@
-"""Run a pinned, non-Hmong MMS inference smoke test outside the repository."""
+"""Run a registry-pinned, non-Hmong MMS inference smoke test outside the repository."""
 
 from __future__ import annotations
 
@@ -13,12 +13,12 @@ from pathlib import Path
 from typing import cast
 
 from hmong_tts.data.paths import DataBoundaryError, require_under_data_root
+from hmong_tts.models.registry import load_model_registry
+from hmong_tts.models.schema import ModelRegistry
 
-APPROVED_MODELS = {
-    "facebook/mms-tts-eng": "c71de0fe7204c83f1c10820a7d696d0b450048ba",
-    "facebook/mms-tts-vie": "b58928d033932a49aa8e3d6cf11625b25fe928d2",
+BUILTIN_SYNTHETIC_PROMPTS = {
+    "builtin:project-synthetic-eng-smoke-v1": "this is a synthetic inference test",
 }
-DEFAULT_ENGLISH_TEXT = "hello my dog is cute"
 
 
 def preflight_failures() -> list[str]:
@@ -48,13 +48,19 @@ def write_pcm16_wave(path: Path, samples: Iterable[float], sample_rate: int) -> 
         handle.writeframes(pcm)
 
 
-def build_parser() -> argparse.ArgumentParser:
+def build_parser(registry: ModelRegistry) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--model", choices=sorted(APPROVED_MODELS), default="facebook/mms-tts-eng")
     parser.add_argument(
-        "--text-file", type=Path, help="UTF-8 prompt; required for the Vietnamese model"
+        "--model",
+        choices=sorted(model.model_id for model in registry.models),
+        default="mms-eng",
     )
-    parser.add_argument("--output", type=Path, default=Path("smoke/mms-eng.wav"))
+    parser.add_argument(
+        "--text-file",
+        type=Path,
+        help="UTF-8 prompt with independent public-license/provenance review",
+    )
+    parser.add_argument("--output", type=Path, default=Path("smoke/mms-output.wav"))
     parser.add_argument("--seed", type=int, default=555)
     parser.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
     parser.add_argument("--preflight-only", action="store_true")
@@ -62,7 +68,9 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
+    registry = load_model_registry()
+    args = build_parser(registry).parse_args(argv)
+    model_entry = registry.by_id(args.model)
     failures = preflight_failures()
     if failures:
         print("MMS smoke preflight failed:", file=sys.stderr)
@@ -73,17 +81,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         print("MMS smoke preflight passed.")
         return 0
 
-    if args.model.endswith("-vie") and args.text_file is None:
+    builtin_text = BUILTIN_SYNTHETIC_PROMPTS.get(model_entry.prompt_set_reference)
+    if builtin_text is None and args.text_file is None:
         print(
-            "Vietnamese smoke requires --text-file; no pronunciation text is invented.",
+            f"{args.model} requires --text-file with independent public prompt provenance; "
+            "no language text is invented.",
             file=sys.stderr,
         )
         return 2
-    text = (
-        args.text_file.read_text(encoding="utf-8").strip()
-        if args.text_file
-        else DEFAULT_ENGLISH_TEXT
-    )
+    text = args.text_file.read_text(encoding="utf-8").strip() if args.text_file else builtin_text
     if not text:
         print("Smoke-test text is empty.", file=sys.stderr)
         return 2
@@ -96,9 +102,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     import torch
     from transformers import VitsModel, VitsTokenizer, set_seed
 
-    revision = APPROVED_MODELS[args.model]
-    tokenizer = VitsTokenizer.from_pretrained(args.model, revision=revision)
-    model = VitsModel.from_pretrained(args.model, revision=revision)
+    repository = model_entry.repository
+    revision = model_entry.revision
+    tokenizer = VitsTokenizer.from_pretrained(repository, revision=revision)
+    model = VitsModel.from_pretrained(repository, revision=revision)
     device: str = "cuda" if args.device == "auto" and torch.cuda.is_available() else args.device
     if device == "auto":
         device = "cpu"
@@ -119,8 +126,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         if handle.getnchannels() != 1 or handle.getnframes() <= 0:
             raise RuntimeError("generated WAV failed structural validation")
     print(
-        f"PASS model={args.model} revision={revision} rate={model.config.sampling_rate} "
-        f"samples={len(samples)} output={output_path}"
+        f"PASS model_id={args.model} repository={repository} revision={revision} "
+        f"rate={model.config.sampling_rate} samples={len(samples)} output={output_path}"
     )
     return 0
 

@@ -1,58 +1,64 @@
-# Pinned MMS inference smoke test
+# Registry-pinned MMS inference smoke test
 
-This path verifies model download, pinned provenance, tokenizer/model loading,
-deterministic inference, finite samples, and a valid mono WAV. It does not test
-White Hmong pronunciation or authorize recording/training.
+This retained path verifies optional dependency availability, audited registry
+lookup, tokenizer/model loading at an immutable revision, seeded inference,
+finite samples, and a valid mono WAV outside Git.
 
-For the complete first-checkout-to-evidence procedure on the intended PC, use
-`docs/gpu_machine_handoff.md`. This page documents the smoke implementation and
-its constraints.
+It does not test pronunciation, naturalness, language correctness, or White
+Hmong support. It does not train or redistribute a model.
 
-## Preconditions
+## Metadata-only checks
 
-- x86-64 Ubuntu 24.04, preferably WSL2 on the RTX 4070 machine;
-- NVIDIA Windows driver exposing the GPU to WSL (`nvidia-smi` works in WSL);
-- Python 3.12, Git, and `uv` 0.11.x;
-- absolute external `HMONG_TTS_DATA_ROOT` with private storage;
-- explicit approval for the multi-gigabyte PyTorch/CUDA dependency install and
-  approximately 145 MB per MMS safetensors checkpoint.
+These commands require no network, weight download, PyTorch, or GPU:
 
-The two eligible model revisions and CC BY-NC 4.0 terms are recorded in
-`docs/license_matrix.md`. Do not substitute a branch name or another checkpoint.
+```text
+tts-workbench-models validate
+tts-workbench-models list
+```
 
-## Commands on the target machine
+## Optional inference preconditions
+
+- Linux x86-64;
+- the locked `mms` dependency group;
+- a valid external `HMONG_TTS_DATA_ROOT`;
+- acceptance of the registered checkpoint license and download size; and
+- explicit authorization for weight download and inference.
+
+The artifact-root variable retains its legacy name during the first rescope
+milestone. Model caches and generated audio must stay outside Git.
+
+## English synthetic smoke fixture
 
 ```bash
-export HMONG_TTS_DATA_ROOT=/absolute/private/hmong-tts
 uv sync --frozen --extra mms
-uv run hmong-tts-env --require-training \
-  --output reports/validation/environment-target.json
 uv run hmong-tts-mms-smoke \
-  --model facebook/mms-tts-eng \
+  --model mms-eng \
   --device cuda \
   --output smoke/mms-eng.wav
 ```
 
-`--output` is resolved below `HMONG_TTS_DATA_ROOT`; repository WAV output is
-rejected. The English prompt is a punctuation-free version of the official
-Transformers documentation example and is not a White Hmong validation case.
+The built-in English input is a project-authored synthetic runtime fixture. It
+is not a pronunciation or language-quality evaluation prompt.
 
-For the Vietnamese candidate, provide an independently sourced/reviewed UTF-8
-Vietnamese prompt outside Git; the tool intentionally invents none:
+## Vietnamese external-prompt policy
+
+The workbench contains no invented Vietnamese text. A future authorized run
+must provide a public prompt with independently reviewed license/provenance:
 
 ```bash
 uv run hmong-tts-mms-smoke \
-  --model facebook/mms-tts-vie \
-  --text-file "$HMONG_TTS_DATA_ROOT/smoke/vie_prompt.txt" \
+  --model mms-vie \
+  --text-file "$HMONG_TTS_DATA_ROOT/smoke/audited-vie-prompt.txt" \
   --device cuda \
   --output smoke/mms-vie.wav
 ```
 
-Pass evidence is the command’s `PASS` line plus the environment JSON. Listen
-only for gross runtime corruption; no cross-language quality conclusion is made.
+The current smoke CLI does not yet create a complete prompt/run manifest; that
+belongs to the reusable inference-adapter milestone.
 
-## Current machine result
+## Historical evidence
 
-On 2026-07-14, preflight is blocked: Windows and WSL are ARM64, no RTX 4070 or
-NVIDIA driver is visible, and PyTorch/CUDA are absent. The large optional extra
-was therefore not downloaded. See `reports/validation/phase0-validation.md`.
+The 2026-07-21 Phase 0 run validated the same pinned English checkpoint revision
+on an x86-64 WSL2 RTX 4070. That evidence remains unchanged in
+`reports/validation/phase0-validation.md`. The rescope milestone performs no
+new model download or synthesis.

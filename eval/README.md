@@ -1,8 +1,9 @@
-# Evaluation assets
+# Workbench evaluation assets
 
-Only public schemas, blank rubrics, and explicitly consented public prompts may
-appear here. Hidden prompts, listener identities, transcriptions, and ratings
-belong below `HMONG_TTS_DATA_ROOT/evaluation/private`.
+This directory is reserved for future system benchmarking and objective
+waveform-QC schemas. The current model-registry milestone adds no benchmark
+runner, listening study, language-quality metric, or audio fixture.
 
-No evaluation item is populated until native decisions NV-001 through NV-008
-are reviewed and frozen prospectively.
+Original native-listener evaluation plans are archived under
+`docs/history/white_hmong_single_speaker/evaluation/`. White Hmong evaluation
+decisions remain deferred **[NV]**.

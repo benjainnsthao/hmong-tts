@@ -1,20 +1,16 @@
-# Environment target and observed host
+# Workbench environment
 
-## Supported project target
+Registry validation, configuration checks, privacy/artifact scanning, linting,
+typing, and synthetic tests require only the locked Python 3.12 core
+environment. They do not require PyTorch, Transformers, CUDA, network access,
+or model downloads.
 
-Ubuntu 24.04 on x86-64 WSL2 or native Linux, Python 3.12, Git, FFmpeg, an
-NVIDIA-visible RTX 4070, and CUDA-enabled PyTorch. `hmong-tts-env` checks each
-item and reports all failures in machine-readable JSON without emitting user or
-host names.
+The optional MMS dependency group remains restricted to Linux x86-64. Historical
+RTX 4070 validation evidence is retained in `reports/validation/` and the
+original handoff is archived in
+`docs/history/white_hmong_single_speaker/gpu_machine_handoff_phase0.md`.
 
-## Observed on 2026-07-14
-
-- Host: Windows 11 Home 10.0.26200, ARM64, Python 3.13.7.
-- WSL: Ubuntu 24.04.3, kernel 6.6.87.2, `aarch64`, Python 3.12.3.
-- Git: available (Windows 2.52.0; WSL 2.43.0).
-- Missing: `uv` initially, FFmpeg, `nvidia-smi`, `nvcc`, PyTorch, CUDA.
-- No RTX 4070 is visible in either context.
-
-Core governance/config/tests can run with a managed Python 3.12 environment.
-Audio processing, CUDA training, and the MMS inference smoke require the target
-x86-64/GPU environment.
+The current `hmong-tts-env --require-training` report is a retained Phase 0
+diagnostic. General `core_ready`, `cpu_inference_ready`, and
+`cuda_inference_ready` capability reporting is deferred to a later workbench
+milestone.

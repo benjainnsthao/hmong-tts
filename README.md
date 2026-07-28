@@ -1,68 +1,68 @@
-# White Hmong single-speaker TTS
+# Audited pretrained TTS workbench
 
-Research/portfolio implementation of the consented, single-speaker MVP in
-[`WHITE_HMONG_TTS_PROJECT_PLAN.md`](WHITE_HMONG_TTS_PROJECT_PLAN.md). The only
-training voice is the primary speaker; the second speaker is reserved for
-independent review and evaluation.
+Phase A of a possible future community-validated Hmong language-learning
+application. This repository currently demonstrates audited public-checkpoint
+registry, inference, evaluation, benchmarking, and local-deployment
+infrastructure using non-Hmong models.
 
-Phase 0 is complete, and Phase 1 has not started. The repository contains no
-real recordings, completed consent records, speaker identity, or private
-evaluation data. Language-specific choices are not implemented until
-native-speaker validation is recorded.
+It does **not** claim White Hmong support, pronunciation accuracy, linguistic
+correctness, or readiness for a Hmong learning application. White Hmong
+adaptation and NV-001 through NV-008 remain deferred **[NV]**.
 
-## Bootstrap
+The original consented, single-speaker White Hmong TTS project is preserved on
+the local branch `archive/white-hmong-single-speaker-tts-v0.1` at commit
+`fd1756485b1e1b75fd1efee5e37519fa8e255415`. A browsable historical copy is
+indexed in
+[`docs/history/white_hmong_single_speaker/`](docs/history/white_hmong_single_speaker/README.md).
 
-The reproducible target is Ubuntu 24.04 under WSL2 on an x86-64 machine with an
-RTX 4070. Python 3.12 and `uv` 0.11.x are pinned by `pyproject.toml` and
-`uv.lock`.
+## Current milestone
 
-```bash
-sudo apt-get update
-sudo apt-get install -y python3 curl git ffmpeg
-cp .env.example .env
-# Set HMONG_TTS_DATA_ROOT to an absolute encrypted/private path outside this repo.
-bash scripts/bootstrap.sh
-uv run hmong-tts-env --require-data-root
-uv run hmong-tts-config-check
-uv run hmong-tts-privacy-scan
-uv run pytest
-```
-
-On Linux, the bootstrap installs the exact pinned `uv` release from Astral's
-versioned standalone installer when needed. It does not write to the
-PEP 668-managed system Python or modify shell profiles.
-
-PowerShell setup for governance and tests is also supported:
+The first rescoping milestone introduces a strict, versioned model registry.
+It contains metadata only and never downloads model weights.
 
 ```powershell
-Copy-Item .env.example .env
-# Set HMONG_TTS_DATA_ROOT to an absolute private path outside this repo.
-./scripts/bootstrap.ps1
-uv run hmong-tts-env --require-data-root
-uv run pytest
+python -m uv run tts-workbench-models validate
+python -m uv run tts-workbench-models list
 ```
 
-Do not install the GPU/model extra until the environment report confirms
-Linux x86-64, CUDA-visible PyTorch, and the expected GPU. The documented MMS
-machine handoff is in
-[`docs/gpu_machine_handoff.md`](docs/gpu_machine_handoff.md); implementation
-details are in [`docs/mms_smoke_test.md`](docs/mms_smoke_test.md).
+The registry accepts only immutable 40-character revisions, audited license
+metadata, approved local non-commercial inference, no project redistribution
+of weights, and `language_quality_status: not_evaluated`.
 
-## Private-data boundary
+## Reproducible core
 
-All sensitive or bulky artifacts belong below `HMONG_TTS_DATA_ROOT`, which must
-resolve outside the repository. See [`data/README.md`](data/README.md) and
-[`docs/privacy_and_consent.md`](docs/privacy_and_consent.md). The privacy scanner
-runs in tests, pre-commit, and CI and scans both tracked and untracked files.
+The current package still uses the transitional `hmong_tts` import and legacy
+CLI names so the first rescope remains reviewable. Package and artifact-root
+renaming are deferred to a later migration.
 
-## Current status
+```powershell
+python -m uv sync --frozen
+python -m uv run hmong-tts-config-check
+python -m uv run tts-workbench-models validate
+python -m uv run hmong-tts-privacy-scan
+python -m uv run pytest
+```
 
-See [`PROJECT_STATUS.md`](PROJECT_STATUS.md). This repository has no public-use
-license yet; no permission to copy, redistribute, deploy, or distribute model
-weights is granted. See [`LICENSE`](LICENSE) and
+The optional MMS stack is large and remains platform-gated. Registry validation
+and all ordinary tests run without PyTorch, Transformers, a GPU, network
+access, or downloaded weights.
+
+## Artifact boundary
+
+Generated audio, model weights, model caches, and benchmark artifacts stay
+outside Git. The legacy `HMONG_TTS_DATA_ROOT` variable continues to enforce
+that boundary during this milestone; see [`data/README.md`](data/README.md).
+
+## Licensing
+
+The registered MMS checkpoints are CC BY-NC 4.0 and approved only for scoped
+local non-commercial inference. The workbench does not redistribute their
+weights. This repository itself remains all rights reserved until the owner
+makes a separate code-license decision. See
 [`docs/license_matrix.md`](docs/license_matrix.md).
 
-The next-phase sequence, terminal/outside responsibility map, and copyable
-governance-only Step 1 authorization are in
-[`docs/phase1_governance_handoff.md`](docs/phase1_governance_handoff.md). No
-recording may begin until signed consent and recording-readiness Gates A–D pass.
+## Status and limitations
+
+See [`PROJECT_STATUS.md`](PROJECT_STATUS.md),
+[`docs/model_registry.md`](docs/model_registry.md), and
+[`docs/architecture.md`](docs/architecture.md).

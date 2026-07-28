@@ -25,7 +25,9 @@ jobs:
       - name: Enforce privacy boundary
         run: uv run hmong-tts-privacy-scan
       - name: Validate configurations
-        run: uv run hmong-tts-config-check
+        run: |
+          uv run hmong-tts-config-check
+          uv run tts-workbench-models validate
       - name: Lint and format
         run: |
           uv run ruff check .
