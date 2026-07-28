@@ -81,6 +81,8 @@ future-work evidence in `docs/deferred/white_hmong_native_validation.md`.
 
 ## Next executable task
 
-After review and separate authorization, extract a reusable MMS inference
-adapter and run-manifest contract. Do not begin the local service milestone
-before the adapter and benchmark boundaries are approved.
+Follow `docs/implementation_roadmap.md`. First complete milestone M2 by renaming
+the active package, CLI, artifact-root variable, and repository-root marker.
+After M2 review, extract a fake-backed reusable MMS inference adapter and atomic
+run-manifest contract in M3. Do not download weights or begin the local service
+milestone before the adapter and benchmark boundaries are approved.

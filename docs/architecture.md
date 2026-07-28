@@ -31,3 +31,6 @@ Future milestones may add provider-neutral inference adapters, benchmark/QC
 reports, and a bounded local API. No application layer may embed White Hmong
 normalization or capability rules while NV-001 through NV-008 remain deferred
 **[NV]**.
+
+The ordered delivery plan and milestone acceptance criteria are in
+`docs/implementation_roadmap.md`.

@@ -65,4 +65,7 @@ makes a separate code-license decision. See
 
 See [`PROJECT_STATUS.md`](PROJECT_STATUS.md),
 [`docs/model_registry.md`](docs/model_registry.md), and
-[`docs/architecture.md`](docs/architecture.md).
+[`docs/architecture.md`](docs/architecture.md). The ordered implementation
+milestones, acceptance criteria, and future Hmong-learning-application boundary
+are documented in
+[`docs/implementation_roadmap.md`](docs/implementation_roadmap.md).
