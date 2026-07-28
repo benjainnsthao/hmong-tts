@@ -48,11 +48,12 @@ M1 registry
   -> M4 waveform QC, benchmarking, and environment capabilities
   -> M5 bounded local inference service
   -> M6 reproduction and portfolio evidence
+  -> M7 final risk closure and release decision
   -> deferred community-validated Hmong phase [NV]
 ```
 
 Do not begin the local service before the inference and benchmark contracts are
-stable.
+stable. M6 produces a release candidate; only M7 may declare it releasable.
 
 ## Milestone M1 — audited model registry
 
@@ -307,7 +308,8 @@ exists.
 
 ## Milestone M6 — reproduction and portfolio evidence
 
-Goal: produce a credible, reviewable ML-engineering release candidate.
+Goal: produce a credible, reviewable ML-engineering release candidate. M6
+collects evidence but does not make the final release decision.
 
 Estimated effort: 6–10 focused hours, excluding downloads and hardware runtime.
 
@@ -335,6 +337,71 @@ Estimated effort: 6–10 focused hours, excluding downloads and hardware runtime
   the repository as a reusable public software release.
 - White Hmong capability remains deferred **[NV]**.
 
+## Milestone M7 — final risk closure and release decision
+
+Goal: resolve or explicitly disposition every release risk before calling the
+workbench a validated release.
+
+Estimated effort: 6–12 focused hours plus human license/release decisions and
+authorized hardware execution.
+
+Authoritative input: [`docs/release_risk_register.md`](release_risk_register.md).
+
+### Deliverables
+
+- A completed release-risk register with owner, evidence, status, rationale,
+  scope, and review date for every item.
+- An explicit owner decision selecting either a public code license and release
+  mode or a private/local-only disposition.
+- A current license/provenance re-audit for every distributed code component,
+  registered checkpoint revision, prompt source, generated output, and report.
+- Authorized, sanitized M6 inference/QC/benchmark evidence for both registered
+  checkpoints on the intended release hardware, including the independently
+  audited external Vietnamese prompt.
+- CPU-only and intended-CUDA capability reports, with portability limitations
+  and no cross-device equivalence claim.
+- M5 service threat-model closure covering lifecycle, bounded concurrency,
+  resource exhaustion, local binding, input limits, timeouts, and logging.
+- Removal of the 0.2 legacy artifact-root variable before a stable public
+  release, or an owner-approved non-stable release restriction with a dated
+  removal plan.
+- A final privacy, tracked-artifact, dependency-lock, upstream-metadata,
+  documentation-claim, and release-package audit.
+- A signed release decision recording the exact commit, permitted audience/use,
+  model and weight distribution policy, known limitations, and next review
+  date.
+
+### Acceptance criteria
+
+- No release-blocking risk remains `open`.
+- An `accepted` or `deferred` risk names the human owner, affected release
+  scope, evidence/rationale, next review date, and user-facing limitation.
+- A public reusable release is blocked until the code-license decision is
+  complete.
+- Registered CC BY-NC 4.0 weights remain external and undistributed; release
+  materials clearly preserve the non-commercial checkpoint boundary.
+- Model cards, immutable revisions, licenses, prompt provenance, dependency
+  versions, and upstream availability have current source URLs and access
+  dates.
+- Both registered checkpoint demonstrations reproduce on authorized hardware.
+  Without that evidence, the artifact may be labeled only a
+  `contract-validated preview`, not a validated runtime release.
+- Benchmark results name their exact environment and make no cross-device
+  timing or waveform-equivalence promise.
+- QC/runtime success remains labeled engineering evidence and no report or
+  documentation infers pronunciation, naturalness, intelligibility, or
+  linguistic quality.
+- The final Git/package scan contains no weights, generated audio, cache,
+  prompt text, credentials, private identifiers, or absolute private paths.
+- M5 security/resource controls and all frozen/offline, formatting, lint,
+  typing, configuration, registry, privacy, synthetic, pre-commit, CLI, and
+  packaging gates pass at the release commit.
+- White Hmong capability and NV-001 through NV-008 remain explicitly deferred
+  **[NV]**; M7 does not substitute infrastructure evidence for community or
+  native-language validation.
+- The owner records `release`, `preview`, or `do_not_release`. Only `release`
+  completes M7 as a public-release gate.
+
 ## Future bridge to a Hmong learning application
 
 The workbench should preserve extension points for:
@@ -359,18 +426,9 @@ models and present the output as a prototype Hmong voice.
 
 ## Remaining cross-cutting risks
 
-- The repository currently grants no public code license.
-- Registered MMS weights are CC BY-NC 4.0 and non-commercial.
-- Registry metadata does not replace legal review or guarantee complete
-  upstream training-data clearance.
-- Provider APIs, runtime libraries, and model-host metadata can change.
-- Deterministic seeds do not guarantee byte-identical output across devices or
-  runtime versions.
-- Objective audio checks can miss linguistic or perceptual failures.
-- A local service still needs lifecycle, concurrency, resource-exhaustion, and
-  logging controls.
-- Future cultural-preservation value depends on community governance and
-  language evidence, not infrastructure alone.
+The authoritative itemized risks, required evidence, owners, and closure rules
+are maintained in [`docs/release_risk_register.md`](release_risk_register.md).
+M5 and M6 reduce these risks; M7 is the final disposition gate.
 
 ## Next executable task
 

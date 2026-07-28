@@ -232,3 +232,34 @@
   bounded local service. It establishes no Hmong capability and provides no
   real-model performance result. M5 may begin at these stable interfaces but
   must not treat QC or benchmark completion as language-quality evidence.
+
+## D-0011 — Separate release-candidate evidence from final risk disposition
+
+- Date: 2026-07-28
+- Decision: add M7 as the final release gate and make
+  `docs/release_risk_register.md` its authoritative input. M5 builds the bounded
+  service and M6 produces reproduction/portfolio evidence; neither alone may
+  declare a validated public release.
+- Disposition rule: every risk must be `closed`, or explicitly `accepted` or
+  `deferred` by a named human owner with scope, rationale, user-facing
+  limitation, and review date. Open release blockers force `preview` or
+  `do_not_release`.
+- Human gates: the owner must decide the code license/release mode, authorize
+  real checkpoint/hardware execution, approve public prompt provenance, and
+  sign the final release decision. Engineering documentation cannot substitute
+  for those decisions.
+- Alternatives: treat M6 as automatically releasable; leave risks as an
+  unowned narrative list; require every limitation to be technically
+  eliminated; fold future White Hmong validation into the infrastructure
+  release.
+- Evidence: M4 closed its implementation gates while code licensing, real-model
+  execution, Vietnamese prompt provenance, stable compatibility cleanup,
+  service controls, supply-chain freshness, and release claims remain distinct
+  risks with different owners and closure evidence.
+- Native-validation status: **[NV]** unchanged. REL-LANG-001 is deferred from
+  the infrastructure release; M7 must preserve the no-capability claim and
+  cannot close NV-001 through NV-008 without a separately authorized
+  community/native-validation phase.
+- Consequences: the project has a bounded final milestone that can produce
+  `release`, `preview`, or `do_not_release`. A public release cannot silently
+  inherit unresolved risks from M5/M6.

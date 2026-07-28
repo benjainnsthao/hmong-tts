@@ -97,3 +97,5 @@ See [`PROJECT_STATUS.md`](PROJECT_STATUS.md),
 milestones, acceptance criteria, and future Hmong-learning-application boundary
 are documented in
 [`docs/implementation_roadmap.md`](docs/implementation_roadmap.md).
+Remaining release risks and the final M7 closure/owner-decision gate are in
+[`docs/release_risk_register.md`](docs/release_risk_register.md).

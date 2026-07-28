@@ -195,22 +195,24 @@ future-work evidence in `docs/deferred/white_hmong_native_validation.md`.
 
 ## Open risks and blockers
 
-- **LICENSE-001:** no project code license is granted; public redistribution
-  requires an owner decision.
-- Registered MMS weights are CC BY-NC 4.0 and remain non-commercial.
-- Vietnamese inference still requires an independently audited public prompt;
-  the project invents none.
-- The legacy artifact-root variable remains accepted only for the documented
-  0.2 migration window and must be removed in a later breaking release.
-- CPU/CUDA inference readiness is capability evidence only; it does not prove a
-  model will fit or execute successfully for every prompt or runtime build.
-- QC defaults are conservative project sanity checks, not universal audio
-  quality thresholds.
-- Fake-backed benchmark tests validate orchestration and arithmetic, not
-  real-device performance.
-- No registered model has language quality evidence from this workbench.
-- The optional real MMS backend is contract-tested through fakes but has not
-  downloaded or executed either registered checkpoint during M3.
+The authoritative register is
+[`docs/release_risk_register.md`](docs/release_risk_register.md). It tracks:
+
+- public code-license and release-mode decisions;
+- CC BY-NC checkpoint use/redistribution and upstream provenance;
+- the missing independently audited Vietnamese prompt;
+- real-checkpoint/intended-hardware and portability evidence;
+- cross-device reproducibility limitations;
+- QC-versus-language-quality claim boundaries;
+- M5 service security/resource controls;
+- removal of the legacy artifact-root variable;
+- dependency/model-host drift and final supply-chain review;
+- release artifact/report privacy; and
+- the explicitly deferred White Hmong/community-validation boundary **[NV]**.
+
+M5 and M6 mitigate or produce evidence for these risks. M7 is the final
+risk-disposition and release-decision milestone. A public reusable release
+remains blocked until its release-blocking items are closed.
 
 ## Next executable task
 
