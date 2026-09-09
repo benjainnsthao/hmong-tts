@@ -94,3 +94,17 @@ root.
 
 M4 deliberately excludes LUFS, SNR, PESQ, STOI, MOS, ASR, pronunciation,
 linguistic, and perceptual scoring.
+
+## M6 authorized-hardware observations
+
+The unchanged thresholds above were applied to both M6 CUDA artifacts. Both
+WAVs reopened as mono 16 kHz PCM16 and produced `qc_passing` with zero failed
+rules. The English artifact contained 38,656 frames (2.416 seconds), peak
+0.738586, RMS 0.110700, zero clipping ratio, and total near-silence ratio
+0.331255. The Vietnamese artifact contained 185,600 frames (11.600 seconds),
+peak 0.829498, RMS 0.102642, zero clipping ratio, and total near-silence ratio
+0.288513.
+
+These observations indicate only that the configured structural/level checks
+passed. Full JSON and WAV files remain outside Git; the sanitized table is in
+`reports/validation/m6_reproduction_validation.md`.

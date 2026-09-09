@@ -143,9 +143,18 @@ risks.
 ## Evidence limitations
 
 M5 validation used injected fakes, in-process ASGI calls, and synthetic WAVs
-inside pytest temporary directories. It did not start a persistent server,
-install the MMS optional group, download/execute weights, access a model host,
-or use real/external/native-language content.
+inside pytest temporary directories. That remains the ordinary regression and
+CI boundary.
+
+M6 temporarily launched the same production application on the configured
+loopback interface with explicit model-access acknowledgement, one Uvicorn
+worker, access logging disabled, and the external artifact root. It verified
+health, readiness, both registry records, a sanitized unknown-model rejection,
+and successful CUDA synthesis for both exact registered checkpoints. The
+rejection echoed no prompt and created no artifact; normal server output held
+no access/client record. Shutdown drained work, unloaded the adapter, exited,
+and left no listener. `scripts/probe_local_service.py` reproduces the requests
+without printing prompts.
 
 HTTP success, registry inclusion, runtime readiness, and an atomic manifest do
 not establish pronunciation, naturalness, intelligibility, linguistic

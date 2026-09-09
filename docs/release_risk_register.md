@@ -4,8 +4,8 @@ This register is the authoritative input to Milestone M7. It separates risks
 that engineering can close from decisions or evidence that require the owner,
 authorized hardware, public-source review, or future community participation.
 
-M4 completion does not close these risks. Until M7 passes, the repository is a
-workbench under development rather than a validated public release.
+M6 completion does not close these risks. Until M7 passes, the repository is an
+engineering release candidate rather than a validated public release.
 
 ## Status and disposition rules
 
@@ -37,7 +37,7 @@ identify the approving human; a commit message alone is not approval.
 
 ### REL-LIC-002 — checkpoint use and redistribution
 
-- Current status: `mitigated`.
+- Current status: `mitigated`; pending M7 final audit.
 - Risk: registered MMS weights are CC BY-NC 4.0, non-commercial, and unsuitable
   for a release that implies unrestricted commercial use.
 - Existing control: registry permits only local non-commercial inference and
@@ -51,45 +51,54 @@ identify the approving human; a commit message alone is not approval.
 
 ### REL-PROMPT-001 — Vietnamese prompt provenance
 
-- Current status: `open`; blocker for the Vietnamese M6 demonstration.
-- Risk: no independently audited public Vietnamese prompt is supplied.
-- Required closure: the owner supplies or approves an external public prompt
-  with documented license/provenance. Prompt text and private location remain
-  outside Git; reports retain only the registered reference and SHA-256.
-- Evidence: external provenance record, reviewer/date, prompt hash, and
-  successful sanitized run report.
-- Human gate: public-source/provenance approval.
+- Current status: `mitigated`; pending M7 final audit.
+- Risk: prompt provenance could be incomplete, mutable, or disclosed with raw
+  text/private location.
+- M6 control: an unmodified sentence from Article 1 of Vietnam's 2013
+  Constitution was sourced from the official National Assembly/Government
+  Portal scan. Vietnam IP Law No. 50/2005/QH11 Article 15(2), published by WIPO
+  Lex, excludes legal documents and official translations from copyright
+  protection. Registry reference and SHA-256 are committed; prompt/source
+  material remains external.
+- Required closure: M7 re-audits the primary record, source scan, legal basis,
+  hash, absence of raw text, and intended release documentation.
+- Evidence: `docs/m6_reproduction.md`, `docs/license_matrix.md`, and
+  `reports/validation/m6_reproduction_validation.md`.
 
 ### REL-RUNTIME-001 — real checkpoint and intended-hardware evidence
 
-- Current status: `open`.
-- Risk: adapter, QC, and benchmark orchestration are fake-tested, but neither
-  registered checkpoint has been executed for M4 validation.
-- Required closure: explicitly authorize model access, install the audited
-  optional runtime, and reproduce inference/QC/benchmark reports for both
-  immutable checkpoint revisions on intended hardware.
+- Current status: `mitigated`; pending M7 final audit.
+- Risk: runtime evidence can drift from the registered checkpoints, frozen
+  environment, or intended hardware.
+- M6 control: explicitly authorized execution reproduced the separate locked
+  MMS environment and ran inference, QC, bounded benchmarks, and the real
+  loopback service for both immutable revisions on requested/resolved CUDA with
+  an RTX 4070.
+- Required closure: M7 re-audits the exact release commit and retained external
+  evidence against the documented environment and registry.
 - Evidence: sanitized environment report, run manifests, QC reports, benchmark
   reports, commands, checkpoint revisions, dependency versions, and failure
   resolution record.
 - Release rule: without both demonstrations, label the result
   `contract-validated preview`, not a validated runtime release.
-- Human gate: model-access and hardware-execution authorization.
+- Human gate: final release-scope approval remains M7 work.
 
 ### REL-PORT-001 — portability and resource observability
 
-- Current status: `mitigated`.
+- Current status: `mitigated`; pending M7 final audit.
 - Risk: CPU/CUDA readiness and memory availability vary by OS, runtime build,
   driver, and device; unavailable measurements do not prove zero usage.
 - Required closure: validate core operation on the supported CPU-only
   environment and inference on intended CUDA hardware; document unavailable
   resource fields and platform exclusions.
 - Evidence: sanitized capability matrix, frozen dependency versions, target
-  hardware report, and documented support boundaries.
+  hardware report, separate clean core/MMS environments, actual CPU/CUDA memory
+  availability, and documented support boundaries.
 - Residual limitation: no cross-device timing or waveform equivalence claim.
 
 ### REL-REPRO-001 — deterministic settings versus cross-device equivalence
 
-- Current status: `mitigated`.
+- Current status: `mitigated`; pending M7 final audit.
 - Risk: fixed seeds/settings improve same-environment reproduction but do not
   guarantee byte-identical waveforms or timing across devices/runtime versions.
 - Required closure: record exact model, revision, adapter, dependency, device,
@@ -100,14 +109,15 @@ identify the approving human; a commit message alone is not approval.
 
 ### REL-QC-001 — engineering QC is not language quality
 
-- Current status: `mitigated`.
+- Current status: `mitigated`; pending M7 final audit.
 - Risk: QC pass or runtime success could be misrepresented as naturalness,
   intelligibility, pronunciation, or linguistic evidence.
 - Existing control: every M4 rule/report uses
   `evidence_scope: engineering_sanity_check`.
 - Required closure: audit all CLI/API/release text and sample/report labels;
   preserve the limitations notice; add no linguistic acceptance threshold.
-- Evidence: claims scan, documentation review, and release checklist.
+- Evidence: unchanged M4 thresholds, two M6 structural reports, claims scan,
+  documentation review, and release checklist.
 - Residual limitation: objective waveform checks can miss perceptual or
   linguistic failures.
 
@@ -122,7 +132,8 @@ identify the approving human; a commit message alone is not approval.
 - Evidence: `docs/local_service.md`, `docs/service_threat_model.md`,
   `reports/validation/m5_service_validation.md`, schema/OpenAPI/configuration
   gates, focused branch coverage, in-process ASGI tests, queue/shutdown tests,
-  and negative binding/privacy/package scans.
+  negative binding/privacy/package scans, and the M6 real-backend loopback
+  demonstration with clean shutdown.
 - Residual limitation: loopback is not authentication; another local process
   may reach the port, long native/model calls are not safely preemptible, and
   repeated local calls can still consume resources.
@@ -143,7 +154,7 @@ identify the approving human; a commit message alone is not approval.
 
 ### REL-SUPPLY-001 — upstream and dependency drift
 
-- Current status: `mitigated`.
+- Current status: `mitigated`; pending M7 final audit.
 - Risk: model cards, licenses, model-host availability, APIs, dependencies,
   drivers, and optional runtime behavior can change.
 - Existing control: immutable model revisions and frozen Python lock.
@@ -151,20 +162,21 @@ identify the approving human; a commit message alone is not approval.
   checkpoint availability without changing revisions, validate the frozen lock
   offline, review dependency advisories, and record accepted exceptions.
 - Evidence: refreshed license matrix/registry audit, lock verification,
-  dependency inventory, and source URLs/access dates.
+  dependency inventory, exact cached checkpoint snapshot identities,
+  safetensors selection, and source URLs/access dates.
 - Human/external gate: network source review; any material license/model change
   requires owner approval.
 
 ### REL-PRIV-001 — release artifact and report privacy
 
-- Current status: `mitigated`.
+- Current status: `mitigated`; pending M7 final audit.
 - Risk: weights, generated audio, prompts, caches, credentials, private paths,
   or machine/client identifiers could enter Git or release packages.
 - Required closure: run privacy, tracked-artifact, package-content, report
   schema, absolute-path, credential, and history scans at the exact release
   commit.
-- Evidence: final validation report and package inventory showing no forbidden
-  material.
+- Evidence: M6 privacy/tracked-artifact/report/package scans and wheel inventory
+  showing no forbidden material; repeat against the exact M7 release commit.
 
 ### REL-LANG-001 — no White Hmong capability or community evidence
 

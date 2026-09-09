@@ -27,7 +27,7 @@ def load_project_metadata(repository_root: Path) -> dict[str, object]:
 
 
 def test_new_package_import_succeeds() -> None:
-    assert tts_workbench.__version__ == "0.4.0"
+    assert tts_workbench.__version__ == "0.5.0"
 
 
 def test_old_package_import_fails() -> None:
@@ -42,7 +42,7 @@ def test_distribution_and_build_identity_are_neutral(repository_root: Path) -> N
     hatch = metadata["tool"]["hatch"]["build"]["targets"]["wheel"]
 
     assert project["name"] == "audited-tts-workbench"
-    assert project["version"] == "0.4.0"
+    assert project["version"] == "0.5.0"
     assert hatch["packages"] == ["src/tts_workbench"]
 
 

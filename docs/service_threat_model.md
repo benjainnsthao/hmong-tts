@@ -70,6 +70,17 @@ M5 also adds no model download during validation, real audio, native-language
 prompt, language normalization, pronunciation scoring, or capability claim.
 White Hmong adaptation and NV-001 through NV-008 remain deferred **[NV]**.
 
+## M6 real-backend check
+
+M6 exercised the unchanged boundary with one temporary loopback process and
+the locked real MMS backend. Both registered models completed serial CUDA
+requests. An unknown model returned its generic category without prompt echo or
+artifact creation. Server output contained startup/shutdown lifecycle messages
+but no access/client record, prompt, backend exception, or artifact path.
+Shutdown drained the coordinator, unloaded the adapter, exited, and left no
+listener. This evidence mitigates implementation/lifecycle risk but does not
+change any residual operator duty or approve public deployment.
+
 ## M7 review requirement
 
 REL-SERVICE-001 is mitigated by the M5 controls and synthetic evidence, but M7

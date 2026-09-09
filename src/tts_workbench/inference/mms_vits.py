@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import gc
 import importlib
 from collections.abc import Callable, Iterable, Mapping
 from typing import Any, Protocol, SupportsFloat, cast
@@ -155,11 +156,19 @@ class TransformersMmsBackend:
         return WaveformResult(samples=samples, sample_rate=sample_rate, channel_count=1)
 
     def unload(self) -> None:
+        torch_module = self._torch
         self._model = None
         self._tokenizer = None
         self._runtime = None
         self._transformers = None
         self._torch = None
+        gc.collect()
+        if torch_module is not None:
+            try:
+                if bool(torch_module.cuda.is_available()):
+                    torch_module.cuda.empty_cache()
+            except (AttributeError, RuntimeError, TypeError, ValueError):
+                pass
 
 
 class MmsVitsAdapter:

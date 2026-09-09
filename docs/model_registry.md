@@ -4,8 +4,8 @@
 checkpoint identity and workbench-use policy. Registry commands validate
 metadata only; they do not contact a model host or download weights.
 
-The registry is loaded through `tts_workbench.models` and is unchanged by the
-0.2 namespace migration and M3/M4 execution work. Its schema version remains 1.
+The registry is loaded through `tts_workbench.models`. Its schema version
+remains 1.
 
 ## Required fields and policy
 
@@ -33,8 +33,9 @@ Repository aliases or caller-supplied revisions are not accepted.
 
 A request's `prompt_set_reference` must exactly match its registry entry.
 The built-in English reference identifies only the existing project-authored
-synthetic smoke fixture. The Vietnamese entry still requires an external,
-independently audited public prompt; M3 adds no Vietnamese prompt content.
+synthetic smoke fixture. The Vietnamese entry identifies the externally
+retained, independently audited 2013 Constitution Article 1 prompt; no prompt
+content is stored in the registry or repository.
 
 Successful run manifests copy the eligible entry's model ID, provider,
 repository, revision, architecture, documented language tag, license/use/
@@ -51,9 +52,10 @@ M3 manifests and retain only a SHA-256 prompt hash.
 
 `tts-workbench-benchmark run` fails closed without
 `--acknowledge-model-access`. The English entry may use its existing synthetic
-smoke prompt. The Vietnamese entry still requires an artifact-root-relative,
-independently audited public prompt file. M4 validation uses only the synthetic
-test registry and does not execute either real entry.
+smoke prompt. The Vietnamese entry requires the matching artifact-root-relative
+audited prompt file. M4 validation used only the synthetic test registry; M6
+separately executed both real entries after the provenance and model-access
+gates passed.
 
 ## M5 service routing
 
@@ -73,8 +75,10 @@ unknown model returns a sanitized 404 before inference.
 - `mms-eng`: public English MMS/VITS checkpoint. Its built-in input is a
   project-authored synthetic smoke fixture, not a language-quality evaluation.
 - `mms-vie`: public Vietnamese MMS/VITS checkpoint. Inference requires an
-  external public prompt with independent license/provenance review; the
-  workbench invents no Vietnamese prompt.
+  external public prompt matching
+  `external:vietnam-constitution-2013-article-1`. Its source/license audit and
+  SHA-256 are recorded without text in `docs/m6_reproduction.md`; the workbench
+  invents no Vietnamese prompt.
 
 Both are CC BY-NC 4.0, scoped to local non-commercial inference, and have no
 linguistic-quality finding from this project. Their inclusion does not provide
@@ -91,6 +95,12 @@ tts-workbench-serve openapi
 
 An alternate local registry may be checked with `--registry PATH`. Validation
 is fail-closed and performs no weight download.
+
+Both model provenance records were re-audited on 2026-09-09 at their exact
+Hugging Face revisions. M6 cache snapshot identities matched the registered
+40-character revisions; callers still cannot provide alternate repositories or
+mutable revisions. Both checkpoint pages listed CC BY-NC 4.0 and safetensors
+weights. M6 does not change use, redistribution, or quality policy.
 
 Before adding a model, update `docs/license_matrix.md` from primary sources,
 pin an immutable revision, record prompt provenance, and add policy tests.

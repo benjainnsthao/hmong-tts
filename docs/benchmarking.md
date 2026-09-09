@@ -42,6 +42,11 @@ one excluded warmup, three measured repetitions, a hard maximum of ten, seed
 point-in-time memory requested, `benchmarks/latest.json`, and `continue`
 failure handling.
 
+`configs/benchmark/cuda.yaml` preserves the same bounded repetitions, seed,
+generation settings, memory observation, and failure handling while requiring
+the intended `cuda` device. It exists for explicit authorized-hardware evidence
+and does not change the portable default.
+
 The runner injects clock, adapter, registry, resource observer, and environment
 collector seams. It resolves an approved immutable model and matching prompt
 reference before adapter load. The same model ID, device request, seed, and
@@ -91,3 +96,21 @@ QC.
 
 M4 implementation and validation did not invoke the execution command, import
 the optional ML runtime, download weights, or run a real checkpoint.
+
+## M6 authorized-hardware observations
+
+M6 separately executed the CUDA configuration on an RTX 4070 with PyTorch
+2.12.0+cu130, Transformers 5.13.1, float32, seed 555, one excluded warmup,
+and three successful measured repetitions per exact checkpoint. The English
+run recorded 2.374749 seconds cold load, 0.044189 seconds median synthesis,
+0.044990 seconds p95, 0.018290 median RTF, and 0.018622 p95 RTF. The
+Vietnamese run recorded 2.337115 seconds cold load, 0.111316 seconds median
+synthesis, 0.114130 seconds p95, 0.009596 median RTF, and 0.009839 p95 RTF.
+Both failure counts were zero and CPU/CUDA memory observations were available.
+The immutable snapshots were already present in the external model cache;
+"cold load" retains the M4 definition of one fresh adapter/model load and does
+not include checkpoint download time.
+
+These are point-in-time engineering measurements for one environment, not a
+cross-language ranking or quality finding. Full reports remain external; see
+`reports/validation/m6_reproduction_validation.md` for sanitized evidence.

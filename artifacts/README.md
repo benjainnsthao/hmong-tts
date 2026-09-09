@@ -87,5 +87,36 @@ resolved absolute artifact root.
 Generated audio and third-party weights must never be committed or
 redistributed by this project. No private speaker data is in the active scope.
 
+## M6 external evidence layout
+
+M6 additionally uses these external-only subtrees:
+
+```text
+TTS_WORKBENCH_ARTIFACT_ROOT/
+  cache/
+    huggingface/
+    torch/
+    uv/
+  m6/
+    prompts/       official source, OCR intermediates, raw prompt
+    runs/          direct WAV/manifest pairs
+    qc/            full structural reports
+    benchmarks/    full bounded timing/resource reports
+    wheel/         inspected candidate wheel
+    environment.json
+  service/runs/    temporary real-service WAV/manifest pairs
+```
+
+Only root-relative labels, registry identities, checksums, versions, sanitized
+measurements, source URLs, and pass/fail outcomes may be copied into committed
+M6 evidence. The raw prompt, its source/OCR files, checkpoints, caches, audio,
+complete reports, run identifiers, resolved roots, and machine-local details
+remain external. Model access uses `HF_HOME` and `TORCH_HOME` below the same
+boundary; uv downloads use an external `UV_CACHE_DIR`.
+
+The external M6 directory is local review evidence and is not a release
+artifact. Retention/deletion is an operator decision after M7; this repository
+does not implement an automatic destructive cleanup command.
+
 The original private recording-data layout is historical documentation at
 `docs/history/white_hmong_single_speaker/private_data_layout.md`.

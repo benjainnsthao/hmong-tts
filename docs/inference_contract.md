@@ -171,3 +171,20 @@ structure, and a manifest do not establish pronunciation, naturalness,
 linguistic correctness, White Hmong capability, or readiness for a Hmong
 learning application. White Hmong adaptation and NV-001 through NV-008 remain
 deferred **[NV]**.
+
+## M6 real-runtime evidence
+
+Direct MMS execution now requires `--acknowledge-model-access`; preflight and
+help remain metadata-only. On 2026-09-09 both registered immutable revisions
+ran with requested/resolved CUDA, float32, seed 555, and the committed default
+generation settings. Each output reopened as mono 16 kHz PCM16 and matched its
+manifest frame count, duration, checksum, registry identity, and root-relative
+path. The raw prompts and absolute artifact/cache roots were absent from the
+manifests and ordinary output.
+
+The optional backend owns one model/tokenizer pair, clears those references on
+unload, performs collection, and releases unused CUDA cache. Runtime-context
+memory that remains observable after unload is reported honestly by the
+benchmark and is not interpreted as a retained adapter model. Full machine-local
+artifacts remain outside Git; sanitized results are in
+`reports/validation/m6_reproduction_validation.md`.

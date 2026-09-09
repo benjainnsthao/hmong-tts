@@ -121,3 +121,24 @@ No runtime, HTTP, manifest, QC, or benchmark success is linguistic-quality
 evidence. M5 used only fakes and pytest-temporary synthetic WAVs. It provides no
 real-model performance result and establishes no White Hmong capability.
 NV-001 through NV-008 remain deferred **[NV]**.
+
+## M6 realized deployment evidence
+
+M6 preserved these component boundaries while exercising them on authorized
+hardware. A core-only frozen environment imported contracts, configuration,
+registry, OpenAPI, service schemas, and every help path without importing
+PyTorch or Transformers. A separate locked MMS environment lazily loaded one
+registry-selected model at a time on CUDA.
+
+Both registered checkpoints traversed the same adapter, executor, atomic
+artifact, QC, and benchmark paths. Explicit unload now clears model/tokenizer
+ownership, runs Python collection, and releases unused CUDA cache. The real
+loopback process retained one application/coordinator/adapter owner while
+switching between the two registry entries; shutdown drained the coordinator,
+unloaded the adapter, and exited without a listener.
+
+Detailed WAVs, manifests, reports, prompts, caches, and source downloads remain
+under the external artifact root. The repository contains only sanitized
+summaries and reproducible commands. See `docs/m6_reproduction.md` and
+`reports/validation/m6_reproduction_validation.md`. This realization evidence
+does not expand the service, security, model, or linguistic scope.

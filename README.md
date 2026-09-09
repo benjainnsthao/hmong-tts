@@ -17,9 +17,10 @@ indexed in
 
 ## Current milestone
 
-Milestone M5 adds a bounded localhost-only FastAPI service around the M3
-inference executor and M4 readiness boundaries. The distribution is
-`audited-tts-workbench` 0.4.0 with eight `tts-workbench-*` commands.
+Milestone M6 completes authorized-hardware reproduction and portfolio evidence
+for the M3–M5 workbench. The distribution is `audited-tts-workbench` 0.5.0
+with eight `tts-workbench-*` commands. This is a release candidate; only M7
+may determine release disposition.
 
 Ordinary imports and CI do not import PyTorch or Transformers. The optional real
 MMS backend imports them only when explicitly loaded; synthetic tests use
@@ -46,7 +47,8 @@ without invoking an ML runtime.
 QC thresholds are conservative engineering sanity checks, not language-quality
 criteria. Benchmark reports separate cold model loading from warm synthesis,
 exclude configured warmups from aggregates, and use deterministic nearest-rank
-p95. No real checkpoint was executed to validate M4. See
+p95. M6 ran both exact registered revisions on an RTX 4070 through CUDA and
+retained only sanitized summaries in Git. See
 [`docs/waveform_qc.md`](docs/waveform_qc.md) and
 [`docs/benchmarking.md`](docs/benchmarking.md).
 
@@ -65,6 +67,12 @@ addresses, one Uvicorn worker, disabled access/request/client logging, and
 public deployment disabled. Localhost is a development boundary, not a
 complete authentication system.
 
+M6 exercised health, readiness, registry metadata, one sanitized rejection,
+and successful CUDA synthesis for both registered models through the real
+one-worker service. It then shut the service down and verified that no listener
+remained. See the
+[`M6 validation evidence`](reports/validation/m6_reproduction_validation.md).
+
 ## Reproducible core
 
 ```powershell
@@ -78,6 +86,12 @@ python -m uv run pytest --cov=tts_workbench --cov-branch
 The optional MMS stack is large and remains platform-gated. Registry validation
 and all ordinary tests run without PyTorch, Transformers, a GPU, network
 access, or downloaded weights.
+
+Fresh-core, separate locked MMS/CUDA, prompt provenance, inference, QC,
+benchmark, artifact-integrity, and loopback-service commands are in
+[`docs/m6_reproduction.md`](docs/m6_reproduction.md). A concise engineering
+case study is in
+[`docs/m6_portfolio_summary.md`](docs/m6_portfolio_summary.md).
 
 ## Artifact boundary
 

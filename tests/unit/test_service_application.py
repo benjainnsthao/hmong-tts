@@ -177,7 +177,7 @@ def test_health_is_independent_of_model_cuda_and_artifact_state(
         assert response.json() == {
             "schema_version": 1,
             "status": "healthy",
-            "service_version": "0.4.0",
+            "service_version": "0.5.0",
         }
         assert "hostname" not in response.text
         assert "client" not in response.text

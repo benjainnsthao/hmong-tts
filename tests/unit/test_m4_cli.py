@@ -69,6 +69,30 @@ def test_benchmark_execution_fails_closed_without_acknowledgement(
     assert "transformers" not in sys.modules
 
 
+def test_mms_execution_fails_closed_without_acknowledgement(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    sys.modules.pop("torch", None)
+    sys.modules.pop("transformers", None)
+
+    assert mms_smoke_main([]) == 2
+
+    assert "--acknowledge-model-access is required" in capsys.readouterr().err
+    assert "torch" not in sys.modules
+    assert "transformers" not in sys.modules
+
+
+def test_mms_preflight_does_not_require_model_access_acknowledgement(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setattr("tts_workbench.inference.mms_smoke.preflight_failures", lambda: [])
+
+    assert mms_smoke_main(["--preflight-only"]) == 0
+
+    assert "MMS smoke preflight passed" in capsys.readouterr().out
+
+
 def test_qc_cli_writes_external_report_and_uses_stable_nonpass_exit(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

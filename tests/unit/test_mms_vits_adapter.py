@@ -5,6 +5,7 @@ import subprocess
 import sys
 from collections.abc import Iterator
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -232,6 +233,30 @@ def test_real_backend_reports_missing_optional_dependencies_without_import_at_mo
             revision="1" * 40,
             requested_device="cpu",
         )
+
+
+def test_real_backend_unload_drops_state_and_releases_cuda_cache() -> None:
+    empty_cache_calls = 0
+
+    def empty_cache() -> None:
+        nonlocal empty_cache_calls
+        empty_cache_calls += 1
+
+    backend = TransformersMmsBackend()
+    backend._torch = SimpleNamespace(  # noqa: SLF001
+        cuda=SimpleNamespace(is_available=lambda: True, empty_cache=empty_cache)
+    )
+    backend._transformers = object()  # noqa: SLF001
+    backend._tokenizer = object()  # noqa: SLF001
+    backend._model = object()  # noqa: SLF001
+
+    backend.unload()
+
+    assert backend._torch is None  # noqa: SLF001
+    assert backend._transformers is None  # noqa: SLF001
+    assert backend._tokenizer is None  # noqa: SLF001
+    assert backend._model is None  # noqa: SLF001
+    assert empty_cache_calls == 1
 
 
 def test_package_contract_and_adapter_imports_are_lazy(

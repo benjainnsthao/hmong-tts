@@ -308,3 +308,42 @@
 - Native-validation status: **[NV]** unchanged. M5 adds no White Hmong prompt,
   tag, rule, normalization, evaluation, or capability claim. HTTP success does
   not establish linguistic quality; NV-001 through NV-008 remain deferred.
+
+## D-0013 — M6 external evidence, immutable execution, and release-candidate boundary
+
+- Date: 2026-09-09
+- Environment decision: reproduce the core and the optional MMS runtime in
+  separate clean Python 3.12 environments from the frozen lock. The core cache
+  may be populated online once and then synchronized into a second environment
+  with offline mode; it must not import PyTorch or Transformers. The MMS
+  environment remains Linux x86-64-only and uses the external uv/Hugging Face/
+  Torch cache boundary.
+- Model-access decision: direct MMS execution now joins benchmark and service
+  execution in requiring explicit `--acknowledge-model-access`. All repository,
+  revision, license/use, redistribution, prompt-reference, and quality-status
+  values continue to come only from registry schema version 1.
+- Prompt decision: register
+  `external:vietnam-constitution-2013-article-1` after auditing the official
+  National Assembly/Government Portal source and Vietnam IP Law Article 15(2)
+  public-domain basis. Keep the source scan, OCR material, and prompt outside
+  Git; commit only the stable reference, source URLs, audit date, and SHA-256.
+  Do not invent, translate, or correct the prompt.
+- Artifact decision: checkpoint snapshots, caches, WAVs, run manifests, full
+  environment/QC/benchmark reports, service outputs, and prompt material remain
+  external. Commit only sanitized summary facts and commands using
+  artifact-root-relative references.
+- Runtime decision: demonstrate both exact immutable checkpoints with requested
+  and resolved CUDA, float32, seed 555, registered prompts, atomic manifests,
+  structural QC, bounded benchmarks, and a real one-worker loopback service.
+  Explicit backend unload drops model/tokenizer ownership, runs collection, and
+  releases unused CUDA cache.
+- Evidence decision: report unavailable resource observations as unavailable,
+  retain actual nonzero CUDA-runtime observations after unload, and preserve the
+  M4 timing/QC definitions. Do not tune thresholds to obtain a pass or add a
+  perceptual or linguistic metric.
+- Release boundary: M6 marks an engineering release candidate only. It does not
+  select `release`, `preview`, or `do_not_release`; resolve the open code-license
+  and compatibility decisions and disposition all risks only in M7.
+- Native-validation status: **[NV]** unchanged. M6 adds no White Hmong prompt,
+  tag, rule, normalization, training, adaptation, evaluation, or support claim.
+  NV-001 through NV-008 remain deferred.

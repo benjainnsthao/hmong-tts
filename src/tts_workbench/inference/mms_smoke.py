@@ -55,6 +55,11 @@ def build_parser(registry: ModelRegistry) -> argparse.ArgumentParser:
     parser.add_argument("--seed", type=int, default=555)
     parser.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
     parser.add_argument("--preflight-only", action="store_true")
+    parser.add_argument(
+        "--acknowledge-model-access",
+        action="store_true",
+        help="explicitly authorize local model access for this run",
+    )
     return parser
 
 
@@ -62,6 +67,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     registry = load_model_registry()
     args = build_parser(registry).parse_args(argv)
     model_entry = registry.by_id(args.model)
+    if not args.preflight_only and not args.acknowledge_model_access:
+        print(
+            "MMS SMOKE BLOCKED: --acknowledge-model-access is required.",
+            file=sys.stderr,
+        )
+        return 2
     failures = preflight_failures()
     if failures:
         print("MMS smoke preflight failed:", file=sys.stderr)

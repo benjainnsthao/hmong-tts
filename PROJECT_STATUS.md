@@ -1,12 +1,12 @@
 # Project status
 
-Last updated: 2026-07-28
+Last updated: 2026-09-09
 
 ## Current milestone
 
 - Project: audited pretrained multi-language TTS inference, benchmarking, and
   local-deployment workbench.
-- Milestone: **M5 bounded local inference service — complete**.
+- Milestone: **M6 reproduction and portfolio evidence — complete**.
 - Active branch: `rescope/audited-tts-workbench`.
 - Preserved baseline: `archive/white-hmong-single-speaker-tts-v0.1` at
   `fd1756485b1e1b75fd1efee5e37519fa8e255415`.
@@ -218,6 +218,51 @@ deferred **[NV]**.
   server, real audio, external/native-language content, CORS, UI, M6
   demonstration, or M7 release decision was used.
 
+## M6 deliverables
+
+- Distribution version 0.5.0 and a dedicated locked CUDA benchmark config.
+- Fresh clean Python 3.12 core synchronization online and offline without the
+  MMS extra or heavyweight optional imports.
+- Separate frozen `mms` environment with PyTorch 2.12.0+cu130, Transformers
+  5.13.1, safetensors 0.8.0, Accelerate 1.14.0, and SciPy 1.18.0.
+- Sanitized WSL/Linux x86-64, dependency, driver-visibility, CUDA, RTX 4070,
+  memory, and dtype evidence.
+- Refreshed primary-source dependency and exact-revision checkpoint audit.
+- Externally retained Vietnamese prompt from an official National Assembly
+  legal document, registered provenance reference, public-domain basis, and
+  SHA-256 only in Git; no raw prompt text is committed.
+- Explicit model-access acknowledgement on direct MMS execution as well as
+  benchmark and service execution.
+- Successful real CUDA inference for both exact registered checkpoints with
+  atomic WAV/manifest publication, reopen/checksum/identity validation, and
+  explicit adapter unload.
+- Unchanged structural QC thresholds and bounded one-warmup/three-measurement
+  benchmarks for both demonstrations, including observable CPU/CUDA memory.
+- Real one-worker loopback service demonstration covering health, readiness,
+  model metadata, both models, sanitized rejection, no prompt/access logging,
+  shutdown, and no persistent listener.
+- Reproducible operator instructions, sanitized validation evidence, and a
+  concise portfolio-facing engineering summary.
+
+## M6 validation
+
+- Repository synchronization, M5 ancestry, protected refs, and clean-start
+  checks: PASS.
+- Frozen lock, online/offline clean core environments, package install, lazy
+  imports, configurations, registry metadata, privacy, synthetic coverage,
+  focused service coverage, in-process ASGI, pre-commit, help/metadata paths,
+  old-identity absence, wheel build/inventory, and package install: PASS.
+- Optional MMS lock reproduction and CUDA capability gates: PASS on an RTX
+  4070 under WSL2 without driver or kernel modification.
+- Exact English and Vietnamese checkpoint resolution, CUDA inference,
+  WAV/manifest integrity, structural QC, and bounded benchmarks: PASS.
+- Real loopback service and clean shutdown: PASS.
+- Tracked artifact, prompt/privacy, historical-evidence, deferred-NV, active
+  scope, and whitespace scans: PASS.
+- Detailed results: `reports/validation/m6_reproduction_validation.md`.
+
+M6 is engineering evidence, not language-quality evidence or release approval.
+
 ## Preserved historical work
 
 The completed White Hmong single-speaker Phase 0 validation remains unchanged
@@ -230,9 +275,7 @@ future-work evidence in `docs/deferred/white_hmong_native_validation.md`.
 
 ## Explicitly not started
 
-- M6 real-checkpoint reproduction and portfolio demonstrations.
 - M7 final risk disposition or release decision.
-- Optional MMS dependency installation or checkpoint/model-cache access.
 - White Hmong text handling, prompts, normalization, adaptation, or evaluation.
 - Recording, private speaker data, consent execution, or training.
 
@@ -243,8 +286,8 @@ The authoritative register is
 
 - public code-license and release-mode decisions;
 - CC BY-NC checkpoint use/redistribution and upstream provenance;
-- the missing independently audited Vietnamese prompt;
-- real-checkpoint/intended-hardware and portability evidence;
+- M7 re-audit of the independently sourced Vietnamese prompt;
+- M7 final audit of real-checkpoint/intended-hardware and portability evidence;
 - cross-device reproducibility limitations;
 - QC-versus-language-quality claim boundaries;
 - final M7 audit of the mitigated M5 service controls;
@@ -253,15 +296,14 @@ The authoritative register is
 - release artifact/report privacy; and
 - the explicitly deferred White Hmong/community-validation boundary **[NV]**.
 
-M5 mitigates the bounded-service risk; M6 produces runtime and reproduction
-evidence. M7 is the final risk-disposition and release-decision milestone. A
-public reusable release remains blocked until its release-blocking items are
-closed.
+M6 provides runtime and reproduction evidence and mitigates the corresponding
+risks pending M7 final audit. M7 is the final risk-disposition and
+release-decision milestone. A public reusable release remains blocked until
+its release-blocking items are closed.
 
 ## Next executable task
 
-Begin M6 from the frozen M5 service boundary by writing fresh-clone
-reproduction instructions and an explicit authorized-hardware evidence
-procedure. Real checkpoint access, the English demonstration, and the
-independently audited Vietnamese prompt remain separate operator gates. Do not
-make an M7 release decision or add White Hmong language behavior.
+Begin M7 from the completed M6 release-candidate evidence. Re-audit and
+disposition every release risk, obtain the required human code-license/release
+decisions, and select a release disposition only in that milestone. Preserve
+the deferred White Hmong boundary and NV-001 through NV-008.

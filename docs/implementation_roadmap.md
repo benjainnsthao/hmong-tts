@@ -1,6 +1,6 @@
 # Audited TTS workbench implementation roadmap
 
-Status: approved direction; milestone M4 complete
+Status: approved direction; milestone M6 complete
 
 ## Purpose
 
@@ -323,6 +323,8 @@ collects evidence but does not make the final release decision.
 
 Estimated effort: 6–10 focused hours, excluding downloads and hardware runtime.
 
+Status: **complete**.
+
 ### Deliverables
 
 - Fresh-clone core reproduction instructions.
@@ -346,6 +348,28 @@ Estimated effort: 6–10 focused hours, excluding downloads and hardware runtime
 - The owner makes an explicit project code-license decision before presenting
   the repository as a reusable public software release.
 - White Hmong capability remains deferred **[NV]**.
+
+### Delivered
+
+- Clean frozen online and offline core reproduction without the optional ML
+  stack, plus wheel build/install and package-content inspection.
+- A separate frozen Python 3.12 MMS environment on WSL/Linux x86-64 with
+  sanitized RTX 4070 and CUDA capability evidence.
+- Refreshed primary-source dependency, exact-checkpoint, license, host-access,
+  and Vietnamese public-prompt provenance audits.
+- Both immutable registry revisions executed on requested/resolved CUDA with
+  fixed seed/settings, atomic WAV/manifests, reopen/checksum verification,
+  structural QC, and bounded benchmarks.
+- A real one-worker loopback service demonstration for both models plus a
+  sanitized rejected request and clean shutdown.
+- External-only weights, caches, raw prompts, audio, and detailed reports;
+  committed validation and portfolio summaries contain sanitized facts only.
+- Version 0.5.0, explicit acknowledgement for direct model access, dedicated
+  CUDA benchmark settings, and explicit optional-backend cache release during
+  unload.
+
+The code-license owner decision in the acceptance criteria remains a required
+M7 human gate, not an M6 engineering decision. M6 makes no release disposition.
 
 ## Milestone M7 — final risk closure and release decision
 
@@ -438,12 +462,12 @@ models and present the output as a prototype Hmong voice.
 
 The authoritative itemized risks, required evidence, owners, and closure rules
 are maintained in [`docs/release_risk_register.md`](release_risk_register.md).
-M5 mitigates the bounded-service risk; M6 produces reproduction evidence. M7
-is the final disposition gate.
+M6 produced the authorized-hardware reproduction evidence and preserved the
+bounded-service controls. M7 is the final disposition gate.
 
 ## Next executable task
 
-Begin M6 from the completed M5 service boundary. Produce fresh-clone
-reproduction instructions, explicit operator gates, and sanitized portfolio
-evidence on separately authorized hardware. Do not make the M7 release
-decision, bind publicly, or add White Hmong language behavior.
+Begin M7 from the completed M6 release-candidate evidence. Re-audit and
+disposition the risk register, obtain the required human decisions, and only
+then select the release disposition. Do not bind publicly or add White Hmong
+language behavior.

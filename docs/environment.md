@@ -67,3 +67,22 @@ The readiness response does not include OS identity, device name, package
 paths, environment values, the artifact root, hostname, username, or client
 address. `GET /health` is intentionally independent of CUDA, model load, and
 artifact readiness.
+
+## M6 observed environment
+
+The sanitized 2026-09-09 authorized-hardware report recorded Ubuntu 24.04
+under WSL2, Linux x86-64, CPython 3.12.3, Git 2.43.0, and uv 0.11.28. The
+separate frozen MMS environment installed workbench 0.5.0, PyTorch 2.12.0
+with CUDA build 13.0, Transformers 5.13.1, safetensors 0.8.0, Accelerate
+1.14.0, and SciPy 1.18.0.
+
+The NVIDIA driver was visible through WSL without modification. PyTorch
+reported one NVIDIA GeForce RTX 4070 with 12,282 MiB, CUDA capability 8.9,
+and float32, float16, and bfloat16 support. Both real adapters resolved to
+CUDA/float32. Core, CPU-inference, CUDA-inference, and external-artifact
+readiness were true at collection time.
+
+These facts describe one run. They do not establish support for another
+driver, device, OS, dtype, or timing profile, and they make no cross-device
+waveform-equivalence claim. The full report remains outside Git; the sanitized
+summary is in `reports/validation/m6_reproduction_validation.md`.
