@@ -278,3 +278,57 @@ def test_package_contract_and_adapter_imports_are_lazy(
         text=True,
     )
     assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize("missing_safetensors", [False, True])
+def test_real_backend_requires_safetensors_without_pickle_fallback(
+    monkeypatch: pytest.MonkeyPatch,
+    missing_safetensors: bool,
+) -> None:
+    calls: list[dict[str, object]] = []
+
+    class Model:
+        dtype = "torch.float32"
+
+        def to(self, device: str):
+            assert device == "cpu"
+            return self
+
+    def load_model(repository: str, **kwargs: object):
+        assert repository == "synthetic/fixture-eng"
+        calls.append(kwargs)
+        if missing_safetensors:
+            raise OSError("synthetic safetensors absence")
+        return Model()
+
+    torch = SimpleNamespace(__version__="fixture", cuda=SimpleNamespace(is_available=lambda: False))
+    transformers = SimpleNamespace(
+        __version__="fixture",
+        VitsTokenizer=SimpleNamespace(from_pretrained=lambda *_a, **_k: object()),
+        VitsModel=SimpleNamespace(from_pretrained=load_model),
+    )
+    monkeypatch.setattr(
+        importlib,
+        "import_module",
+        lambda name: {
+            "torch": torch,
+            "transformers": transformers,
+        }[name],
+    )
+    backend = TransformersMmsBackend()
+    if missing_safetensors:
+        with pytest.raises(ModelLoadError):
+            backend.load(
+                repository="synthetic/fixture-eng", revision="1" * 40, requested_device="cpu"
+            )
+    else:
+        assert (
+            backend.load(
+                repository="synthetic/fixture-eng",
+                revision="1" * 40,
+                requested_device="cpu",
+            ).dtype
+            == "float32"
+        )
+    assert calls == [{"revision": "1" * 40, "use_safetensors": True}]
+    backend.unload()

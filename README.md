@@ -1,136 +1,119 @@
 # Audited pretrained TTS workbench
 
-Phase A of a possible future community-validated Hmong language-learning
-application. This repository currently demonstrates audited public-checkpoint
-registry, inference, evaluation, benchmarking, and local-deployment
-infrastructure using non-Hmong models.
+The long-term purpose is useful speech technology for the Hmong community.
+This release scope is a reproducible **local engineering workbench**, with
+registered English and Vietnamese demonstrations. Recruiters are a secondary
+audience for its engineering methods and evidence.
 
-It does **not** claim White Hmong support, pronunciation accuracy, linguistic
-correctness, or readiness for a Hmong learning application. White Hmong
-adaptation and NV-001 through NV-008 remain deferred **[NV]**.
+M7 does **not** establish Hmong support, pronunciation accuracy, linguistic
+correctness, perceptual quality, or application readiness. White Hmong work
+and NV-001 through NV-008 remain deferred **[NV]**. Community-language support
+requires a separately authorized phase with community participation,
+appropriate licensing, and native-speaker validation.
 
-The original consented, single-speaker White Hmong TTS project is preserved on
-the local branch `archive/white-hmong-single-speaker-tts-v0.1` at commit
-`fd1756485b1e1b75fd1efee5e37519fa8e255415`. A browsable historical copy is
-indexed in
+The historical single-speaker project is preserved at commit
+`fd1756485b1e1b75fd1efee5e37519fa8e255415`, with a browsable record under
 [`docs/history/white_hmong_single_speaker/`](docs/history/white_hmong_single_speaker/README.md).
+The preservation branch is protected when present; this checkout did not have
+that local branch at M7 discovery.
 
-## Current milestone
+## M7 release audit
 
-Milestone M6 completes authorized-hardware reproduction and portfolio evidence
-for the M3–M5 workbench. The distribution is `audited-tts-workbench` 0.5.0
-with eight `tts-workbench-*` commands. This is a release candidate; only M7
-may determine release disposition.
+The candidate distribution is `audited-tts-workbench` **1.0.0**, with eight
+`tts-workbench-*` commands. The
+[release decision](docs/m7_release_decision.md),
+[owner approval record](docs/m7_owner_approval.json), and
+[validation evidence](reports/validation/m7_release_validation.md) distinguish
+measured results from final human acceptance. Only an approved `release`, with
+all required gates passing, completes M7 as a public-release gate.
 
-Ordinary imports and CI do not import PyTorch or Transformers. The optional real
-MMS backend imports them only when explicitly loaded; synthetic tests use
-dependency-injected fakes and do not access weights or a network.
+The audit reproduces both immutable checkpoints on an RTX 4070 using
+CUDA/float32, bounded CPU diagnostics, structural QC, timing benchmarks, and
+the real local service. These observations establish engineering behavior on
+one environment; they do not establish language quality or cross-device
+waveform/timing equivalence.
 
-```powershell
-python -m uv run tts-workbench-models validate
-python -m uv run tts-workbench-models list
-python -m uv run tts-workbench-qc schema
-python -m uv run tts-workbench-benchmark schema
-python -m uv run tts-workbench-env --json
-python -m uv run tts-workbench-serve validate-config
-python -m uv run tts-workbench-serve openapi
+## Reproduce the core
+
+Use Python 3.12 on Linux/WSL x86-64. Set `UV_PROJECT_ENVIRONMENT` to an external
+virtual environment before synchronization. Complete external-environment,
+cache, offline, package, and runtime commands are in
+[`docs/m7_reproduction.md`](docs/m7_reproduction.md).
+
+```bash
+uv sync --frozen
+uv run --frozen tts-workbench-config
+uv run --frozen tts-workbench-models validate
+uv run --frozen tts-workbench-models list
+uv run --frozen tts-workbench-qc schema
+uv run --frozen tts-workbench-benchmark schema
+uv run --frozen tts-workbench-serve validate-config
+uv run --frozen tts-workbench-serve openapi
+uv run --frozen tts-workbench-env --json
+uv run --frozen tts-workbench-privacy-scan
+uv run --frozen pytest --cov=tts_workbench --cov-branch --cov-fail-under=78
 ```
 
-The registry accepts only immutable 40-character revisions, audited license
-metadata, approved local non-commercial inference, no project redistribution
-of weights, and `language_quality_status: not_evaluated`.
+Ordinary imports, all eight help commands, metadata operations, and synthetic
+tests work without PyTorch, Transformers, model downloads, or a GPU. The MMS
+extra is separate and large. Its imports and checkpoint access are explicit.
+The registry alone selects repositories and immutable revisions; no caller
+can select an alternative source. Model weights load through safetensors,
+with no fallback to pickle weights.
 
-Both registry lookup and prompt-provenance matching occur before backend load.
-Unknown models, path escapes, and prompt-reference mismatches therefore fail
-without invoking an ML runtime.
+## Local service and engineering evidence
 
-QC thresholds are conservative engineering sanity checks, not language-quality
-criteria. Benchmark reports separate cold model loading from warm synthesis,
-exclude configured warmups from aggregates, and use deterministic nearest-rank
-p95. M6 ran both exact registered revisions on an RTX 4070 through CUDA and
-retained only sanitized summaries in Git. See
-[`docs/waveform_qc.md`](docs/waveform_qc.md) and
-[`docs/benchmarking.md`](docs/benchmarking.md).
+The service supports `GET /health`, `GET /ready`, `GET /v1/models`, and
+`POST /v1/synthesize`. It requires model-access acknowledgement, literal
+loopback binding, one Uvicorn worker, one model owner, one active inference
+operation, and a finite FIFO queue. Access, prompt, and client logging are
+disabled. The caller cannot choose repositories, revisions, or artifact paths.
 
-The service exposes only `GET /health`, `GET /ready`, `GET /v1/models`, and
-`POST /v1/synthesize`. It accepts no artifact path, repository, revision,
-prompt-provenance override, client identity, or normalization option. One
-bounded FIFO coordinator owns exactly one active inference operation and one
-adapter/model owner. Pending overflow and pre-execution expiry fail without
-calling the adapter or creating artifacts. See
-[`docs/local_service.md`](docs/local_service.md) and
-[`docs/service_threat_model.md`](docs/service_threat_model.md).
+Loopback is not authentication. Use this service only with trusted local
+clients and approved prompts. Input character and queue limits do not impose
+a hard HTTP-body, total-work, output-duration, or disk quota. Queue deadlines
+apply before execution; active native calls are not safely preemptible and
+shutdown waits for them. See [local service](docs/local_service.md) and its
+[threat model](docs/service_threat_model.md).
 
-Actual serving is blocked unless the operator supplies
-`--acknowledge-model-access`. Configuration accepts only literal loopback
-addresses, one Uvicorn worker, disabled access/request/client logging, and
-public deployment disabled. Localhost is a development boundary, not a
-complete authentication system.
+QC retains the M4 thresholds and `engineering_sanity_check` labels.
+Benchmarks distinguish cold loading, excluded warmup, measured repetitions,
+median, nearest-rank p95, real-time factor, failures, and observable memory.
+No MOS, ASR, pronunciation, speaker similarity, or language-ranking metric is
+claimed. See [QC](docs/waveform_qc.md), [benchmarking](docs/benchmarking.md),
+and the [M7 engineering summary](docs/m7_portfolio_summary.md).
 
-M6 exercised health, readiness, registry metadata, one sanitized rejection,
-and successful CUDA synthesis for both registered models through the real
-one-worker service. It then shut the service down and verified that no listener
-remained. See the
-[`M6 validation evidence`](reports/validation/m6_reproduction_validation.md).
+## Artifacts and compatibility
 
-## Reproducible core
+`TTS_WORKBENCH_ARTIFACT_ROOT` must name an existing absolute directory outside
+the repository. `HF_HOME` and `TORCH_HOME` must also remain external. Weights,
+caches, raw prompts/source material, WAVs, and detailed reports stay outside
+Git and release packages. Each WAV has an atomic success manifest containing
+its checksum, prompt hash, registry/runtime/settings metadata, and only
+root-relative artifact references.
 
-```powershell
-python -m uv sync --frozen
-python -m uv run tts-workbench-config
-python -m uv run tts-workbench-models validate
-python -m uv run tts-workbench-privacy-scan
-python -m uv run pytest --cov=tts_workbench --cov-branch
-```
+**Breaking change:** version 1.0.0 removes `HMONG_TTS_DATA_ROOT` support.
+Legacy-only configuration fails as an unset canonical root; if both are set,
+only the canonical variable is used. See [migration](docs/m7_migration.md),
+[artifact retention](artifacts/README.md), and [changelog](CHANGELOG.md).
 
-The optional MMS stack is large and remains platform-gated. Registry validation
-and all ordinary tests run without PyTorch, Transformers, a GPU, network
-access, or downloaded weights.
+## License and distribution
 
-Fresh-core, separate locked MMS/CUDA, prompt provenance, inference, QC,
-benchmark, artifact-integrity, and loopback-service commands are in
-[`docs/m6_reproduction.md`](docs/m6_reproduction.md). A concise engineering
-case study is in
-[`docs/m6_portfolio_summary.md`](docs/m6_portfolio_summary.md).
+Covered original project code is **Apache-2.0**, including commercial reuse,
+under the owner's conversational approval dated **2026-09-10**. Read
+[LICENSE](LICENSE), [NOTICE](NOTICE), and
+[third-party notices](THIRD_PARTY_NOTICES.md) for scope and attribution.
 
-## Artifact boundary
+Apache-2.0 does not relicense third-party code, model weights, data, or outputs.
+Both registered MMS checkpoints remain **CC BY-NC 4.0**, approved here only for
+local non-commercial inference; their weights and generated audio are not
+redistributed. Training-data lineage is not commercially cleared. The public
+candidate contains original code, configuration, tests, documentation, and
+sanitized engineering evidence. Package publication or deployment is a
+separate authorization. See the [license/provenance matrix](docs/license_matrix.md).
 
-Generated audio, model weights, model caches, and benchmark artifacts stay
-outside Git. `TTS_WORKBENCH_ARTIFACT_ROOT` is canonical. A legacy variable is
-accepted with a visible deprecation warning for the 0.2 migration window only;
-conflicting values fail closed. See
-[`artifacts/README.md`](artifacts/README.md).
-
-Each successful M3 inference transaction writes a mono PCM WAV and publishes
-its `.manifest.json` last as the commit marker. Manifests contain a SHA-256
-prompt hash, audited model/runtime metadata, structural audio facts, and only
-artifact-root-relative paths. They exclude raw prompts and machine identity.
-See [`docs/inference_contract.md`](docs/inference_contract.md).
-
-M4 analyzes WAVs and writes QC or benchmark JSON only through separate
-artifact-root-relative, collision-rejecting atomic report transactions. QC
-never changes whether an M3 artifact is committed.
-
-M5 generates collision-resistant output names below the configured
-`service/runs` prefix. Successful HTTP responses contain only the existing
-root-relative WAV and manifest references. Rejected, full, expired, invalid,
-or failed requests publish no success artifact.
-
-## Licensing
-
-The registered MMS checkpoints are CC BY-NC 4.0 and approved only for scoped
-local non-commercial inference. The workbench does not redistribute their
-weights. This repository itself remains all rights reserved until the owner
-makes a separate code-license decision. See
-[`docs/license_matrix.md`](docs/license_matrix.md).
-
-## Status and limitations
-
-See [`PROJECT_STATUS.md`](PROJECT_STATUS.md),
-[`docs/model_registry.md`](docs/model_registry.md), and
-[`docs/architecture.md`](docs/architecture.md). The ordered implementation
-milestones, acceptance criteria, and future Hmong-learning-application boundary
-are documented in
-[`docs/implementation_roadmap.md`](docs/implementation_roadmap.md).
-Remaining release risks and the final M7 closure/owner-decision gate are in
-[`docs/release_risk_register.md`](docs/release_risk_register.md).
+All risk dispositions and limitations are in the
+[release risk register](docs/release_risk_register.md). Next review:
+**2026-12-09**, sooner for a material security, dependency, licensing, or
+provenance issue. M1–M6 validation reports and the deferred native-validation
+record remain historical evidence, unchanged by M7.

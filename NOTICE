@@ -1,0 +1,18 @@
+Audited TTS Workbench
+Copyright 2026 benjainnsthao
+
+Original project software is licensed under the Apache License, Version 2.0.
+The owner approved this code license and commercial reuse on 2026-09-10 and
+confirmed authority to license the original project code. This records a
+conversational owner decision, not a cryptographic signature or final release
+approval. See docs/m7_release_decision.md for the separate release decision.
+
+This grant does not relicense third-party code, model weights, data, prompts,
+or generated outputs. Existing third-party attribution and licenses prevail.
+Historical records retain their original provenance and notices. See
+THIRD_PARTY_NOTICES.md and docs/license_matrix.md for distribution boundaries.
+
+Meta MMS English and Vietnamese checkpoints are referenced only by metadata.
+Their CC BY-NC 4.0 weights remain external and are not distributed here.
+Registered checkpoint use remains local and non-commercial. No White Hmong
+capability or linguistic-quality validation is claimed.

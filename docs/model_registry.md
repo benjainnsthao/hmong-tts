@@ -104,3 +104,13 @@ weights. M6 does not change use, redistribution, or quality policy.
 
 Before adding a model, update `docs/license_matrix.md` from primary sources,
 pin an immutable revision, record prompt provenance, and add policy tests.
+
+## M7 source refresh
+
+Both existing revisions were re-audited on 2026-09-10. Exact Hub revision
+metadata remains public and ungated; cached safetensors SHA-256 values match
+upstream LFS identity. Only `audited_on` changes in the registry. No model is
+added or substituted, and local non-commercial use, no weight redistribution,
+and `language_quality_status: not_evaluated` remain mandatory. Prompt and
+current legal-basis evidence are in `license_matrix.md` and
+`m7_reproduction.md`; dependency advisories are in `m7_dependency_audit.md`.

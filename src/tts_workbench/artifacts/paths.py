@@ -3,12 +3,10 @@
 from __future__ import annotations
 
 import os
-import warnings
 from collections.abc import Mapping
 from pathlib import Path
 
 ARTIFACT_ROOT_ENV = "TTS_WORKBENCH_ARTIFACT_ROOT"
-LEGACY_ARTIFACT_ROOT_ENV = "HMONG_TTS_DATA_ROOT"
 REPOSITORY_MARKERS = (
     Path("pyproject.toml"),
     Path("configs/models/registry.yaml"),
@@ -17,10 +15,6 @@ REPOSITORY_MARKERS = (
 
 class ArtifactBoundaryError(ValueError):
     """Raised when a path could place workbench artifacts inside Git."""
-
-
-class LegacyArtifactRootWarning(FutureWarning):
-    """Warn that the temporary legacy artifact-root variable must be removed."""
 
 
 def find_repository_root(start: Path | None = None) -> Path:
@@ -50,42 +44,6 @@ def _absolute_configured_path(raw_value: str, variable: str) -> Path:
     return configured
 
 
-def _select_configured_root(env: Mapping[str, str]) -> tuple[Path, str]:
-    canonical_raw = env.get(ARTIFACT_ROOT_ENV, "").strip()
-    legacy_raw = env.get(LEGACY_ARTIFACT_ROOT_ENV, "").strip()
-
-    if not canonical_raw and not legacy_raw:
-        raise ArtifactBoundaryError(f"{ARTIFACT_ROOT_ENV} is not set")
-
-    if canonical_raw and legacy_raw:
-        canonical = _absolute_configured_path(canonical_raw, ARTIFACT_ROOT_ENV)
-        legacy = _absolute_configured_path(legacy_raw, LEGACY_ARTIFACT_ROOT_ENV)
-        if canonical.resolve(strict=False) != legacy.resolve(strict=False):
-            raise ArtifactBoundaryError(
-                f"{ARTIFACT_ROOT_ENV} and {LEGACY_ARTIFACT_ROOT_ENV} resolve to different paths"
-            )
-        warnings.warn(
-            f"{LEGACY_ARTIFACT_ROOT_ENV} is deprecated and duplicates "
-            f"{ARTIFACT_ROOT_ENV}; remove the legacy variable",
-            LegacyArtifactRootWarning,
-            stacklevel=3,
-        )
-        return canonical, ARTIFACT_ROOT_ENV
-
-    if canonical_raw:
-        return _absolute_configured_path(canonical_raw, ARTIFACT_ROOT_ENV), ARTIFACT_ROOT_ENV
-
-    warnings.warn(
-        f"{LEGACY_ARTIFACT_ROOT_ENV} is deprecated; set {ARTIFACT_ROOT_ENV} instead",
-        LegacyArtifactRootWarning,
-        stacklevel=3,
-    )
-    return (
-        _absolute_configured_path(legacy_raw, LEGACY_ARTIFACT_ROOT_ENV),
-        LEGACY_ARTIFACT_ROOT_ENV,
-    )
-
-
 def get_artifact_root(
     *,
     environ: Mapping[str, str] | None = None,
@@ -94,16 +52,19 @@ def get_artifact_root(
 ) -> Path:
     """Return a validated absolute artifact root located outside the repository."""
     env = os.environ if environ is None else environ
-    configured, selected_variable = _select_configured_root(env)
+    raw_value = env.get(ARTIFACT_ROOT_ENV, "").strip()
+    if not raw_value:
+        raise ArtifactBoundaryError(f"{ARTIFACT_ROOT_ENV} is not set")
+    configured = _absolute_configured_path(raw_value, ARTIFACT_ROOT_ENV)
     if configured.is_symlink():
-        raise ArtifactBoundaryError(f"{selected_variable} must not be a symlink")
+        raise ArtifactBoundaryError(f"{ARTIFACT_ROOT_ENV} must not be a symlink")
 
     artifact_root = configured.resolve(strict=False)
     repo_root = (repository_root or find_repository_root()).resolve()
     if artifact_root == repo_root or _is_within(artifact_root, repo_root):
-        raise ArtifactBoundaryError(f"{selected_variable} must resolve outside the repository")
+        raise ArtifactBoundaryError(f"{ARTIFACT_ROOT_ENV} must resolve outside the repository")
     if require_exists and not artifact_root.is_dir():
-        raise ArtifactBoundaryError(f"{selected_variable} does not exist or is not a directory")
+        raise ArtifactBoundaryError(f"{ARTIFACT_ROOT_ENV} does not exist or is not a directory")
     return artifact_root
 
 

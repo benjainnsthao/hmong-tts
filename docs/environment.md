@@ -86,3 +86,27 @@ These facts describe one run. They do not establish support for another
 driver, device, OS, dtype, or timing profile, and they make no cross-device
 waveform-equivalence claim. The full report remains outside Git; the sanitized
 summary is in `reports/validation/m6_reproduction_validation.md`.
+
+## M7 observed environment and supported scope
+
+On 2026-09-10: Ubuntu 24.04.1 LTS/WSL2, Linux x86-64, Python 3.12.3,
+Git 2.43.0, uv 0.11.28, workbench 1.0.0, PyTorch 2.13.0+cu130,
+Transformers 5.13.1, safetensors 0.8.0, SciPy 1.18.0. The driver visible
+through WSL was 610.62; the CUDA build was 13.0. RTX 4070 memory was
+12,282 MiB. Capability reporting listed float32, float16, and bfloat16;
+actual tested model execution selected float32. No driver/kernel/host changes
+were made. Accelerate is no longer installed; the audit explains its removal.
+
+The clean core environment contains neither torch nor transformers: core
+readiness passes, CPU-model and CUDA-model readiness do not. In the separate
+MMS environment both model-readiness levels pass; bounded two-thread CPU
+model diagnostics and intended CUDA execution were separately measured.
+These are distinct observations, not inferred execution from a readiness flag.
+
+Release evidence is limited to this Python 3.12 Linux/WSL x86-64 stack.
+Native Windows, macOS, ARM, other accelerators/drivers, reduced-precision
+model execution, and cross-platform performance are unvalidated. CPU peak
+RSS is a process lifetime high-water mark; CUDA allocated/reserved values
+are point observations, not complete system or peak GPU use. Missing data
+must remain `unavailable`, never zero. See `m7_reproduction.md` and the M7
+validation report for timings, raw-evidence labels, and residual limitations.

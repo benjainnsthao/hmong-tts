@@ -142,3 +142,13 @@ under the external artifact root. The repository contains only sanitized
 summaries and reproducible commands. See `docs/m6_reproduction.md` and
 `reports/validation/m6_reproduction_validation.md`. This realization evidence
 does not expand the service, security, model, or linguistic scope.
+
+## M7 release boundary
+
+Version 1.0.0 retains the M3–M6 architecture and schemas while removing the
+legacy artifact-root selector, requiring safetensors in adapter 1.0.1, and
+sanitizing invalid smoke requests. Targeted dependency corrections and the
+release-file manifest are documented in the M7 audit. Core and optional MMS
+environments remain separate; no deployment, application, new model, training,
+or community-language component is introduced. Apache-2.0 covers eligible
+original code only; third-party model/output rights remain independent.

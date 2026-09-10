@@ -347,3 +347,24 @@
 - Native-validation status: **[NV]** unchanged. M6 adds no White Hmong prompt,
   tag, rule, normalization, training, adaptation, evaluation, or support claim.
   NV-001 through NV-008 remain deferred.
+
+## D-0014 — M7 original-code license and canonical-root stable transition
+
+- Date: 2026-09-10. Public decision owner: benjainnsthao.
+- Owner-approved decision: Apache-2.0 applies to covered original project code,
+  including commercial reuse; the owner confirmed authority conversationally.
+  This supersedes D-0004's pending code-license decision. It is not a
+  cryptographic signature, third-party relicense, or final release approval.
+- Preserve third-party notices, local non-commercial MMS use, undistributed
+  weights/audio, external prompts/source material, and independent output rights.
+- Remove the 0.2 artifact-root bridge in version 1.0.0. D-0008's temporary
+  compatibility period ends; existing launchers must use the canonical variable.
+- M7 evidence supports targeted Starlette/PyTorch/setuptools corrections,
+  removing unused vulnerable Accelerate, and mandatory safetensors in adapter
+  1.0.1. No checkpoint, schema, or QC-threshold substitution is authorized.
+- Final outcome and residual acceptance are separate: `m7_release_decision.md`,
+  `m7_owner_approval.json`, and the candidate file manifest bind the reviewed
+  decision. The complete approved statement is recorded only after receipt.
+- Next review: 2026-12-09, sooner for a material issue. NV-001 through NV-008
+  remain unchanged; no community-language, training, deployment, or application
+  work begins in M7.

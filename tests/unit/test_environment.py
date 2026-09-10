@@ -224,3 +224,16 @@ def test_injected_collectors_avoid_optional_package_imports(
     report = report_for(tmp_path)
     assert report.core_ready
     assert imported == []
+
+
+def test_removed_variable_does_not_configure_environment(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from tts_workbench.environment.detect import _artifact_state
+
+    monkeypatch.delenv("TTS_WORKBENCH_ARTIFACT_ROOT", raising=False)
+    monkeypatch.setenv("HMONG_TTS_DATA_ROOT", str(tmp_path))
+    state = _artifact_state(tmp_path)
+    assert not state.valid
+    assert state.failure_reason == "not_configured"

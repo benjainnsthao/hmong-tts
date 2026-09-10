@@ -35,7 +35,7 @@ def test_service_dependencies_are_minimal_and_do_not_install_framework_extras(
     metadata = tomllib.loads((repository_root / "pyproject.toml").read_text(encoding="utf-8"))
     dependencies = metadata["project"]["dependencies"]
     assert "fastapi==0.136.3" in dependencies
-    assert "starlette==1.0.0" in dependencies
+    assert "starlette==1.3.1" in dependencies
     assert "uvicorn==0.46.0" in dependencies
     assert all("fastapi[" not in dependency for dependency in dependencies)
     assert all("uvicorn[" not in dependency for dependency in dependencies)
@@ -77,4 +77,5 @@ def test_m5_documents_and_release_risk_state_are_present(
         maxsplit=1,
     )[0]
     assert "`mitigated`" in service_risk
-    assert "pending the final M7" in service_risk
+    assert "Proposed disposition: `accepted`" in service_risk
+    assert "pending explicit final owner approval" in service_risk

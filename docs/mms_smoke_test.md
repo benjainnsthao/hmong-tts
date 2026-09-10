@@ -33,8 +33,8 @@ caches and generated audio must stay outside Git.
 
 ```bash
 uv sync --frozen --extra mms
-uv run tts-workbench-mms-smoke \
-  --model mms-eng \
+uv run --frozen --extra mms tts-workbench-mms-smoke \
+  --acknowledge-model-access --model mms-eng \
   --device cuda \
   --output smoke/mms-eng.wav
 ```
@@ -55,13 +55,14 @@ same output path is rejected rather than overwritten.
 
 ## Vietnamese external-prompt policy
 
-The workbench contains no invented Vietnamese text. A future authorized run
-must provide a public prompt with independently reviewed license/provenance:
+The workbench contains no invented Vietnamese text. M7 revalidates the retained
+M6 prompt against its official source and exact hash; follow the gate in
+`m7_reproduction.md` before inference:
 
 ```bash
-uv run tts-workbench-mms-smoke \
-  --model mms-vie \
-  --text-file "$TTS_WORKBENCH_ARTIFACT_ROOT/smoke/audited-vie-prompt.txt" \
+uv run --frozen --extra mms tts-workbench-mms-smoke \
+  --acknowledge-model-access --model mms-vie \
+  --text-file "${M7_LABEL}/prompts/vie-prompt.txt" \
   --device cuda \
   --output smoke/mms-vie.wav
 ```
@@ -79,5 +80,5 @@ model weight, external prompt, native-language content, or real audio.
 
 The 2026-07-21 Phase 0 run validated the same pinned English checkpoint revision
 on an x86-64 WSL2 RTX 4070. That evidence remains unchanged in
-`reports/validation/phase0-validation.md`. The rescope milestone performs no
-new model download or synthesis.
+`reports/validation/phase0-validation.md`. M6 and M7 separately record
+authorized execution at their own versions; those runs confer no Hmong capability.

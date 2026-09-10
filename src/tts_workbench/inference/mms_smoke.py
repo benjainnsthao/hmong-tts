@@ -8,6 +8,8 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
+from pydantic import ValidationError
+
 from tts_workbench.artifacts.paths import (
     ArtifactBoundaryError,
     get_artifact_root,
@@ -111,14 +113,18 @@ def main(argv: Sequence[str] | None = None) -> int:
         print("Smoke-test text is empty.", file=sys.stderr)
         return 2
     output_display = output_path.relative_to(artifact_root).as_posix()
-    request = InferenceRequest(
-        model_id=args.model,
-        text=text,
-        prompt_set_reference=model_entry.prompt_set_reference,
-        requested_device=args.device,
-        seed=args.seed,
-        output_wav_path=output_display,
-    )
+    try:
+        request = InferenceRequest(
+            model_id=args.model,
+            text=text,
+            prompt_set_reference=model_entry.prompt_set_reference,
+            requested_device=args.device,
+            seed=args.seed,
+            output_wav_path=output_display,
+        )
+    except ValidationError:
+        print("MMS SMOKE ERROR: request validation failed.", file=sys.stderr)
+        return 2
     adapter = MmsVitsAdapter(registry)
     executor = InferenceExecutor(
         registry=registry,

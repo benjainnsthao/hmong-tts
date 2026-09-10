@@ -70,15 +70,11 @@ success artifact reference. Work that expires while queued never calls the M3
 executor. An in-flight operation is not force-cancelled; it either completes
 the normal atomic transaction or returns a structured failure.
 
-## Temporary legacy-variable policy
+## Version 1.0.0 canonical-variable policy
 
-For the 0.2 migration window only:
-
-- canonical variable only: accepted;
-- legacy `HMONG_TTS_DATA_ROOT` only: accepted with a deprecation warning;
-- both variables resolving to the same path: canonical wins and a warning asks
-  the user to remove the legacy variable;
-- both variables resolving to different paths: rejected.
+Only `TTS_WORKBENCH_ARTIFACT_ROOT` is read. The legacy
+`HMONG_TTS_DATA_ROOT` variable has no effect, including when supplied alone.
+See [migration](../docs/m7_migration.md).
 
 Missing, relative, repository-local, symlinked, nonexistent, and escaping paths
 fail closed. Validation reports expose only pass/fail status and never print the
@@ -120,3 +116,32 @@ does not implement an automatic destructive cleanup command.
 
 The original private recording-data layout is historical documentation at
 `docs/history/white_hmong_single_speaker/private_data_layout.md`.
+
+## M7 retention and privacy policy
+
+M7 reuses the retained external root and adds `m7/20260910T122457Z/` without
+changing M6 evidence. Its `audit/`, `prompts/`, `runs/`, `cpu/`, `qc/`,
+`benchmarks/`, `service/runs/`, `environment/`, `logs/`, `tooling/`, and
+`packages/` hold detailed local evidence. The service temporarily uses the M7
+run directory as a nested canonical root so its default `service/runs` prefix
+cannot overwrite retained M6 output. Shared HF/Torch/uv caches stay external.
+
+Retain M6 and M7 raw evidence through the 2026-12-09 risk review and until the
+owner has resolved any material audit issue. There is no automatic deletion.
+After review the owner may choose retention or deletion under the applicable
+licenses; neither Git history rewriting nor cache/audio publication is implied.
+Use local access controls and avoid automatic cloud sharing of this boundary.
+
+The public distribution scope is original code and sanitized documentation,
+configuration, tests, checksums, and factual measurement summaries. Detailed
+raw logs, model files, generated audio, prompt/source/OCR text, environments,
+and complete runtime reports are local review material. Never copy machine
+account names, hostnames, addresses, environment values, process arguments,
+credentials, or absolute private paths into public evidence. The specifically
+approved public decision-owner handle is permitted only in governance records.
+
+M7's expanded audit found a personal-provider email in existing Git commit
+metadata, distinct from repository file contents. The address is not copied
+into public reports. Its continued historical visibility requires explicit
+owner disposition; use the verified public GitHub no-reply identity for the
+new M7 commit. This policy does not authorize rewriting prior commits.

@@ -88,3 +88,30 @@ must re-audit the exact release commit, dependency advisories, configuration,
 package contents, claims, and intended distribution mode. Any public or
 non-loopback deployment requires a new security design; this threat model does
 not approve it.
+
+## M7 re-audit and residual exhaustion limits
+
+M7 repeats configuration/schema/OpenAPI, synthetic ASGI, lifecycle/FIFO,
+shutdown, expiry, sanitization, and real-backend controls against the corrected
+locked dependencies. Both approved prompts ran on CUDA through one service;
+an unknown model was rejected before execution, with no partial artifact or
+prompt echo. Shutdown reached unloaded adapter state, zero active/pending
+requests, and a stopped listener. Small allocator/runtime buffers can remain
+until process exit; unloaded state does not mean all CUDA runtime memory is zero.
+
+The 500-character limit applies after JSON parsing. There is no hard HTTP-body
+byte limit, output-duration ceiling, request-rate limit, disk quota, or safe
+active-native-call cancellation. Positive but very small speaking rates can
+cause disproportionate work despite the character bound. The finite FIFO
+bounds admitted pending inference, not every HTTP parser/connection resource.
+The scoped service therefore requires trusted local clients, approved prompts,
+and ordinary generation settings. Loopback is not authentication. Other local
+processes, hostile callers, compromised dependencies, and resource exhaustion
+remain residual risks for explicit owner acceptance; this is not a public
+service security design. No destructive exhaustion experiment was performed.
+
+Starlette and PyTorch advisories were corrected, unused vulnerable Accelerate
+removed, and transitive setuptools constrained; see `m7_dependency_audit.md`.
+Registry-only sources and safetensors-only model loading do not guarantee that
+native runtimes or every upstream artifact are vulnerability-free. The complete
+proposed disposition is REL-SERVICE-001 in `release_risk_register.md`.

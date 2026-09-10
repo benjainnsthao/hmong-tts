@@ -148,3 +148,32 @@ def test_old_cli_modules_remain_absent() -> None:
     importlib.invalidate_caches()
     with pytest.raises(ModuleNotFoundError):
         importlib.import_module("hmong_tts.cli")
+
+
+def test_invalid_mms_prompt_is_sanitized_before_adapter_creation(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    marker = "synthetic confidential marker " * 30
+    (tmp_path / "prompt.txt").write_text(marker, encoding="utf-8")
+    monkeypatch.setenv(ARTIFACT_ROOT_ENV, str(tmp_path))
+    monkeypatch.setattr("tts_workbench.inference.mms_smoke.preflight_failures", lambda: [])
+    monkeypatch.setattr(
+        "tts_workbench.inference.mms_smoke.MmsVitsAdapter",
+        lambda _: pytest.fail("invalid prompt must not create an adapter"),
+    )
+    assert (
+        mms_smoke_main(
+            [
+                "--acknowledge-model-access",
+                "--text-file",
+                "prompt.txt",
+            ]
+        )
+        == 2
+    )
+    captured = capsys.readouterr()
+    assert "request validation failed" in captured.err
+    assert marker.strip() not in captured.err + captured.out
+    assert not list(tmp_path.rglob("*.wav"))

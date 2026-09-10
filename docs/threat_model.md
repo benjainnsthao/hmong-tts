@@ -12,7 +12,7 @@ capability claims.
 - weights used beyond audited license scope or accidentally redistributed;
 - generated audio, weights, caches, or credentials entering Git;
 - unlicensed or untraceable prompt material;
-- prompt or client metadata leaking through logs in a future service;
+- prompt or client metadata leaking through local service logs;
 - resource exhaustion from unbounded model loading or inference requests;
 - runtime metrics being misrepresented as pronunciation or language quality;
 - public claims of White Hmong support without community validation **[NV]**.
@@ -24,6 +24,11 @@ non-commercial-use and no-redistribution policy fields, an external artifact
 root, privacy/artifact scanning, offline synthetic tests, and
 `language_quality_status: not_evaluated`.
 
-The current milestone downloads no weights and exposes no service. Future
-inference and deployment milestones require separate model-lifecycle,
-concurrency, timeout, logging, and abuse controls.
+M7 re-audits real registry-pinned execution and the existing loopback-only
+service. See `service_threat_model.md` for its lifecycle, finite FIFO,
+pre-execution deadlines, logging controls, trusted-local-client assumptions,
+and exhaustion limits. Current dependency corrections and safetensors-only
+loading reduce known supply risks; they do not eliminate native-code or
+upstream risk. Public binding, deployment, or additional checkpoints require
+separate authorization and review. Final acceptance is in
+`m7_owner_approval.json`, with per-risk evidence in `release_risk_register.md`.

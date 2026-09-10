@@ -3,7 +3,6 @@
 from tts_workbench.artifacts.paths import (
     ARTIFACT_ROOT_ENV,
     ArtifactBoundaryError,
-    LegacyArtifactRootWarning,
     get_artifact_root,
     require_under_artifact_root,
 )
@@ -11,7 +10,6 @@ from tts_workbench.artifacts.paths import (
 __all__ = [
     "ARTIFACT_ROOT_ENV",
     "ArtifactBoundaryError",
-    "LegacyArtifactRootWarning",
     "get_artifact_root",
     "require_under_artifact_root",
 ]

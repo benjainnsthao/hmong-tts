@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "owner": "benjainnsthao",
+  "code_license_approval": {
+    "license": "Apache-2.0",
+    "approved_on": "2026-09-10",
+    "method": "conversational owner decision",
+    "commercial_reuse_of_covered_original_code": true,
+    "authority_confirmed_by_owner": true,
+    "cryptographic_signature": false
+  },
+  "candidate_manifest": "reports/validation/m7_candidate_manifest.json",
+  "decision_record": "docs/m7_release_decision.md",
+  "risk_register": "docs/release_risk_register.md",
+  "next_review_on": "2026-12-09",
+  "release_approval": {
+    "status": "approved",
+    "disposition": "release",
+    "approved_on": "2026-09-10",
+    "candidate_sha256": "8e5e9d918c9570da40b914c03918f5b844fad13c133ff65f0edbb05281d02496",
+    "statement": "i approve and select release",
+    "method": "conversational owner approval in direct response to the concrete final M7 review question",
+    "cryptographic_signature": false,
+    "approval_scope": "The identified candidate, every proposed risk disposition, permitted distribution and capability boundaries, existing historical commit-email exposure, and verified GitHub no-reply identity for the M7 commit.",
+    "risk_dispositions": {
+      "REL-LIC-001": "closed",
+      "REL-LIC-002": "accepted",
+      "REL-PROMPT-001": "closed",
+      "REL-RUNTIME-001": "closed",
+      "REL-PORT-001": "accepted",
+      "REL-REPRO-001": "accepted",
+      "REL-QC-001": "accepted",
+      "REL-SERVICE-001": "accepted",
+      "REL-COMPAT-001": "closed",
+      "REL-SUPPLY-001": "accepted",
+      "REL-PRIV-001": "accepted",
+      "REL-LANG-001": "deferred"
+    },
+    "historical_commit_email_exposure_accepted": true,
+    "new_commit_github_noreply_identity_approved": true,
+    "deferred_white_hmong_boundary_confirmed": true,
+    "post_approval_execution": "Exactly one M7 implementation commit; validate the committed tree in a clean checkout, push only the active branch, and stop after M7."
+  }
+}

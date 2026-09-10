@@ -16,7 +16,7 @@ models:
       model_card_url: https://huggingface.co/facebook/mms-tts-eng/tree/c71de0fe7204c83f1c10820a7d696d0b450048ba
       license_url: https://huggingface.co/facebook/mms-tts/blob/44cc7fb408064ef9ea6e7c59130d88cac1274671/README.md
       audit_reference: docs/license_matrix.md
-      audited_on: 2026-09-09
+      audited_on: 2026-09-10
 
   - model_id: mms-vie
     provider: Meta
@@ -34,4 +34,4 @@ models:
       model_card_url: https://huggingface.co/facebook/mms-tts-vie/tree/b58928d033932a49aa8e3d6cf11625b25fe928d2
       license_url: https://huggingface.co/facebook/mms-tts/blob/44cc7fb408064ef9ea6e7c59130d88cac1274671/README.md
       audit_reference: docs/license_matrix.md
-      audited_on: 2026-09-09
+      audited_on: 2026-09-10

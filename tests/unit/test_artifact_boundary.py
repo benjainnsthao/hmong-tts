@@ -4,9 +4,7 @@ import pytest
 
 from tts_workbench.artifacts.paths import (
     ARTIFACT_ROOT_ENV,
-    LEGACY_ARTIFACT_ROOT_ENV,
     ArtifactBoundaryError,
-    LegacyArtifactRootWarning,
     find_repository_root,
     get_artifact_root,
     require_under_artifact_root,
@@ -37,52 +35,31 @@ def test_accepts_canonical_artifact_root_without_warning(tmp_path: Path) -> None
     assert result == artifact_root.resolve()
 
 
-def test_accepts_legacy_only_root_with_deprecation_warning(tmp_path: Path) -> None:
+def test_legacy_only_root_is_not_configuration(tmp_path: Path) -> None:
     repo = make_repo(tmp_path)
     artifact_root = tmp_path / "legacy-artifacts"
     artifact_root.mkdir()
 
-    with pytest.warns(LegacyArtifactRootWarning, match="deprecated"):
-        result = get_artifact_root(
-            environ={LEGACY_ARTIFACT_ROOT_ENV: str(artifact_root)},
+    with pytest.raises(ArtifactBoundaryError, match=f"{ARTIFACT_ROOT_ENV} is not set"):
+        get_artifact_root(
+            environ={"HMONG_TTS_DATA_ROOT": str(artifact_root)},
             repository_root=repo,
         )
 
-    assert result == artifact_root.resolve()
 
-
-def test_accepts_matching_canonical_and_legacy_roots_with_warning(tmp_path: Path) -> None:
+@pytest.mark.parametrize("legacy_value", ["relative/path", "", "different-path"])
+def test_canonical_root_ignores_removed_variable(tmp_path: Path, legacy_value: str) -> None:
     repo = make_repo(tmp_path)
-    artifact_root = tmp_path / "shared-artifacts"
+    artifact_root = tmp_path / "canonical-artifacts"
     artifact_root.mkdir()
 
-    with pytest.warns(LegacyArtifactRootWarning, match="remove the legacy variable"):
-        result = get_artifact_root(
-            environ={
-                ARTIFACT_ROOT_ENV: str(artifact_root),
-                LEGACY_ARTIFACT_ROOT_ENV: str(artifact_root),
-            },
-            repository_root=repo,
-        )
-
-    assert result == artifact_root.resolve()
-
-
-def test_rejects_conflicting_canonical_and_legacy_roots(tmp_path: Path) -> None:
-    repo = make_repo(tmp_path)
-    canonical = tmp_path / "canonical"
-    legacy = tmp_path / "legacy"
-    canonical.mkdir()
-    legacy.mkdir()
-
-    with pytest.raises(ArtifactBoundaryError, match="resolve to different paths"):
+    assert (
         get_artifact_root(
-            environ={
-                ARTIFACT_ROOT_ENV: str(canonical),
-                LEGACY_ARTIFACT_ROOT_ENV: str(legacy),
-            },
+            environ={ARTIFACT_ROOT_ENV: str(artifact_root), "HMONG_TTS_DATA_ROOT": legacy_value},
             repository_root=repo,
         )
+        == artifact_root.resolve()
+    )
 
 
 def test_rejects_missing_root(tmp_path: Path) -> None:
@@ -92,18 +69,10 @@ def test_rejects_missing_root(tmp_path: Path) -> None:
         get_artifact_root(environ={}, repository_root=repo)
 
 
-@pytest.mark.parametrize("variable", [ARTIFACT_ROOT_ENV, LEGACY_ARTIFACT_ROOT_ENV])
-def test_rejects_relative_root(tmp_path: Path, variable: str) -> None:
+def test_rejects_relative_root(tmp_path: Path) -> None:
     repo = make_repo(tmp_path)
-    if variable == LEGACY_ARTIFACT_ROOT_ENV:
-        with (
-            pytest.warns(LegacyArtifactRootWarning),
-            pytest.raises(ArtifactBoundaryError, match="absolute path"),
-        ):
-            get_artifact_root(environ={variable: "relative/path"}, repository_root=repo)
-    else:
-        with pytest.raises(ArtifactBoundaryError, match="absolute path"):
-            get_artifact_root(environ={variable: "relative/path"}, repository_root=repo)
+    with pytest.raises(ArtifactBoundaryError, match="absolute path"):
+        get_artifact_root(environ={ARTIFACT_ROOT_ENV: "relative/path"}, repository_root=repo)
 
 
 def test_rejects_nonexistent_root(tmp_path: Path) -> None:

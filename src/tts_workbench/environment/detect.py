@@ -19,7 +19,6 @@ from typing import Any
 
 from tts_workbench.artifacts.paths import (
     ARTIFACT_ROOT_ENV,
-    LEGACY_ARTIFACT_ROOT_ENV,
     ArtifactBoundaryError,
     find_repository_root,
     get_artifact_root,
@@ -102,10 +101,7 @@ def _artifact_state(repository_root: Path) -> ArtifactRootCapability:
     try:
         get_artifact_root(repository_root=repository_root)
     except ArtifactBoundaryError:
-        configured = bool(
-            os.environ.get(ARTIFACT_ROOT_ENV, "").strip()
-            or os.environ.get(LEGACY_ARTIFACT_ROOT_ENV, "").strip()
-        )
+        configured = bool(os.environ.get(ARTIFACT_ROOT_ENV, "").strip())
         return ArtifactRootCapability(
             valid=False,
             failure_reason="invalid" if configured else "not_configured",

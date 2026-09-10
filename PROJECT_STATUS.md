@@ -1,21 +1,23 @@
 # Project status
 
-Last updated: 2026-09-09
+Last updated: 2026-09-10
 
 ## Current milestone
 
 - Project: audited pretrained multi-language TTS inference, benchmarking, and
   local-deployment workbench.
-- Milestone: **M6 reproduction and portfolio evidence — complete**.
+- Milestone: **M7 final release audit, version 1.0.0**; final disposition is
+  authoritative in `docs/m7_owner_approval.json`. M6 remains complete.
 - Active branch: `rescope/audited-tts-workbench`.
-- Preserved baseline: `archive/white-hmong-single-speaker-tts-v0.1` at
-  `fd1756485b1e1b75fd1efee5e37519fa8e255415`.
+- Protected historical baseline: `fd1756485b1e1b75fd1efee5e37519fa8e255415`.
+  The local preservation branch was absent at M7 discovery.
 
 ## Approved scope
 
 Build reusable TTS infrastructure using properly licensed public non-Hmong
-checkpoints. The long-term purpose is to support a possible future
-community-validated Hmong learning application.
+checkpoints. The long-term purpose is useful speech technology for the Hmong community.
+Current English/Vietnamese demonstrations establish engineering behavior only;
+recruiters are a secondary audience for this evidence.
 
 The current project makes no White Hmong support, pronunciation, or linguistic
 correctness claim. White Hmong adaptation and NV-001 through NV-008 remain
@@ -273,37 +275,45 @@ human-evaluation plans are historical material indexed in
 The unresolved native-validation register remains active only as deferred
 future-work evidence in `docs/deferred/white_hmong_native_validation.md`.
 
-## Explicitly not started
+## M7 audit and decision
 
-- M7 final risk disposition or release decision.
-- White Hmong text handling, prompts, normalization, adaptation, or evaluation.
-- Recording, private speaker data, consent execution, or training.
+M7 applies the original-code Apache-2.0 decision approved by benjainnsthao
+on 2026-09-10, removes the legacy artifact-root bridge in version 1.0.0,
+requires safetensors in adapter 1.0.1, sanitizes invalid smoke requests, and
+corrects the audited dependency findings. M3–M6 contracts and M4 thresholds
+remain intact. Historical milestone observations above retain their dates.
 
-## Open risks and blockers
+Both immutable models execute on the RTX 4070/CUDA/float32 stack, repeat
+within the same environment, pass structural QC, complete bounded benchmarks,
+and run through the real loopback service with clean shutdown. Core and
+bounded CPU-model execution are independently documented. See:
 
-The authoritative register is
-[`docs/release_risk_register.md`](docs/release_risk_register.md). It tracks:
+- `reports/validation/m7_release_validation.md` for exact outcomes and privacy;
+- `docs/m7_reproduction.md` for external-only reproducible commands;
+- `docs/m7_dependency_audit.md` and `docs/license_matrix.md` for current sources;
+- `docs/release_risk_register.md` for every proposed residual disposition; and
+- `docs/m7_release_decision.md`, `docs/m7_owner_approval.json`, and the candidate
+  file manifest for reviewed identity and the actual human decision.
 
-- public code-license and release-mode decisions;
-- CC BY-NC checkpoint use/redistribution and upstream provenance;
-- M7 re-audit of the independently sourced Vietnamese prompt;
-- M7 final audit of real-checkpoint/intended-hardware and portability evidence;
-- cross-device reproducibility limitations;
-- QC-versus-language-quality claim boundaries;
-- final M7 audit of the mitigated M5 service controls;
-- removal of the legacy artifact-root variable;
-- dependency/model-host drift and final supply-chain review;
-- release artifact/report privacy; and
-- the explicitly deferred White Hmong/community-validation boundary **[NV]**.
+While final owner approval is pending, M7 is not complete as a public-release
+gate. Code-license approval is already complete and is not requested again.
+Only an approved `release`, all technical gates, exact committed-state
+validation, and the authorized active-branch push complete that outcome.
+A `preview` or `do_not_release` must be reported accurately.
 
-M6 provides runtime and reproduction evidence and mitigates the corresponding
-risks pending M7 final audit. M7 is the final risk-disposition and
-release-decision milestone. A public reusable release remains blocked until
-its release-blocking items are closed.
+## Scope still deferred
 
-## Next executable task
+White Hmong text handling, prompts, normalization, adaptation, evaluation,
+recording, private speaker data, consent execution, training, application,
+and public deployment are not started or authorized by M7. NV-001 through
+NV-008 remain unchanged and unresolved. Future community-language work needs
+separate authorization, community participation, licensing, and native
+validation. Retained weights/audio/prompts/caches are not public artifacts.
 
-Begin M7 from the completed M6 release-candidate evidence. Re-audit and
-disposition every release risk, obtain the required human code-license/release
-decisions, and select a release disposition only in that milestone. Preserve
-the deferred White Hmong boundary and NV-001 through NV-008.
+## End boundary and review
+
+The only remaining human gate is approval of the concrete candidate and every
+residual disposition. After that approval, one implementation commit, clean
+exact-commit validation, and a normal push of only the active branch are
+permitted. Stop after M7; no later milestone begins automatically.
+Next risk review: 2026-12-09, sooner for a material issue.

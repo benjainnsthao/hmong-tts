@@ -467,7 +467,9 @@ bounded-service controls. M7 is the final disposition gate.
 
 ## Next executable task
 
-Begin M7 from the completed M6 release-candidate evidence. Re-audit and
-disposition the risk register, obtain the required human decisions, and only
-then select the release disposition. Do not bind publicly or add White Hmong
-language behavior.
+M7's implementation/audit evidence and concrete review manifest are recorded
+in `reports/validation/m7_release_validation.md`. The original-code license
+and canonical-variable removal were owner-approved on 2026-09-10. Final
+outcome and residual acceptance are separate in `docs/m7_owner_approval.json`.
+Complete only the authorized M7 owner-review, one-commit validation, and active
+branch push sequence; do not begin the future bridge automatically.

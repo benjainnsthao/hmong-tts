@@ -27,7 +27,7 @@ from tts_workbench.models.schema import ModelRegistry
 
 MMS_VITS_ADAPTER_IDENTITY = AdapterIdentity(
     adapter_id="mms-vits",
-    implementation_version="1.0.0",
+    implementation_version="1.0.1",
 )
 
 
@@ -99,6 +99,7 @@ class TransformersMmsBackend:
             model = transformers_module.VitsModel.from_pretrained(
                 repository,
                 revision=revision,
+                use_safetensors=True,
             )
             model = model.to(resolved_device)
         except Exception as exc:

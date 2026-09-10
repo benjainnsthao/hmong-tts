@@ -160,3 +160,14 @@ HTTP success, registry inclusion, runtime readiness, and an atomic manifest do
 not establish pronunciation, naturalness, intelligibility, linguistic
 correctness, or White Hmong capability. NV-001 through NV-008 remain deferred
 **[NV]**.
+
+## M7 release evidence
+
+Both immutable English and Vietnamese checkpoints were exercised on CUDA with
+approved prompts, followed by a safe rejection and clean shutdown. Exact
+commands and evidence are in `m7_reproduction.md` and
+`../reports/validation/m7_release_validation.md`. Public release of the
+workbench code does not authorize publicly binding this service or commercial
+use of MMS. Trusted local clients must observe the body/work/disk exhaustion
+limitations in `service_threat_model.md`; queue capacity is not a complete
+resource quota. Final owner acceptance is recorded in `m7_owner_approval.json`.

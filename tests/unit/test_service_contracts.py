@@ -38,7 +38,7 @@ def service_config_payload(**changes: object) -> dict[str, object]:
 
 
 def test_service_contracts_are_strict_frozen_and_versioned() -> None:
-    health = HealthResponse(service_version="0.5.0")
+    health = HealthResponse(service_version="1.0.0")
     with pytest.raises(ValidationError):
         HealthResponse.model_validate({**health.model_dump(), "hostname": "forbidden"})
     with pytest.raises(ValidationError):

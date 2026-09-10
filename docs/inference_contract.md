@@ -188,3 +188,14 @@ memory that remains observable after unload is reported honestly by the
 benchmark and is not interpreted as a retained adapter model. Full machine-local
 artifacts remain outside Git; sanitized results are in
 `reports/validation/m6_reproduction_validation.md`.
+
+## M7 compatibility and loading corrections
+
+Workbench 1.0.0 reads only `TTS_WORKBENCH_ARTIFACT_ROOT`; the legacy variable
+bridge is removed. MMS adapter implementation 1.0.1 passes
+`use_safetensors=True` at the immutable registered revision and fails if that
+format is unavailable. It never falls back to the pickle alternative. Invalid
+smoke requests return a generic validation failure before adapter construction
+so raw input cannot leak via Pydantic tracebacks. Existing schemas, generation
+settings, atomic success marker, registry-only source resolution, and M4 QC
+thresholds are unchanged. See `m7_migration.md` and `m7_dependency_audit.md`.
