@@ -1,5 +1,12 @@
 # M7 release validation
 
+The original audit sections below preserve the first candidate's measured
+results. Its post-commit packaging failure, subsequent owner-directed push,
+and corrected-candidate validation are recorded in the final **Corrective
+validation supplement**. Initial package passes do not override that failure.
+The operative current approval is `docs/m7_owner_approval.json`; previous
+candidate approval is preserved separately and does not approve the correction.
+
 Audit and execution date: **2026-09-10**. Workbench **1.0.0**.
 Decision owner: **benjainnsthao**. Next review: **2026-12-09**, sooner for a
 material security, dependency, licensing, or provenance issue.
@@ -424,3 +431,178 @@ GitHub release, deployment, pull request, new checkpoint, training, or later
 community-language/application work is performed under M7. Stop after the
 approved decision, necessary exact-commit validation, one commit, and normal
 active-branch push.
+
+## Corrective validation supplement — 2026-09-10
+
+### Failure, authorization, and synchronization
+
+The owner approved the original digest
+`8e5e9d918c9570da40b914c03918f5b844fad13c133ff65f0edbb05281d02496`
+with `i approve and select release`. The implementation was committed as
+`61e0ce5f9c7b21bd805b87f0420d9b22f2677c03`. Clean detached-worktree validation
+then found a 160th sdist file: a `.git` pointer containing a private absolute
+path. The original ordinary-checkout sdist had 159 files. Its other members
+and wheel matched the approved archives. Validation stopped at packaging;
+the remaining clean-commit checks were not claimed to have passed.
+
+That defective archive was retained externally and never committed or
+published. The raw pointer is not reproduced here. After being informed of
+the defect, the owner explicitly requested `push to git`; the active branch
+was normally pushed. The selected `release` outcome did not complete the
+failed technical gate. No additional commit or history rewrite occurred.
+
+The owner then authorized exactly one additional corrective M7 commit,
+preserving the existing commit and requiring new approval of the changed
+candidate. `previous_candidate_decisions` retains the original approval
+verbatim; `corrective_commit_authorization` records the new authority. Neither
+is normalized out of the new candidate digest. The current approval is pending
+until the owner reviews this complete correction.
+
+Corrective work started clean, with local and fetched remote active HEAD both
+at the first M7 commit. Fetch/prune required no synchronization change. M5
+and M6 remain ancestors. Remote/local main retain
+`fd1756485b1e1b75fd1efee5e37519fa8e255415`; the local preservation branch
+remains absent. The correction uses isolated external ordinary/worktree
+copies and does not modify protected references.
+
+### Correction and regression evidence
+
+Hatchling 1.29.0's default directory handling did not exclude a worktree's
+`.git` file. Both wheel and sdist targets now explicitly set
+`exclude = [".git"]`, covering administrative files/directories at any depth.
+The [official Hatch pattern documentation](https://hatch.pypa.io/1.16/config/build/#patterns)
+was inspected on 2026-09-10; behavior was tested with the repository's exact
+pinned backend. No backend, runtime, dependency, or version upgrade was made.
+
+Two real offline archive tests place synthetic Git directories or pointer
+files at the project root and inside the package. They inspect both archives
+without extraction, reject administrative names and canary/private temporary
+bytes, and require the package and all three notices. Under the original
+configuration the pointer case fails and the directory case passes. Under
+the correction both pass. The expected failing regression log is retained.
+CI now populates the pinned build cache before these offline tests.
+
+Full builds from an actual ordinary clone and detached Git worktree contain
+the same candidate bytes/modes. Their wheels match byte for byte, as do their
+sdists. Inspection checks every member against the candidate inventory,
+rejects Git metadata, unsafe paths, links, duplicates, unexpected members,
+forbidden artifacts and private values, and validates source bytes, eight
+entry points, metadata, exact notices, and empty tar owner/group identities.
+Current wheel: **47 files**. Current sdist: **160 files**, comprising the
+159-file candidate plus `PKG-INFO`; the added member relative to the original
+ordinary candidate is the new regression test, not Git metadata.
+
+Compared with the previously approved wheel, only `METADATA` and its `RECORD`
+checksum change because the README now records the corrective release status.
+Metadata headers, runtime source files, entry points, and notices are unchanged.
+A first verifier assumed complete equality with the earlier wheel; the
+comparison was corrected to check this explicit README-derived metadata delta.
+Candidate-copy comparisons also required rebuilding after documentation
+changed; final package validation uses the final copied inventory. These
+verification adjustments did not change runtime behavior or hide a failed gate.
+
+A repeated local wheel installation hit a uv rename error in the mounted
+artifact-filesystem cache. Retrying that offline, no-dependency wheel install
+with `--no-cache` succeeded without deleting caches or changing dependencies.
+The original error log is retained as `logs/install-wheel-mounted-cache-failure.log`.
+
+### Required gates and retained runtime evidence
+
+| Corrective gate | Measured outcome |
+|---|---|
+| New clean Python 3.12 core, frozen offline sync | PASS; retained dependency caches, optional ML absent |
+| Frozen lock, built-wheel install and dependency consistency | PASS; lock unchanged |
+| Format, Ruff, strict MyPy | PASS |
+| Eight help commands, imports/lazy imports, old package absence | PASS |
+| All configurations, registry/list, service schema/OpenAPI | PASS |
+| Model-access acknowledgement fail-closed paths | PASS; return code 2 |
+| Aggregate synthetic/ASGI/compatibility/binding tests | **268 passed; 83.0972% branch-aware coverage**, floor 78% |
+| Focused service tests | **77 passed; 96.6549% branch-aware coverage**, floor 90% |
+| Original-config regression / corrected-config regression | Expected pointer failure reproduced / both cases pass |
+| Complete core validation driver | **36 checks passed** |
+| Full pre-commit and working/staged whitespace | PASS; repeated after final staging |
+| Ordinary/worktree wheel and sdist inspection and equality | PASS; four archives, 47 wheel / 160 sdist files |
+| Candidate/staged privacy, source identity, notices, links | PASS |
+| Reachable historical file-content scan | **358 unique blobs**, no flagged contents |
+| Git author/committer metadata | Same 14 prior commits with previously accepted personal-email exposure; raw value withheld |
+| M1–M6 validation, NV-001–NV-008, M4 QC thresholds | Byte-for-byte unchanged |
+| Retained real WAV/manifest/QC/benchmark integrity | PASS again for the eight retained pairs and both report sets |
+| Retained optional MMS dependency consistency | PASS |
+| Corrected candidate owner approval, corrective commit, clean exact-commit validation and push | Pending approval; not claimed complete |
+
+The existing test-only Starlette/HTTPX deprecation warning remains documented.
+No thresholds were weakened and no failure was converted into a runtime pass.
+
+The original runtime-source digest remains a historical execution identity,
+not the corrected whole-file digest. Comparing its complete inventory finds
+only `pyproject.toml` changed. Parsed comparison proves its sole changes are
+the two Hatch exclusions: `src/`, `configs/`, `uv.lock`, project metadata, and
+build-system requirements are identical. The corrected wheel independently
+confirms unchanged runtime bytes. Therefore the measured RTX 4070 CUDA/float32
+executions, bounded CPU diagnostics, same-environment comparison, QC,
+benchmarks, and real service/shutdown observations above remain applicable.
+They were not remeasured solely for this packaging correction. Integrity was
+rechecked against retained artifacts; no model, prompt, or measurement was
+substituted. No active service was started during corrective packaging work.
+
+### Current review and external evidence
+
+Corrective file inventory (relative to the first M7 commit):
+
+```text
+.github/workflows/ci.yml
+CHANGELOG.md
+PROJECT_STATUS.md
+README.md
+artifacts/README.md
+docs/decisions.md
+docs/implementation_roadmap.md
+docs/m7_owner_approval.json
+docs/m7_portfolio_summary.md
+docs/m7_release_decision.md
+docs/m7_reproduction.md
+docs/release_risk_register.md
+pyproject.toml
+reports/validation/m7_candidate_manifest.json
+reports/validation/m7_release_validation.md
+scripts/release_manifest.py
+tests/unit/test_release_manifest.py
+tests/unit/test_release_packaging.py
+```
+
+The candidate manifest now starts at
+`61e0ce5f9c7b21bd805b87f0420d9b22f2677c03` and binds every corrected candidate
+file/mode, including the prior decisions. Its reproducible digest is in
+`m7_candidate_manifest.json`; the existing two narrow self-reference/current-
+approval exclusions remain. No digest is embedded in its own included report.
+
+Proposals remain four `closed`, seven `accepted`, and one `deferred`, with
+benjainnsthao as owner and next review 2026-12-09 or sooner for a material
+issue. REL-PRIV-001 now includes the corrected packaging defect and preserved
+failure evidence. The defect itself is not submitted as an accepted residual;
+the previously disclosed historical-email visibility remains an explicit
+bounded residual. All other scopes and acceptance criteria are unchanged.
+
+The corrected candidate requires new final owner approval. After approval,
+create only the single authorized corrective commit, validate its exact tree
+in clean ordinary and worktree checkouts, and normally push only the active
+branch. Any post-commit validation failure requires a stop without pushing.
+Only successful exact-commit validation and push following approved `release`
+complete M7's public-release gate. The exact corrective SHA is reported in
+the later handoff; this report does not claim to contain its own final SHA.
+
+Correction evidence is relative to the external artifact root at
+`m7/20260910T122457Z/correction-20260910T232407Z/`: `package-inventory.json`,
+`core-checks.json`, `build-checks.json`, `coverage-aggregate.json`,
+`coverage-service.json`, `audit/`, `environment/core.json`, `logs/`, and
+`packages/ordinary/` plus `packages/worktree/`. Failed original committed-build
+evidence remains separately under `m7/20260910T122457Z/committed/`, including
+`postcommit-blocker.json` and the subsequent `push-handoff.json`. Package hashes
+and full inventories stay external to avoid self-referential archive digests.
+
+Public distribution remains covered original Apache-2.0 code and sanitized
+engineering evidence only. Weights, caches, prompts/source, audio, detailed
+raw reports/logs, environments, and the defective archive remain external
+and undistributed. No private path or machine identity is included in the
+candidate. No Hmong capability or linguistic-quality claim, later community
+phase, training, deployment, publication, tag, merge, or PR is introduced.

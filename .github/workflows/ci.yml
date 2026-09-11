@@ -37,6 +37,8 @@ jobs:
           uv run ruff format --check .
       - name: Type check
         run: uv run mypy src
+      - name: Build packages and populate the offline build cache
+        run: uv build --out-dir "$RUNNER_TEMP/tts-workbench-packages"
       - name: Test synthetic fixtures
         run: >-
           uv run pytest --cov=tts_workbench --cov-branch

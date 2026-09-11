@@ -6,8 +6,10 @@ Last updated: 2026-09-10
 
 - Project: audited pretrained multi-language TTS inference, benchmarking, and
   local-deployment workbench.
-- Milestone: **M7 final release audit, version 1.0.0**; final disposition is
-  authoritative in `docs/m7_owner_approval.json`. M6 remains complete.
+- Milestone: **M7 packaging correction and final review, version 1.0.0**.
+  The original candidate was approved and pushed, but its clean-worktree sdist
+  failed privacy validation. The changed candidate requires new approval in
+  `docs/m7_owner_approval.json` and exact-commit validation. M6 remains complete.
 - Active branch: `rescope/audited-tts-workbench`.
 - Protected historical baseline: `fd1756485b1e1b75fd1efee5e37519fa8e255415`.
   The local preservation branch was absent at M7 discovery.
@@ -312,8 +314,10 @@ validation. Retained weights/audio/prompts/caches are not public artifacts.
 
 ## End boundary and review
 
-The only remaining human gate is approval of the concrete candidate and every
-residual disposition. After that approval, one implementation commit, clean
-exact-commit validation, and a normal push of only the active branch are
-permitted. Stop after M7; no later milestone begins automatically.
+The remaining human gate is approval of the corrected concrete candidate and
+every residual disposition. The owner authorized one additional corrective
+commit while preserving the existing M7 commit. After approval, create that
+commit, validate it in a clean checkout, and normally push only the active
+branch. Any post-commit failure requires stopping without pushing. Stop after
+M7; no later milestone begins automatically.
 Next risk review: 2026-12-09, sooner for a material issue.

@@ -471,5 +471,7 @@ M7's implementation/audit evidence and concrete review manifest are recorded
 in `reports/validation/m7_release_validation.md`. The original-code license
 and canonical-variable removal were owner-approved on 2026-09-10. Final
 outcome and residual acceptance are separate in `docs/m7_owner_approval.json`.
-Complete only the authorized M7 owner-review, one-commit validation, and active
-branch push sequence; do not begin the future bridge automatically.
+Complete the authorized M7 packaging correction, new candidate review, one
+additional corrective commit, exact-commit validation, and active-branch push.
+Preserve the first M7 commit and its failed post-commit archive evidence. Stop
+without pushing if post-commit validation fails. Do not begin the future bridge.

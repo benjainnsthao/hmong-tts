@@ -280,9 +280,74 @@ never blindly extracted into the repository.
 
 Runtime evidence is bound to the pre-execution sorted path/SHA-256 inventory
 of `src/`, `configs/`, `pyproject.toml`, and `uv.lock`. Its compact sorted-key
-JSON digest is recorded in the M7 report and checked against final contents.
+JSON digest is recorded in the M7 report. The packaging correction changes
+only Hatch archive exclusions within that inventory's `pyproject.toml` entry:
+all runtime source/configuration bytes, the lock, and parsed project/build-system
+metadata still match. The corrective supplement records this comparison and
+wheel runtime-byte equality (the README updates metadata); it does not claim the original whole-file digest is unchanged.
 The complete review manifest then binds those files plus tests/docs/evidence,
 with only the explicit self-reference/actual-owner-approval exclusions in
 `m7_release_decision.md`. Revalidate affected gates after any content change.
 A later exact-commit checkout check and normal active-branch push occur only
-after the owner's final approval. Never amend or add a fixup to the one M7 commit.
+after the owner's new final approval. One additional corrective commit is
+authorized; preserve the original commit without amending or rewriting it.
+
+## Packaging regression and checkout comparison
+
+Hatchling remains pinned to 1.29.0. Explicit `exclude = [".git"]` patterns on
+both wheel and sdist targets exclude Git directories and worktree pointer files
+at any depth. Reviewed 2026-09-10: [Hatch file selection](https://hatch.pypa.io/1.16/config/build/#patterns).
+No build-system or dependency upgrade accompanies this correction.
+
+Populate the pinned build cache with the normal core build, then run the real
+archive regression tests offline. They use synthetic Git metadata at the
+project root and inside the package, check both archive types and all notices,
+and keep builds under pytest's external temporary root:
+
+```bash
+uv build --out-dir "${M7_RUN}/packages"
+"${CORE_PYTHON}" -m pytest tests/unit/test_release_packaging.py \
+  --basetemp "${M7_CORE_DIR}/packaging-tests" \
+  -o "cache_dir=${M7_RUN}/tooling/packaging-pytest-cache"
+```
+
+For exact-commit verification, create a separate ordinary clone and a detached
+worktree beneath a new native external temporary directory. No commit, branch
+rewrite, or change to the original worktree is needed:
+
+```bash
+export M7_CHECKOUTS="$(mktemp -d -t tts-workbench-package-check.XXXXXX)"
+git clone --no-hardlinks --single-branch --branch rescope/audited-tts-workbench \
+  . "${M7_CHECKOUTS}/ordinary"
+git -C "${M7_CHECKOUTS}/ordinary" worktree add --detach \
+  "${M7_CHECKOUTS}/worktree" HEAD
+uv build --offline "${M7_CHECKOUTS}/ordinary" \
+  --out-dir "${M7_RUN}/packages-ordinary"
+uv build --offline "${M7_CHECKOUTS}/worktree" \
+  --out-dir "${M7_RUN}/packages-worktree"
+cmp "${M7_RUN}/packages-ordinary/audited_tts_workbench-1.0.0-py3-none-any.whl" \
+  "${M7_RUN}/packages-worktree/audited_tts_workbench-1.0.0-py3-none-any.whl"
+cmp "${M7_RUN}/packages-ordinary/audited_tts_workbench-1.0.0.tar.gz" \
+  "${M7_RUN}/packages-worktree/audited_tts_workbench-1.0.0.tar.gz"
+```
+
+Before approval, the same checkout comparison overlays each candidate file
+onto these isolated checkouts, preserving `.git`, then verifies every copied
+file/mode against the review manifest. After committing, use clean checkouts
+of the exact approved commit without overlays. Archive inspection must reject
+any `.git` path component, unsafe path, link, unexpected member, private value,
+audio/weight/cache/prompt content, missing notice, or source-byte mismatch.
+Compare sdist members to the complete candidate inventory plus generated
+`PKG-INFO`; compare wheel source, metadata, entry points, and notices. Keep
+full inventories, archive hashes, and failure logs external. Do not publish
+the retained defective archive or its pointer content.
+
+For repeated installation of rebuilt local wheels, bypass the distribution
+cache to avoid a mounted-filesystem rename collision observed in this audit.
+This command accesses neither dependency indexes nor model hosts:
+
+```bash
+uv pip install --offline --no-cache --python "${CORE_PYTHON}" \
+  --reinstall --no-deps \
+  "${M7_RUN}/packages-ordinary/audited_tts_workbench-1.0.0-py3-none-any.whl"
+```

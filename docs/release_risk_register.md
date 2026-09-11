@@ -8,7 +8,8 @@ M6 completion does not close these risks. The M7 assessment below retains each
 original risk and acceptance criterion and supplies proposed dispositions.
 The dated human decision in [m7_owner_approval.json](m7_owner_approval.json)
 is authoritative for final status: while its release approval is `pending`,
-no proposed acceptance or deferral below is owner-approved. Once approved,
+the corrected candidate has no final approval. Previous approvals remain
+preserved for their identified candidate only. Once newly approved,
 its explicit risk-disposition mapping adopts the reviewed proposals; release
 completion additionally requires exact committed-state validation and push.
 The record is a named conversational sign-off, not a cryptographic signature.
@@ -282,12 +283,24 @@ M7 assessment (2026-09-10):
 
 M7 assessment (2026-09-10):
 
-- Proposed disposition: `accepted`; **release-blocking until the owner explicitly accepts the existing historical email exposure** or selects a non-release outcome.
+- Proposed disposition: `accepted`, after the packaging correction passes all applicable gates and the owner approves the corrected candidate. The previous candidate's historical-email acceptance is preserved; the package privacy defect is corrected, not accepted as a residual risk.
 - Owner: benjainnsthao. Review: 2026-12-09, or sooner for a material issue.
 - Scope: Candidate tracked/staged files, relevant reachable history, public docs/reports, wheel/sdist, and external runtime boundary.
-- Evidence: Privacy/credential/absolute-path/private-identifier and artifact scans, 309 historical blobs, package inventory/notices, report/log prompt checks, preserved M1–M6 and NV records; M7 report.
+- Evidence: Privacy/credential/absolute-path/private-identifier and artifact scans, 309 original historical blobs, package inventory/notices, report/log prompt checks, preserved M1–M6 and NV records; M7 report and its corrective validation supplement. The failed clean-worktree archive is retained externally, alongside corrected ordinary/worktree builds and regression evidence.
 - Rationale: No forbidden material was found in the reviewed candidate files or 309 scanned historical file blobs. Expanded author/committer metadata inspection found one personal-provider email identity across 14 existing commits. The raw address is not reproduced. Its continued visibility in preserved history is not covered by approval of the public owner handle. Weights, caches, prompts/source/OCR, audio, full logs/reports, and environments remain external. Scans are supplemented by file review and schema checks. The proposed mitigation is a verified public GitHub no-reply identity for the new M7 commit, with no history rewriting. Explicit final owner acceptance must cover the already-present historical metadata; no acceptance is assumed.
 - User-facing limitation: The existing personal-provider email remains discoverable in prior Git commit metadata if this history is publicly released. It cannot be removed within the no-rewrite authorization. Raw evidence is retained locally through review; do not publish it automatically. Pattern scans cannot prove absence of every possible secret.
+
+Corrective assessment (2026-09-10): the owner approved the historical-email
+residual for the prior candidate. Its post-commit worktree sdist nevertheless
+included a `.git` pointer containing a private absolute path. That failed
+archive was neither committed nor published. After being informed, the owner
+requested an active-branch push, then authorized one additional corrective
+commit with new candidate approval. Explicit `.git` exclusions apply to both
+archive types at any depth. Real-build regression tests cover administrative
+directories and pointer files at the root and inside the package. Full
+ordinary/worktree package inspection and exact committed-state validation
+are required; the defect itself cannot be accepted away. The corrected
+candidate remains subject to final owner review and post-approval checks.
 
 ### REL-LANG-001 — no White Hmong capability or community evidence
 

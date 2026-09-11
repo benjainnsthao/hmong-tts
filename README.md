@@ -27,6 +27,11 @@ The candidate distribution is `audited-tts-workbench` **1.0.0**, with eight
 measured results from final human acceptance. Only an approved `release`, with
 all required gates passing, completes M7 as a public-release gate.
 
+The first M7 commit was pushed at the owner's request after its clean-worktree
+sdist failed a privacy check. The packaging correction and its renewed approval
+are tracked in the decision record; the earlier approval applies to the previous
+candidate. Completion requires corrected-candidate approval and exact-commit validation.
+
 The audit reproduces both immutable checkpoints on an RTX 4070 using
 CUDA/float32, bounded CPU diagnostics, structural QC, timing benchmarks, and
 the real local service. These observations establish engineering behavior on

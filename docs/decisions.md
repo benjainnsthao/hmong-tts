@@ -368,3 +368,34 @@
 - Next review: 2026-12-09, sooner for a material issue. NV-001 through NV-008
   remain unchanged; no community-language, training, deployment, or application
   work begins in M7.
+
+## D-0015 — M7 package privacy correction and renewed candidate review
+
+- Date: 2026-09-10. Public decision owner: benjainnsthao.
+- The first M7 candidate was approved conversationally and committed as
+  `61e0ce5f9c7b21bd805b87f0420d9b22f2677c03`. Post-commit worktree validation
+  found a `.git` pointer with a private absolute path in its external sdist.
+  The archive was not committed or published. The owner was informed and then
+  explicitly requested the active-branch push; the failed release gate remained
+  incomplete. This history and the original approval are retained.
+- The owner subsequently authorized exactly one additional corrective M7 commit,
+  preserving the existing commit and all no-rewrite/protected-branch boundaries.
+  The changed candidate requires new final approval; the previous `release`
+  choice remains the intended outcome only for this new review.
+- Corrective control: exclude `.git` from both Hatch archive targets at any
+  depth. Real offline archive tests use synthetic directories and worktree
+  pointers at the root and inside the package. Inspect complete packages from
+  actual ordinary and worktree checkouts and compare their bytes.
+- Runtime source, dependency lock, model revisions, approved prompts, schemas,
+  and QC thresholds remain unchanged. Existing measured runtime evidence is
+  retained with an explicit parsed packaging-only delta and package-source
+  comparison; no new model or community-language work is introduced.
+- Preserve version 1.0.0 as an unpublished candidate. Record a new manifest
+  starting at the first M7 commit, with earlier decisions included in the
+  digest and only the current actual approval object normalized.
+- After new approval, create the single corrective commit, validate its exact
+  contents, and normally push only the active branch. Any post-commit failure
+  requires stopping without pushing. No further commit or history rewriting
+  is authorized. No package publication, tag, GitHub release, merge, PR, or
+  deployment is authorized. Review remains 2026-12-09 or sooner for a material
+  issue; NV-001 through NV-008 and the deferred scope remain unchanged.

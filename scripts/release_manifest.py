@@ -10,7 +10,7 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
-BASELINE = "32e55eed6c647fbe497e14973c768bf83f0a3a85"
+BASELINE = "61e0ce5f9c7b21bd805b87f0420d9b22f2677c03"
 MANIFEST = "reports/validation/m7_candidate_manifest.json"
 APPROVAL = "docs/m7_owner_approval.json"
 

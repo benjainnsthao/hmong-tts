@@ -5,6 +5,12 @@
 Final disposition is recorded in `docs/m7_owner_approval.json`; this version
 number alone is not owner approval or package publication.
 
+- Correct package selection to exclude `.git` directories and worktree pointer
+  files at every depth in wheels and sdists. Real archive regression tests use
+  synthetic administrative content and external temporary build directories.
+  This is an unpublished 1.0.0 candidate correction; runtime, dependency, and
+  interface versions remain unchanged.
+
 - Apply the owner-approved Apache-2.0 license to covered original code, with
   explicit third-party/model/output exclusions and package license notices.
 - Remove the deprecated `HMONG_TTS_DATA_ROOT` bridge and its warning type.

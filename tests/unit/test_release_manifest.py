@@ -34,6 +34,18 @@ def test_review_identity_detects_content_and_mode_changes_but_allows_recording_a
                 json.dumps({"owner": "fixture-owner", "release_approval": {"status": "approved"}})
             )
             assert module.candidate_manifest(tmp_path) == original
+            approval.write_text(
+                json.dumps(
+                    {
+                        "owner": "fixture-owner",
+                        "release_approval": None,
+                        "previous_candidate_decisions": [{"disposition": "release"}],
+                    }
+                )
+            )
+            # Prior decisions are evidence bound by the digest, not a new approval exemption.
+            assert module.candidate_manifest(tmp_path) != original
+            approval.write_text(json.dumps({"owner": "fixture-owner", "release_approval": None}))
             source.write_text("value = 2\n")
             assert module.candidate_manifest(tmp_path) != original
             source.write_text("value = 1\n")

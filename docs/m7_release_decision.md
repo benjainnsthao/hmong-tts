@@ -5,17 +5,18 @@ Intended outcome: **release**, conditional on the completed technical gates,
 explicit approval of this candidate and all residual dispositions, and exact
 committed-state validation before the authorized active-branch push.
 
-The actual human decision is the `release_approval` object in
-[`m7_owner_approval.json`](m7_owner_approval.json). Its initial status is
-`pending`; no final approval, signature, or acceptance is inferred from the
+The actual human decision for the corrected candidate is the `release_approval`
+object in [`m7_owner_approval.json`](m7_owner_approval.json). Its status remains
+`pending` until new approval; no final approval, signature, or acceptance is inferred from the
 implementation, the code-license choice, or the intention to release.
 `preview` and `do_not_release` remain available owner outcomes. Only an
 approved `release` with all gates passing completes M7 as a public-release gate.
 
 ## Candidate identity and binding method
 
-Starting completed-M6 commit:
-`32e55eed6c647fbe497e14973c768bf83f0a3a85`.
+Starting corrective-work commit:
+`61e0ce5f9c7b21bd805b87f0420d9b22f2677c03`.
+Completed-M6 ancestor: `32e55eed6c647fbe497e14973c768bf83f0a3a85`.
 Required M5 ancestor: `fb72a5e87f9b3841d29ff4a0717546646e188422`.
 Active branch: `rescope/audited-tts-workbench`.
 Candidate version: **1.0.0**; MMS adapter implementation: **1.0.1**.
@@ -40,13 +41,37 @@ After approval only that normalized object may change: it records the actual
 owner statement, date, method, approved digest, selected outcome, and exact
 risk-disposition mapping. No source/package payload change is authorized by
 this exclusion. The approved digest must match the manifest, and every
-unexcluded byte must still verify before and after the one commit. This is a
+unexcluded byte must still verify before and after the corrective commit. This is a
 review identity, not a digital signature or proof of the owner's identity.
 
 The final full Git SHA is reported after committing in the handoff. That
 commit carries this decision record and the actual approval; a commit cannot
 contain its own literal final SHA. Clean-checkout verification binds that SHA
 to this reviewed file manifest, with the documented approval-only difference.
+
+## Previous approval and corrective authorization
+
+The owner approved the earlier candidate with `i approve and select release`
+on 2026-09-10. Commit `61e0ce5f9c7b21bd805b87f0420d9b22f2677c03` carries that
+decision. Clean-worktree validation then found an extra `.git` pointer in its
+sdist containing a private absolute path. The archive remained external and
+unpublished; the pointer was not committed. Other archive members and the
+wheel matched the reviewed build. The initial validation failure is retained.
+
+After being informed of the failure, the owner explicitly requested `push to
+git`; only the active branch was pushed. That instruction did not complete
+the failed public-release gate. The owner subsequently authorized one additional
+corrective M7 commit, preserving the existing commit without rewriting history,
+and explicitly required new approval of the changed candidate. These earlier
+decisions are preserved outside the normalized approval field in
+`previous_candidate_decisions` and `corrective_commit_authorization`.
+
+The correction excludes Git administrative directories and pointer files from
+both archive types and tests actual builds with synthetic metadata. Version
+1.0.0 remains an unpublished candidate: runtime source, dependency lock, model
+registry, and inference behavior are unchanged. Revalidated packages and the
+documented runtime-evidence comparison support this corrected candidate;
+technical correction is not a proposed acceptance of the packaging defect.
 
 ## Audience, current capability, and distribution
 
@@ -119,9 +144,10 @@ The audit also found a personal-provider email identity in existing Git
 author/committer metadata across 14 prior commits. It is absent from candidate
 file contents and is not reproduced here. Preserved history keeps that address
 visible; approval of the public owner handle does not authorize that disclosure.
-REL-PRIV-001 therefore remains release-blocking until the owner explicitly
-accepts this existing exposure. Proposed mitigation: use the verified GitHub
-no-reply identity for the new M7 commit, without rewriting historical commits.
+The owner explicitly accepted this existing exposure for the previous candidate.
+That decision is preserved; the changed candidate asks for adoption of the same
+bounded residual disposition. Use the already-approved verified GitHub no-reply
+identity for the corrective commit, without rewriting historical commits.
 If the owner does not accept continued historical visibility, `release` is
 unsupported under the current no-rewrite constraint; choose `preview` with an
 explicit restricted audience or `do_not_release`. This finding is not removed
@@ -155,9 +181,10 @@ as such, with no invented cryptographic signature. Licensing approval alone
 is insufficient. Any requested content change requires affected validation and
 review of a new digest before approval.
 
-After approval: create exactly one commit with message
-`chore: complete M7 release audit and decision`, validate that committed tree
-in a clean checkout, and normally push only the active branch. A necessary
-post-commit code correction or upstream divergence triggers a stop under the
-one-commit/no-rewrite constraint. No merge, tag, package publication, GitHub
+After approval: create the one additional authorized commit with message
+`fix: exclude Git metadata from M7 release packages`, validate that exact
+committed tree in a clean ordinary checkout and a Git worktree, and normally
+push only the active branch. Any post-commit validation failure or upstream
+divergence triggers a stop without pushing; no further corrective commit or
+history rewriting is authorized. No merge, tag, package publication, GitHub
 release, deployment, or pull request is authorized.

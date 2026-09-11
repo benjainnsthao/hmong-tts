@@ -49,6 +49,11 @@ tts-workbench-benchmark = "tts_workbench.benchmark.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/tts_workbench"]
+exclude = [".git"]
+
+[tool.hatch.build.targets.sdist]
+# Match both Git directories and worktree pointer files, at any depth.
+exclude = [".git"]
 
 [tool.uv]
 required-version = ">=0.11.28,<0.12"

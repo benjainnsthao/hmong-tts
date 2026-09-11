@@ -51,7 +51,11 @@ no-reply identity. Existing history is not rewritten.
 The release evidence distinguishes prior owner-approved code licensing,
 measured technical results, proposed risk dispositions, and final human
 approval. The candidate file manifest binds reviewed contents before the
-single authorized implementation commit. The actual outcome is in
+authorized commit sequence. The first M7 commit was approved and pushed, but
+clean-worktree packaging found a private-path pointer in its external sdist.
+The correction explicitly excludes Git metadata and adds real archive regression
+tests; a changed candidate requires new review and exact-commit validation.
+The failed archive was not published. The actual current outcome is in
 [m7_owner_approval.json](m7_owner_approval.json); only an approved `release`
 with all gates passed completes M7 as a public-release gate.
 

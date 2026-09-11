@@ -13,15 +13,63 @@
   "decision_record": "docs/m7_release_decision.md",
   "risk_register": "docs/release_risk_register.md",
   "next_review_on": "2026-12-09",
+  "previous_candidate_decisions": [
+    {
+      "implementation_commit": "61e0ce5f9c7b21bd805b87f0420d9b22f2677c03",
+      "release_approval": {
+        "status": "approved",
+        "disposition": "release",
+        "approved_on": "2026-09-10",
+        "candidate_sha256": "8e5e9d918c9570da40b914c03918f5b844fad13c133ff65f0edbb05281d02496",
+        "statement": "i approve and select release",
+        "method": "conversational owner approval in direct response to the concrete final M7 review question",
+        "cryptographic_signature": false,
+        "approval_scope": "The identified candidate, every proposed risk disposition, permitted distribution and capability boundaries, existing historical commit-email exposure, and verified GitHub no-reply identity for the M7 commit.",
+        "risk_dispositions": {
+          "REL-LIC-001": "closed",
+          "REL-LIC-002": "accepted",
+          "REL-PROMPT-001": "closed",
+          "REL-RUNTIME-001": "closed",
+          "REL-PORT-001": "accepted",
+          "REL-REPRO-001": "accepted",
+          "REL-QC-001": "accepted",
+          "REL-SERVICE-001": "accepted",
+          "REL-COMPAT-001": "closed",
+          "REL-SUPPLY-001": "accepted",
+          "REL-PRIV-001": "accepted",
+          "REL-LANG-001": "deferred"
+        },
+        "historical_commit_email_exposure_accepted": true,
+        "new_commit_github_noreply_identity_approved": true,
+        "deferred_white_hmong_boundary_confirmed": true,
+        "post_approval_execution": "Exactly one M7 implementation commit; validate the committed tree in a clean checkout, push only the active branch, and stop after M7."
+      },
+      "post_commit_validation": "failed: worktree sdist included a Git administrative pointer with a private absolute path; archive remained external and unpublished",
+      "subsequent_owner_instruction": "push to git",
+      "active_branch_push_completed_on": "2026-09-10",
+      "public_release_gate_completed": false
+    }
+  ],
+  "corrective_commit_authorization": {
+    "authorized_on": "2026-09-10",
+    "method": "conversational owner instruction",
+    "statement": "I authorize one additional corrective M7 commit, relaxing my earlier exactly-one-commit constraint. Preserve the existing commit; do not amend, reset, rebase, force-push, or otherwise rewrite history.",
+    "starting_commit": "61e0ce5f9c7b21bd805b87f0420d9b22f2677c03",
+    "additional_commits_authorized": 1,
+    "changed_candidate_requires_new_final_approval": true,
+    "post_commit_failure_requires_stop_without_push": true,
+    "cryptographic_signature": false
+  },
   "release_approval": {
     "status": "approved",
     "disposition": "release",
-    "approved_on": "2026-09-10",
-    "candidate_sha256": "8e5e9d918c9570da40b914c03918f5b844fad13c133ff65f0edbb05281d02496",
-    "statement": "i approve and select release",
-    "method": "conversational owner approval in direct response to the concrete final M7 review question",
+    "approved_on": "2026-09-11",
+    "recorded_at_utc": "2026-09-11T03:16:37.587611+00:00",
+    "candidate_sha256": "19c700ebb04a7f3afc70fd1af8707a990f6390758d1e67d82a760ba9d2b02447",
+    "statement": "yes i approve",
+    "method": "conversational owner approval in direct response to the identified corrected candidate and its proposed risk dispositions for release",
     "cryptographic_signature": false,
-    "approval_scope": "The identified candidate, every proposed risk disposition, permitted distribution and capability boundaries, existing historical commit-email exposure, and verified GitHub no-reply identity for the M7 commit.",
+    "approval_scope": "The identified corrected M7 candidate, all proposed risk dispositions, the permitted distribution and capability boundaries, preserved historical-email exposure, and the single authorized corrective commit using the previously approved verified GitHub no-reply identity.",
     "risk_dispositions": {
       "REL-LIC-001": "closed",
       "REL-LIC-002": "accepted",
@@ -39,6 +87,8 @@
     "historical_commit_email_exposure_accepted": true,
     "new_commit_github_noreply_identity_approved": true,
     "deferred_white_hmong_boundary_confirmed": true,
-    "post_approval_execution": "Exactly one M7 implementation commit; validate the committed tree in a clean checkout, push only the active branch, and stop after M7."
+    "packaging_defect_accepted_as_residual_risk": false,
+    "post_approval_execution": "Create exactly one additional corrective M7 commit preserving the existing commit; validate the exact committed tree in clean ordinary and Git worktree checkouts; stop without pushing on any post-commit validation failure; otherwise normally push only rescope/audited-tts-workbench and stop after M7.",
+    "approval_date_basis": "UTC"
   }
 }

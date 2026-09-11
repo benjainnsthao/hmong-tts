@@ -145,3 +145,12 @@ metadata, distinct from repository file contents. The address is not copied
 into public reports. Its continued historical visibility requires explicit
 owner disposition; use the verified public GitHub no-reply identity for the
 new M7 commit. This policy does not authorize rewriting prior commits.
+
+The first M7 clean-worktree sdist included a Git administrative pointer with
+a private absolute path. That failed archive remains local audit evidence and
+must not be shared. The corrective run uses a separate dated directory below
+M7, retaining the original failure, corrected ordinary/worktree archives,
+regression logs, and inventories without overwriting earlier evidence. Only
+sanitized findings enter Git. All release packages must exclude `.git`
+directories and pointer files; matching builds alone do not replace privacy
+and complete-content inspection.
