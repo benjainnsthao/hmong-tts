@@ -1,6 +1,6 @@
 # Audited TTS workbench implementation roadmap
 
-Status: approved direction; milestone M6 complete
+Status: milestones M1–M7 complete; post-M7 work proposed, not authorized
 
 ## Purpose
 
@@ -373,6 +373,12 @@ M7 human gate, not an M6 engineering decision. M6 makes no release disposition.
 
 ## Milestone M7 — final risk closure and release decision
 
+Status: **complete**, with owner-approved disposition `release` at
+`e4ebfad89383522c26d64a00563a44afe1aab5ba`. The corrective commit passed
+exact-commit validation and CI and was pushed to the active branch. See the
+[post-M7 handoff](post_m7_next_steps.md#completed-m7-baseline) for completion
+evidence; the acceptance criteria below remain unchanged.
+
 Goal: resolve or explicitly disposition every release risk before calling the
 workbench a validated release.
 
@@ -465,13 +471,16 @@ are maintained in [`docs/release_risk_register.md`](release_risk_register.md).
 M6 produced the authorized-hardware reproduction evidence and preserved the
 bounded-service controls. M7 is the final disposition gate.
 
-## Next executable task
+## Next work after M7
 
-M7's implementation/audit evidence and concrete review manifest are recorded
-in `reports/validation/m7_release_validation.md`. The original-code license
-and canonical-variable removal were owner-approved on 2026-09-10. Final
-outcome and residual acceptance are separate in `docs/m7_owner_approval.json`.
-Complete the authorized M7 packaging correction, new candidate review, one
-additional corrective commit, exact-commit validation, and active-branch push.
-Preserve the first M7 commit and its failed post-commit archive evidence. Stop
-without pushing if post-commit validation fails. Do not begin the future bridge.
+The M7 commit, corrective commit, final approval, exact-commit checks, and
+active-branch push are complete. Preserve the release snapshot and all prior
+evidence, including the original failed archive outside Git.
+
+The [post-M7 next-steps guide](post_m7_next_steps.md) records the recommended
+sequence and decision points. Maintain the current release and review its
+risks by 2026-12-09. The next recommended development phase is bounded
+community scoping, subject to separate authorization and actual community
+participation. Repository integration and publication are independent owner
+choices. No later milestone, outreach, language implementation, application,
+training, or deployment starts automatically.

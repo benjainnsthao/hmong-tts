@@ -1,15 +1,16 @@
 # Project status
 
-Last updated: 2026-09-10
+Last updated: 2026-09-11 (UTC)
 
 ## Current milestone
 
 - Project: audited pretrained multi-language TTS inference, benchmarking, and
   local-deployment workbench.
-- Milestone: **M7 packaging correction and final review, version 1.0.0**.
-  The original candidate was approved and pushed, but its clean-worktree sdist
-  failed privacy validation. The changed candidate requires new approval in
-  `docs/m7_owner_approval.json` and exact-commit validation. M6 remains complete.
+- Milestone: **M7 complete; approved disposition `release`, version 1.0.0**.
+  Corrective commit `e4ebfad89383522c26d64a00563a44afe1aab5ba` passed clean
+  ordinary/worktree validation and CI, and was pushed normally to the active
+  branch after the corrected candidate's approval. The original failed archive
+  and earlier commit remain preserved. M6 remains complete.
 - Active branch: `rescope/audited-tts-workbench`.
 - Protected historical baseline: `fd1756485b1e1b75fd1efee5e37519fa8e255415`.
   The local preservation branch was absent at M7 discovery.
@@ -293,15 +294,20 @@ bounded CPU-model execution are independently documented. See:
 - `reports/validation/m7_release_validation.md` for exact outcomes and privacy;
 - `docs/m7_reproduction.md` for external-only reproducible commands;
 - `docs/m7_dependency_audit.md` and `docs/license_matrix.md` for current sources;
-- `docs/release_risk_register.md` for every proposed residual disposition; and
+- `docs/release_risk_register.md` for the residual dispositions adopted by the
+  owner approval record; and
 - `docs/m7_release_decision.md`, `docs/m7_owner_approval.json`, and the candidate
   file manifest for reviewed identity and the actual human decision.
 
-While final owner approval is pending, M7 is not complete as a public-release
-gate. Code-license approval is already complete and is not requested again.
-Only an approved `release`, all technical gates, exact committed-state
-validation, and the authorized active-branch push complete that outcome.
-A `preview` or `do_not_release` must be reported accurately.
+The corrected candidate received conversational owner approval for `release`
+on 2026-09-11 UTC. Exact-commit validation passed 37 core checks, 268 synthetic
+tests with 83.10% aggregate branch-aware coverage, and 77 focused service tests
+with 96.65% coverage. Clean ordinary and worktree wheels/sdists matched the
+approved archives byte for byte and excluded Git administrative material.
+The active-branch push and
+[CI run](https://github.com/benjainnsthao/hmong-tts/actions/runs/34558588222)
+succeeded. M7's public-release gates are complete; no packages, tags, GitHub
+release, pull request, merge, or deployment were created.
 
 ## Scope still deferred
 
@@ -314,10 +320,17 @@ validation. Retained weights/audio/prompts/caches are not public artifacts.
 
 ## End boundary and review
 
-The remaining human gate is approval of the corrected concrete candidate and
-every residual disposition. The owner authorized one additional corrective
-commit while preserving the existing M7 commit. After approval, create that
-commit, validate it in a clean checkout, and normally push only the active
-branch. Any post-commit failure requires stopping without pushing. Stop after
-M7; no later milestone begins automatically.
-Next risk review: 2026-12-09, sooner for a material issue.
+The authorized M7 implementation commit and single corrective commit are
+complete. The completed release identity and approval records remain fixed at
+the corrective commit. Subsequent planning documentation does not extend that
+approval to a new release candidate.
+
+[Post-M7 next steps](docs/post_m7_next_steps.md) documents maintenance,
+optional repository integration, and the proposed community scoping phase.
+This is documentation of future work; no later milestone is authorized or
+started. Additional commits/pushes and any integration or publication need
+separate authorization beyond the exhausted M7 commit allowance.
+
+Next risk review: **2026-12-09**, sooner for a material security, dependency,
+licensing, or provenance issue. Retain external evidence through that review
+and until material audit issues are resolved.

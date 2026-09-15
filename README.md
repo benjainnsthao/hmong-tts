@@ -19,18 +19,25 @@ that local branch at M7 discovery.
 
 ## M7 release audit
 
-The candidate distribution is `audited-tts-workbench` **1.0.0**, with eight
+The validated distribution is `audited-tts-workbench` **1.0.0**, with eight
 `tts-workbench-*` commands. The
 [release decision](docs/m7_release_decision.md),
 [owner approval record](docs/m7_owner_approval.json), and
 [validation evidence](reports/validation/m7_release_validation.md) distinguish
-measured results from final human acceptance. Only an approved `release`, with
-all required gates passing, completes M7 as a public-release gate.
+measured results from final human acceptance. M7's public-release gates are
+complete at commit `e4ebfad89383522c26d64a00563a44afe1aab5ba`, with the owner's
+approved `release` disposition, successful exact-commit validation, active-branch
+push, and [passing CI](https://github.com/benjainnsthao/hmong-tts/actions/runs/34558588222).
 
 The first M7 commit was pushed at the owner's request after its clean-worktree
 sdist failed a privacy check. The packaging correction and its renewed approval
 are tracked in the decision record; the earlier approval applies to the previous
-candidate. Completion requires corrected-candidate approval and exact-commit validation.
+candidate. The correction passed package and privacy checks in clean ordinary
+and Git worktree checkouts. Packages and GitHub releases have not been published.
+
+See [post-M7 next steps](docs/post_m7_next_steps.md) for the completed handoff,
+maintenance dates, proposed community scoping work, and the separate
+authorization needed for integration, publication, or future development.
 
 The audit reproduces both immutable checkpoints on an RTX 4070 using
 CUDA/float32, bounded CPU diagnostics, structural QC, timing benchmarks, and
