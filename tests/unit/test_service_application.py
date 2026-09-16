@@ -99,7 +99,7 @@ def test_application_lifecycle_starts_coordinator_and_unloads_adapter(
     runtime, adapter = runtime_for(coordinator)
     app = create_app(service_config, runtime_factory=lambda _: runtime)
 
-    with TestClient(app) as client:
+    with TestClient(app, base_url="http://127.0.0.1:8000") as client:
         assert coordinator.start_count == 1
         assert client.get("/health").status_code == 200
     assert coordinator.shutdown_count == 1
@@ -171,7 +171,10 @@ def test_health_is_independent_of_model_cuda_and_artifact_state(
         core_ready=False,
         optional_runtime_ready=False,
     )
-    with TestClient(create_app(service_config, runtime_factory=lambda _: runtime)) as client:
+    with TestClient(
+        create_app(service_config, runtime_factory=lambda _: runtime),
+        base_url="http://127.0.0.1:8000",
+    ) as client:
         response = client.get("/health")
         assert response.status_code == 200
         assert response.json() == {
@@ -188,7 +191,10 @@ def test_readiness_distinguishes_lazy_model_and_optional_runtime(
 ) -> None:
     coordinator = ImmediateCoordinator(result=success_result())
     runtime, adapter = runtime_for(coordinator)
-    with TestClient(create_app(service_config, runtime_factory=lambda _: runtime)) as client:
+    with TestClient(
+        create_app(service_config, runtime_factory=lambda _: runtime),
+        base_url="http://127.0.0.1:8000",
+    ) as client:
         response = client.get("/ready")
         payload = response.json()
         assert response.status_code == 200
@@ -222,7 +228,10 @@ def test_nonready_boundaries_return_stable_503(
         artifact_ready=artifact_ready,
         core_ready=core_ready,
     )
-    with TestClient(create_app(service_config, runtime_factory=lambda _: runtime)) as client:
+    with TestClient(
+        create_app(service_config, runtime_factory=lambda _: runtime),
+        base_url="http://127.0.0.1:8000",
+    ) as client:
         response = client.get("/ready")
         assert response.status_code == 503
         assert response.json()["status"] == "not_ready"
@@ -240,7 +249,10 @@ def test_missing_coordinator_keeps_readiness_and_synthesis_closed(
         coordinator=None,
         environment=runtime.environment,
     )
-    with TestClient(create_app(service_config, runtime_factory=lambda _: degraded)) as client:
+    with TestClient(
+        create_app(service_config, runtime_factory=lambda _: degraded),
+        base_url="http://127.0.0.1:8000",
+    ) as client:
         ready = client.get("/ready")
         synthesis = client.post(
             "/v1/synthesize",
@@ -258,7 +270,10 @@ def test_models_are_exact_registry_metadata_without_quality_claims(
 ) -> None:
     coordinator = ImmediateCoordinator(result=success_result())
     runtime, _ = runtime_for(coordinator)
-    with TestClient(create_app(service_config, runtime_factory=lambda _: runtime)) as client:
+    with TestClient(
+        create_app(service_config, runtime_factory=lambda _: runtime),
+        base_url="http://127.0.0.1:8000",
+    ) as client:
         response = client.get("/v1/models")
     assert response.status_code == 200
     payload = response.json()
@@ -297,7 +312,10 @@ def test_successful_synthesis_derives_path_and_provenance_and_forwards_settings(
             "speaking_rate": 1.25,
         },
     }
-    with TestClient(create_app(service_config, runtime_factory=lambda _: runtime)) as client:
+    with TestClient(
+        create_app(service_config, runtime_factory=lambda _: runtime),
+        base_url="http://127.0.0.1:8000",
+    ) as client:
         response = client.post("/v1/synthesize", json=payload)
     assert response.status_code == 200
     assert response.json()["manifest_path"].endswith(".manifest.json")
@@ -319,7 +337,10 @@ def test_unknown_model_is_rejected_before_coordinator_submission(
 ) -> None:
     coordinator = ImmediateCoordinator(result=success_result())
     runtime, _ = runtime_for(coordinator)
-    with TestClient(create_app(service_config, runtime_factory=lambda _: runtime)) as client:
+    with TestClient(
+        create_app(service_config, runtime_factory=lambda _: runtime),
+        base_url="http://127.0.0.1:8000",
+    ) as client:
         response = client.post(
             "/v1/synthesize",
             json={"model_id": "missing-model", "text": "synthetic marker"},
@@ -353,7 +374,10 @@ def test_validation_failure_is_sanitized_and_never_echoes_text(
     submitted_text = str(payload.get("text", ""))
     coordinator = ImmediateCoordinator(result=success_result())
     runtime, _ = runtime_for(coordinator)
-    with TestClient(create_app(service_config, runtime_factory=lambda _: runtime)) as client:
+    with TestClient(
+        create_app(service_config, runtime_factory=lambda _: runtime),
+        base_url="http://127.0.0.1:8000",
+    ) as client:
         response = client.post("/v1/synthesize", json=payload)
     assert response.status_code == 422
     assert response.json()["category"] == "invalid_request"
@@ -370,7 +394,10 @@ def test_prompt_and_client_identity_are_absent_from_responses_and_logs(
     marker = "synthetic privacy marker"
     coordinator = ImmediateCoordinator(result=success_result())
     runtime, _ = runtime_for(coordinator)
-    with TestClient(create_app(service_config, runtime_factory=lambda _: runtime)) as client:
+    with TestClient(
+        create_app(service_config, runtime_factory=lambda _: runtime),
+        base_url="http://127.0.0.1:8000",
+    ) as client:
         response = client.post(
             "/v1/synthesize",
             json={
@@ -397,7 +424,10 @@ def test_configured_maximum_length_is_enforced_without_echo(
     coordinator = ImmediateCoordinator(result=success_result())
     runtime, _ = runtime_for(coordinator)
     marker = "synthetic length marker"
-    with TestClient(create_app(short_config, runtime_factory=lambda _: runtime)) as client:
+    with TestClient(
+        create_app(short_config, runtime_factory=lambda _: runtime),
+        base_url="http://127.0.0.1:8000",
+    ) as client:
         response = client.post(
             "/v1/synthesize",
             json={"model_id": "fixture-eng", "text": marker},
@@ -426,7 +456,10 @@ def test_coordinator_failures_have_stable_http_mappings(
         failure=CoordinatorFailure(category, "backend content must not escape"),
     )
     runtime, _ = runtime_for(coordinator)
-    with TestClient(create_app(service_config, runtime_factory=lambda _: runtime)) as client:
+    with TestClient(
+        create_app(service_config, runtime_factory=lambda _: runtime),
+        base_url="http://127.0.0.1:8000",
+    ) as client:
         response = client.post(
             "/v1/synthesize",
             json={"model_id": "fixture-eng", "text": "synthetic marker"},
@@ -446,7 +479,10 @@ def test_untyped_coordinator_exception_is_sanitized(
 
     coordinator = ExplodingCoordinator(result=success_result())
     runtime, _ = runtime_for(coordinator)
-    with TestClient(create_app(service_config, runtime_factory=lambda _: runtime)) as client:
+    with TestClient(
+        create_app(service_config, runtime_factory=lambda _: runtime),
+        base_url="http://127.0.0.1:8000",
+    ) as client:
         response = client.post(
             "/v1/synthesize",
             json={"model_id": "fixture-eng", "text": "synthetic marker"},
@@ -483,7 +519,10 @@ def test_inference_failures_have_stable_http_mappings(
     )
     coordinator = ImmediateCoordinator(result=result)
     runtime, _ = runtime_for(coordinator)
-    with TestClient(create_app(service_config, runtime_factory=lambda _: runtime)) as client:
+    with TestClient(
+        create_app(service_config, runtime_factory=lambda _: runtime),
+        base_url="http://127.0.0.1:8000",
+    ) as client:
         response = client.post(
             "/v1/synthesize",
             json={"model_id": "fixture-eng", "text": "synthetic marker"},
@@ -522,7 +561,10 @@ def test_full_m3_execution_commits_only_root_relative_success_references(
         output_id_factory=lambda: OUTPUT_ID,
     )
     marker = "synthetic transaction marker"
-    with TestClient(create_app(service_config, runtime_factory=lambda _: runtime)) as client:
+    with TestClient(
+        create_app(service_config, runtime_factory=lambda _: runtime),
+        base_url="http://127.0.0.1:8000",
+    ) as client:
         response = client.post(
             "/v1/synthesize",
             json={"model_id": "fixture-eng", "text": marker},
@@ -566,7 +608,10 @@ def test_failed_full_execution_creates_no_artifacts(
         coordinator=coordinator,
         environment=service_environment(),
     )
-    with TestClient(create_app(service_config, runtime_factory=lambda _: runtime)) as client:
+    with TestClient(
+        create_app(service_config, runtime_factory=lambda _: runtime),
+        base_url="http://127.0.0.1:8000",
+    ) as client:
         response = client.post(
             "/v1/synthesize",
             json={"model_id": "fixture-eng", "text": "synthetic failure marker"},
@@ -594,6 +639,9 @@ def test_openapi_generation_has_no_runtime_or_model_access(
         "/ready",
         "/v1/models",
         "/v1/synthesize",
+        "/v1/ui-config",
+        "/v1/runs/{run_id}",
+        "/v1/runs/{run_id}/audio",
     }
     rendered = json.dumps(schema)
     assert "output_wav_path" not in rendered
@@ -627,7 +675,9 @@ def test_service_imports_are_lazy_and_no_cors_is_installed(
         service_config,
         runtime_factory=lambda _: pytest.fail("lifespan must not run"),
     )
-    assert app.user_middleware == []
+    assert [middleware.cls.__name__ for middleware in app.user_middleware] == [
+        "LocalBrowserBoundary"
+    ]
     importlib.invalidate_caches()
     with pytest.raises(ModuleNotFoundError):
         importlib.import_module("hmong_tts.service")

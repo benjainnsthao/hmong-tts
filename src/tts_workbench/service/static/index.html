@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>Local TTS Workbench</title>
+    <link rel="stylesheet" href="/ui/styles.css" />
+    <script src="/ui/app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Local TTS Workbench home"
+        ><span class="brand-icon" aria-hidden="true">∿</span> Local TTS
+        <strong>Workbench</strong></a
+      >
+      <span class="local-badge"><span class="dot"></span> On your machine</span>
+    </header>
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <p class="eyebrow">A SPACE TO EXPERIMENT</p>
+        <h1 id="page-title">Give your words a voice.</h1>
+        <p class="lede">
+          Turn a little text into speech. Listen, adjust, and try again.
+        </p>
+      </section>
+      <section class="connection" aria-label="Service status">
+        <span id="connection-dot" class="dot pending"></span>
+        <div>
+          <strong id="connection-title">Connecting to your workbench…</strong>
+          <p id="connection-detail">Checking the local speech runtime.</p>
+        </div>
+        <button id="reconnect" class="text-button" type="button">
+          Check connection
+        </button>
+      </section>
+      <div class="workspace">
+        <section class="card composer" aria-labelledby="compose-title">
+          <div class="card-heading">
+            <h2 id="compose-title">Create speech</h2>
+            <span class="step-label">01 / WRITE</span>
+          </div>
+          <form id="synthesis-form" autocomplete="off">
+            <label for="model">Voice / language</label>
+            <select
+              id="model"
+              name="model"
+              disabled
+              aria-describedby="model-note"
+            >
+              <option>Loading voices…</option>
+            </select>
+            <p id="model-note" class="field-note">
+              Voices come from the local model registry.
+            </p>
+            <div class="text-heading">
+              <label for="prompt">Your text</label
+              ><button id="example" class="text-button" type="button" disabled>
+                Load example <span aria-hidden="true">↗</span>
+              </button>
+            </div>
+            <textarea
+              id="prompt"
+              name="prompt"
+              rows="7"
+              placeholder="Start with a sentence, or load the example above."
+              aria-describedby="text-help count"
+              spellcheck="false"
+              autocomplete="off"
+            ></textarea>
+            <div class="text-footer">
+              <span id="text-help"
+                >Use text you own or have permission to test.</span
+              ><span id="count">0 / —</span>
+            </div>
+            <details class="advanced">
+              <summary>
+                Advanced settings <span>Device, seed &amp; speed</span>
+              </summary>
+              <div class="settings-grid">
+                <div>
+                  <label for="device">Run on</label
+                  ><select id="device">
+                    <option value="auto">Automatic</option>
+                    <option value="cuda">GPU (CUDA)</option>
+                    <option value="cpu">CPU</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="seed">Seed</label
+                  ><input
+                    id="seed"
+                    type="number"
+                    value="555"
+                    min="0"
+                    max="9007199254740991"
+                    step="1"
+                    required
+                  />
+                </div>
+              </div>
+              <label class="speed-label" for="speed"
+                >Speaking speed
+                <output id="speed-value" for="speed">1.00×</output></label
+              >
+              <input
+                id="speed"
+                type="range"
+                min="0.5"
+                max="2"
+                step="0.05"
+                value="1"
+              />
+              <p class="field-note">
+                A fixed seed helps compare settings. CPU generation may take
+                longer.
+              </p>
+            </details>
+            <button id="generate" class="primary-button" type="submit" disabled>
+              <span aria-hidden="true">▶</span> Generate speech
+            </button>
+            <p id="progress" class="progress" role="status" aria-live="polite">
+              Load an example or enter your own text to begin.
+            </p>
+            <p id="error" class="error" role="alert" hidden></p>
+          </form>
+        </section>
+        <aside class="card playback" aria-labelledby="listen-title">
+          <div class="card-heading">
+            <h2 id="listen-title">Listen &amp; compare</h2>
+            <span class="step-label">02 / LISTEN</span>
+          </div>
+          <div id="empty-result" class="empty-result">
+            <div class="sound-bars" aria-hidden="true">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+            <h3>Your next sound starts here.</h3>
+            <p>
+              Generate a clip to listen to it,<br />then try another setting.
+            </p>
+          </div>
+          <section id="current-result" hidden aria-label="Selected result">
+            <div class="result-heading">
+              <span class="result-badge">READY TO LISTEN</span
+              ><span id="result-time"></span>
+            </div>
+            <h3 id="result-title"></h3>
+            <p id="result-summary" class="field-note"></p>
+            <audio
+              id="player"
+              controls
+              preload="metadata"
+              aria-label="Generated speech"
+            ></audio>
+            <a id="download" class="download-button" download>↓ Download WAV</a>
+            <details class="result-details">
+              <summary>Technical details</summary>
+              <dl id="metadata"></dl>
+            </details>
+          </section>
+          <div class="history-heading">
+            <h3>This session</h3>
+            <button id="clear" type="button" class="text-button" disabled>
+              Clear list
+            </button>
+          </div>
+          <ol id="history" class="history" aria-label="Recent results"></ol>
+          <p id="history-note" class="field-note">
+            Your last 8 results stay here until you leave this page. Audio files
+            remain on your machine.
+          </p>
+        </aside>
+      </div>
+      <footer>
+        <span class="footer-mark" aria-hidden="true">∿</span>
+        <p>
+          For local, noncommercial testing. Language quality has not been
+          evaluated.<br /><strong
+            >Hmong speech support is not implemented.</strong
+          >
+        </p>
+      </footer>
+    </main>
+  </body>
+</html>

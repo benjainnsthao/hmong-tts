@@ -45,6 +45,44 @@ the real local service. These observations establish engineering behavior on
 one environment; they do not establish language quality or cross-device
 waveform/timing equivalence.
 
+## Try the local browser dashboard
+
+The dashboard provides text entry, an English example, speech generation,
+audio playback and seeking, WAV downloads, and the last eight results from
+the current page. Device, seed, and speed controls are under Advanced settings.
+
+Install once from the repository on Linux/WSL x86-64 with Python 3.12 and uv:
+
+```bash
+UV_PROJECT_ENVIRONMENT="$HOME/.local/share/tts-workbench/venv" \
+  uv sync --frozen --extra mms --python 3.12
+```
+
+Then launch:
+
+```bash
+bash scripts/launch-local.sh
+```
+
+Open **http://127.0.0.1:8000/**. Choose **Load example**, **Generate speech**,
+then press play. The launcher acknowledges local model access; first generation
+may download/load the voice and take longer. Stop with Ctrl-C after generation.
+
+Defaults keep the environment at `$HOME/.local/share/tts-workbench/venv` and
+artifacts at `$HOME/tts-workbench-artifacts`, with model caches below that root.
+Existing environment/root/cache settings are respected. An explicitly set
+artifact root must already exist. No Node build, separate frontend server, or
+external CDN is required. See [dashboard usage and testing](apps/README.md).
+
+Use text you own or have permission to test. Custom English text is recorded
+as unreviewed. Vietnamese requires the retained external prompt and the source
+review in [M7 reproduction](docs/m7_reproduction.md); no Vietnamese example is
+bundled. Model use remains local and noncommercial; local downloads do not
+authorize publication. **Hmong speech is not implemented.**
+
+This browser feature is subsequent development. M7's release commit, manifest,
+and owner approval remain evidence for the historical release.
+
 ## Reproduce the core
 
 Use Python 3.12 on Linux/WSL x86-64. Set `UV_PROJECT_ENVIRONMENT` to an external

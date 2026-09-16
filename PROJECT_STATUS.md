@@ -1,8 +1,27 @@
 # Project status
 
-Last updated: 2026-09-11 (UTC)
+Last updated: 2026-09-15 (UTC)
 
-## Current milestone
+## Current development after M7
+
+The owner authorized a local browser dashboard, now implemented in the shared
+FastAPI service with text input, fixture loading, generation, playback/seek,
+local downloads, session comparison, and advanced controls. Packaged static
+assets require no separate frontend server. Protected result endpoints use
+committed manifests and server-owned run mappings. New output manifests record
+actual prompt provenance with schema 2; historical schema 1 records remain readable.
+
+See [dashboard usage](apps/README.md) for launch and verification instructions.
+The [dashboard validation report](reports/validation/local_dashboard_validation.md)
+records 310 passing tests, 84.08% aggregate branch-aware coverage, installed
+package checks, and Chromium workflows. Real MMS inference remains unverified
+for this feature; synthetic audio was used for browser tests.
+The owner subsequently authorized committing and pushing the dashboard work
+to the active branch. Package publication and deployment remain outside this work.
+The M7 release identity and approvals below remain historical records. Hmong
+support, training, recording, and public deployment remain deferred.
+
+## Completed M7 milestone
 
 - Project: audited pretrained multi-language TTS inference, benchmarking, and
   local-deployment workbench.
@@ -312,8 +331,9 @@ release, pull request, merge, or deployment were created.
 ## Scope still deferred
 
 White Hmong text handling, prompts, normalization, adaptation, evaluation,
-recording, private speaker data, consent execution, training, application,
-and public deployment are not started or authorized by M7. NV-001 through
+recording, private speaker data, consent execution, training, language-learning
+applications, and public deployment are not started or authorized by M7. The
+subsequent local engineering dashboard is described above. NV-001 through
 NV-008 remain unchanged and unresolved. Future community-language work needs
 separate authorization, community participation, licensing, and native
 validation. Retained weights/audio/prompts/caches are not public artifacts.

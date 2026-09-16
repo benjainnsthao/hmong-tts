@@ -19,11 +19,12 @@ from tts_workbench.artifacts.transaction import AtomicArtifactStore
 from tts_workbench.inference.contracts import InferenceRequest
 from tts_workbench.inference.execution import InferenceExecutor
 from tts_workbench.inference.mms_vits import MmsVitsAdapter
+from tts_workbench.inference.prompts import ENGLISH_EXAMPLE, ENGLISH_REFERENCE
 from tts_workbench.models.registry import load_model_registry
 from tts_workbench.models.schema import ModelRegistry
 
 BUILTIN_SYNTHETIC_PROMPTS = {
-    "builtin:project-synthetic-eng-smoke-v1": "this is a synthetic inference test",
+    ENGLISH_REFERENCE: ENGLISH_EXAMPLE,
 }
 
 

@@ -1,4 +1,10 @@
-# Bounded local inference service
+# Bounded local inference service and browser dashboard
+
+The local browser feature extends the completed M5–M7 service. Launch with
+`bash scripts/launch-local.sh` after the installation in
+[dashboard usage](../apps/README.md), then open the printed loopback URL.
+The existing acknowledged service command also serves the dashboard. This
+development does not modify M7's approval records.
 
 Milestone M5 exposes the stable M3 executor through a localhost-only FastAPI
 application. It is intended for controlled local development. It is not a
@@ -81,10 +87,49 @@ It does not accept artifact paths, URLs, repository/revision overrides,
 prompt-provenance overrides, provider configuration, environment values,
 credentials, client identity, arbitrary metadata, or normalization fields.
 
-The service looks up the registry entry, derives prompt provenance, generates a
+The service looks up the registry entry, derives its prompt reference, generates a
 UUID output name below `service/runs`, and submits the internal M3 request to
 the bounded coordinator. A success response contains only run ID and
 artifact-root-relative WAV/manifest references.
+
+Custom English input records `user_supplied_unreviewed` provenance; exact
+built-in fixture content records `builtin_fixture`. The retained Vietnamese
+reference requires the exact approved prompt hash and records
+`retained_external_fixture`. The external source/provenance review still applies.
+New manifests use schema 2 with explicit provenance; historical schema 1
+manifests remain readable. No caller-supplied provenance override is accepted.
+
+### Browser and result routes
+
+- `GET /`: packaged dashboard; `/ui/app.js` and `/ui/styles.css` are its assets.
+- `GET /v1/ui-config`: configured input limit, English example, retained
+  Vietnamese hash, history limit, and conservative UI speaking-speed range.
+- `GET /v1/runs/{run_id}`: sanitized timing, audio, device, model, seed, speed,
+  prompt-provenance, and language-quality metadata.
+- `GET /v1/runs/{run_id}/audio`: verified WAV with single byte-range support
+  for seeking; `?download=true` requests a local WAV download.
+
+An in-memory index maps the latest 64 successful run IDs to actual executor
+results. Run IDs and filenames are independent. Restart clears the index;
+neither eviction nor browser history clearing deletes artifacts. No disk
+directory is scanned or listed. Both audio and metadata require the matching
+completion manifest, WAV checksum, and structural metadata. Descriptor-based
+reads reject symlink components and traversal, including replacement races
+during opening. Nonregular files, manifests over 64 KiB, and WAVs over 32 MiB
+are not served. Unavailable or invalid results return sanitized 404 responses.
+The artifact root is never mounted as a static directory.
+
+Host headers must identify the configured loopback address or `localhost` at
+the configured port. If present, Origin must exactly match that HTTP Host
+origin. Cross-site and same-site-but-not-same-origin fetches are rejected.
+Trusted CLI clients may omit Origin; POST requests must use JSON. Proxy-header
+interpretation is disabled and no broad CORS policy is enabled.
+
+Responses use `Cache-Control: no-store`, same-origin content and resource
+policies, no-referrer, no-sniff, and anti-framing headers. The UI uses safe text
+rendering and page-memory history, without persistent prompt/audio storage.
+Local downloads do not grant publication rights. Global queue counts do not
+describe an individual request's progress; disconnects do not cancel inference.
 
 ## Queue, deadline, and shutdown semantics
 

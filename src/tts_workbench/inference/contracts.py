@@ -9,6 +9,7 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
+from tts_workbench.inference.prompts import PromptProvenance
 from tts_workbench.models.schema import ModelId, PromptSetReference
 
 Sha256Digest = Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]
@@ -70,7 +71,7 @@ class InferenceRequest(StrictContract):
 
     schema_version: Literal[1] = 1
     model_id: ModelId
-    text: Annotated[str, Field(min_length=1, max_length=500, pattern=r"^.*\S.*$")]
+    text: Annotated[str, Field(min_length=1, max_length=500)]
     prompt_set_reference: PromptSetReference
     requested_device: DeviceRequest = "auto"
     seed: int = Field(default=555, ge=0, le=2**63 - 1)
@@ -217,9 +218,10 @@ class ManifestAudio(StrictContract):
 
 
 class RunManifest(StrictContract):
-    """Schema version 1 success record and artifact transaction marker."""
+    """Read historical v1 records and v2 records with explicit prompt provenance."""
 
-    manifest_schema_version: Literal[1] = 1
+    manifest_schema_version: Literal[1, 2] = 1
+    prompt_provenance: PromptProvenance | None = None
     run_id: RunId
     status: Literal["success"]
     started_at: datetime
@@ -252,6 +254,8 @@ class RunManifest(StrictContract):
 
     @model_validator(mode="after")
     def require_timestamp_order(self) -> RunManifest:
+        if self.manifest_schema_version == 2 and self.prompt_provenance is None:
+            raise ValueError("version 2 requires actual prompt provenance")
         if self.completed_at < self.started_at:
             raise ValueError("completed_at cannot precede started_at")
         return self

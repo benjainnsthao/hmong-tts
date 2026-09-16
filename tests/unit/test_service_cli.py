@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import json
+import socket
 import sys
 from pathlib import Path
 
 import pytest
 import yaml
 
+from tests.fakes.service import service_environment
 from tts_workbench.service import cli as service_cli
 
 
@@ -89,3 +91,50 @@ def test_invalid_nonloopback_configuration_never_reaches_server(
     )
     assert "SERVICE CONFIG ERROR" in capsys.readouterr().err
     assert not called
+
+
+def test_actual_launcher_reports_missing_artifact_root(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.delenv("TTS_WORKBENCH_ARTIFACT_ROOT", raising=False)
+    assert service_cli.main(["run", "--acknowledge-model-access"]) == 2
+    assert "existing absolute directory outside the repository" in capsys.readouterr().err
+
+
+def test_actual_launcher_reports_occupied_port(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setenv("TTS_WORKBENCH_ARTIFACT_ROOT", str(tmp_path))
+    config = service_cli._load_service_config(Path("configs/inference/local.yaml"))
+    with socket.socket() as listener:
+        listener.bind(("127.0.0.1", 0))
+        listener.listen()
+        config = config.model_copy(update={"port": listener.getsockname()[1]})
+        monkeypatch.setattr(service_cli, "_load_service_config", lambda _: config)
+        assert service_cli.main(["run", "--acknowledge-model-access"]) == 2
+    assert "Stop any existing workbench" in capsys.readouterr().err
+
+
+def test_missing_runtime_still_launches_dashboard_with_setup_message(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    import uvicorn
+
+    monkeypatch.setenv("TTS_WORKBENCH_ARTIFACT_ROOT", str(tmp_path))
+    monkeypatch.setattr(service_cli, "collect_environment", service_environment)
+    config = service_cli._load_service_config(Path("configs/inference/local.yaml"))
+    monkeypatch.setattr(
+        service_cli, "_load_service_config", lambda _: config.model_copy(update={"port": 0})
+    )
+    calls = []
+    monkeypatch.setattr(uvicorn, "run", lambda app, **settings: calls.append(settings))
+    assert service_cli.main(["run", "--acknowledge-model-access"]) == 0
+    assert "Install with uv sync --frozen --extra mms" in capsys.readouterr().out
+    assert len(calls) == 1
+    assert calls[0]["access_log"] is False
+    assert calls[0]["proxy_headers"] is False

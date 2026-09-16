@@ -40,6 +40,7 @@ from tts_workbench.inference.contracts import (
     ManifestTimings,
     RunManifest,
 )
+from tts_workbench.inference.prompts import classify_prompt
 from tts_workbench.inference.waveform import InvalidWaveformError, validate_waveform
 from tts_workbench.models.schema import ModelEntry, ModelRegistry
 
@@ -223,6 +224,8 @@ class InferenceExecutor:
 
         def build_manifest(audio: CommittedAudio) -> RunManifest:
             return RunManifest(
+                manifest_schema_version=2,
+                prompt_provenance=classify_prompt(model_entry.prompt_set_reference, validated.text),
                 run_id=run_id,
                 status="success",
                 started_at=started_at,

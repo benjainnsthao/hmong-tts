@@ -199,3 +199,19 @@ smoke requests return a generic validation failure before adapter construction
 so raw input cannot leak via Pydantic tracebacks. Existing schemas, generation
 settings, atomic success marker, registry-only source resolution, and M4 QC
 thresholds are unchanged. See `m7_migration.md` and `m7_dependency_audit.md`.
+
+## Browser-era manifest compatibility
+
+New execution writes manifest schema 2 with `prompt_provenance` set to
+`builtin_fixture`, `retained_external_fixture`, or `user_supplied_unreviewed`
+according to the actual submitted content. Custom text is never treated as
+reviewed merely because it uses a registered voice. The model's
+`prompt_set_reference` remains registry metadata, not proof of submitted-text
+provenance. Raw prompt text still stays out of manifests and reports.
+
+The current reader accepts schema 1 historical records with absent provenance
+as legacy/unverified and requires explicit provenance for schema 2. Older
+strict readers must be upgraded before consuming new schema 2 output. Existing
+M7 manifests and approval records are not rewritten. API synthesis request and
+success-response shapes remain unchanged. Multiline input is accepted within
+the original nonempty, trimmed 500-character constraint.

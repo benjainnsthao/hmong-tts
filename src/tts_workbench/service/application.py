@@ -12,7 +12,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from tts_workbench import __version__
-from tts_workbench.artifacts.paths import ArtifactBoundaryError
+from tts_workbench.artifacts.paths import ArtifactBoundaryError, get_artifact_root
 from tts_workbench.artifacts.transaction import AtomicArtifactStore
 from tts_workbench.environment.contracts import EnvironmentCapabilityReport
 from tts_workbench.environment.detect import collect_environment
@@ -24,8 +24,11 @@ from tts_workbench.inference.contracts import (
 )
 from tts_workbench.inference.execution import InferenceExecutor
 from tts_workbench.inference.mms_vits import MmsVitsAdapter
+from tts_workbench.inference.prompts import VIETNAMESE_REFERENCE, classify_prompt
 from tts_workbench.models.registry import load_model_registry
 from tts_workbench.models.schema import ModelEntry, ModelRegistry
+from tts_workbench.service.browser import attach_browser_routes
+from tts_workbench.service.browser_security import LocalBrowserBoundary
 from tts_workbench.service.contracts import (
     HealthResponse,
     ModelListResponse,
@@ -44,6 +47,7 @@ from tts_workbench.service.coordinator import (
     CoordinatorFailure,
     InferenceCoordinator,
 )
+from tts_workbench.service.results import ResultIndex
 
 RuntimeFactory = Callable[[ServiceConfig], "ServiceRuntime"]
 OutputIdFactory = Callable[[], UUID]
@@ -200,6 +204,10 @@ def create_app(
     async def lifespan(app: FastAPI):  # type: ignore[no-untyped-def]
         runtime = runtime_factory(config)
         app.state.runtime = runtime
+        try:
+            app.state.result_index = ResultIndex(get_artifact_root(), config.artifact_output_prefix)
+        except (ArtifactBoundaryError, OSError, ValueError):
+            app.state.result_index = None
         if runtime.coordinator is not None:
             await runtime.coordinator.start()
         try:
@@ -217,6 +225,8 @@ def create_app(
         redoc_url=None,
         lifespan=lifespan,
     )
+    app.add_middleware(LocalBrowserBoundary, host=config.host, port=config.port)
+    attach_browser_routes(app, config)
 
     @app.exception_handler(RequestValidationError)
     async def sanitized_validation_error(
@@ -291,6 +301,12 @@ def create_app(
             return _failure_response(ServiceFailureCategory.UNKNOWN_OR_UNAPPROVED_MODEL)
         if len(synthesis_request.text) > config.max_input_characters:
             return _failure_response(ServiceFailureCategory.INVALID_REQUEST)
+        if (
+            entry.prompt_set_reference == VIETNAMESE_REFERENCE
+            and classify_prompt(entry.prompt_set_reference, synthesis_request.text)
+            != "retained_external_fixture"
+        ):
+            return _failure_response(ServiceFailureCategory.INVALID_REQUEST)
         coordinator = runtime.coordinator
         if coordinator is None or coordinator.state.admission == "closed":
             return _failure_response(ServiceFailureCategory.SERVICE_NOT_READY)
@@ -311,6 +327,8 @@ def create_app(
             return _failure_response(exc.category)
         except Exception:
             return _failure_response(ServiceFailureCategory.UNEXPECTED_INTERNAL_FAILURE)
+        if result.status == "success" and request.app.state.result_index is not None:
+            request.app.state.result_index.remember(result)
         return _result_response(result)
 
     return app

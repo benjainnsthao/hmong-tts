@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import socket
 import sys
 from collections.abc import Callable, Sequence
 from pathlib import Path
@@ -12,8 +13,13 @@ from typing import Any, cast
 import yaml
 from pydantic import ValidationError
 
-from tts_workbench.artifacts.paths import find_repository_root
+from tts_workbench.artifacts.paths import (
+    ArtifactBoundaryError,
+    find_repository_root,
+    get_artifact_root,
+)
 from tts_workbench.config.loader import load_config
+from tts_workbench.environment.detect import collect_environment
 from tts_workbench.service.application import create_app
 from tts_workbench.service.contracts import (
     HealthResponse,
@@ -64,6 +70,17 @@ def _load_service_config(path: Path) -> ServiceConfig:
 def _run_uvicorn(app: Any, **settings: Any) -> None:
     import uvicorn
 
+    get_artifact_root()
+    family = socket.AF_INET6 if ":" in settings["host"] else socket.AF_INET
+    with socket.socket(family) as probe:
+        probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        probe.bind((settings["host"], settings["port"]))
+    environment = collect_environment()
+    if not environment.cpu_inference_ready and not environment.cuda_inference_ready:
+        print(
+            "Speech runtime is unavailable. Install with uv sync --frozen --extra mms "
+            "in the external environment, then restart. The dashboard can still show setup status."
+        )
     uvicorn.run(app, **settings)
 
 
@@ -109,14 +126,34 @@ def main(
             file=sys.stderr,
         )
         return 2
-    server_runner(
-        app,
-        host=config.host,
-        port=config.port,
-        workers=1,
-        access_log=False,
-        log_level="info",
-    )
+    host = f"[{config.host}]" if ":" in config.host else config.host
+    print(f"Local TTS Workbench: http://{host}:{config.port}/", flush=True)
+    print("Press Ctrl-C when finished. Shutdown waits for active generation.", flush=True)
+    try:
+        server_runner(
+            app,
+            host=config.host,
+            port=config.port,
+            workers=1,
+            access_log=False,
+            log_level="info",
+            proxy_headers=False,
+        )
+    except ArtifactBoundaryError:
+        print(
+            "STARTUP ERROR: Set TTS_WORKBENCH_ARTIFACT_ROOT to an existing absolute "
+            "directory outside the repository, then restart.",
+            file=sys.stderr,
+        )
+        return 2
+    except OSError:
+        print(
+            "STARTUP ERROR: The local port or output directory is unavailable. "
+            "Stop any existing workbench, check directory permissions, or choose "
+            "another port in the service configuration.",
+            file=sys.stderr,
+        )
+        return 2
     return 0
 
 

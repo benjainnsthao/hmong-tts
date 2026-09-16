@@ -93,7 +93,7 @@ def test_success_copies_exact_registry_metadata_and_commits_valid_wav(
     payload, rendered = read_manifest(manifest_path)
     entry = synthetic_registry().by_id("fixture-eng")
 
-    assert payload["manifest_schema_version"] == 1
+    assert payload["manifest_schema_version"] == 2
     assert payload["status"] == "success"
     assert payload["run_id"] == str(RUN_UUID)
     assert payload["adapter"] == {

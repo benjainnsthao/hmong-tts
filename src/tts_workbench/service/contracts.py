@@ -135,7 +135,7 @@ class SynthesisRequest(StrictServiceContract):
 
     schema_version: Literal[1] = 1
     model_id: ModelId
-    text: Annotated[str, Field(min_length=1, max_length=500, pattern=r"^.*\S.*$")]
+    text: Annotated[str, Field(min_length=1, max_length=500)]
     requested_device: DeviceRequest = "auto"
     seed: int = Field(default=555, ge=0, le=2**63 - 1)
     generation_settings: GenerationSettings = Field(default_factory=GenerationSettings)

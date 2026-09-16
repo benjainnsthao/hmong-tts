@@ -1,5 +1,45 @@
 # Local service threat model
 
+## Local browser extension
+
+The current development adds a same-origin browser dashboard and narrow
+result endpoints to the previously audited M5–M7 service. Historical audit
+evidence below does not constitute a release approval of these new endpoints.
+
+- Host allowlisting fixes the configured loopback authority and port, rejecting
+  DNS-rebinding authorities. Origin, duplicate-header, and Fetch Metadata checks
+  reject foreign browser requests; JSON is required for POST. Local CLI requests
+  without Origin remain supported. Uvicorn ignores forwarded proxy headers.
+- All resources are local and packaged. A restrictive CSP permits only the
+  required same-origin scripts, styles, media, and connections; framing and
+  executable inline content are blocked. User values are rendered as text.
+- Successful runs alone enter a bounded, process-local result index. Audio and
+  metadata reads validate the committed manifest, actual independent run ID,
+  WAV path, checksum, and structure. Directory-descriptor walks with no-follow
+  flags reject symlink traversal and file-opening replacement races. Arbitrary
+  paths, directory listings, and static mounting of the artifact root are absent.
+- Browser read limits are 64 KiB per manifest and 32 MiB per WAV. At most 64
+  server index entries and eight page-history entries are retained. Responses
+  are marked no-store; no service worker or persistent browser storage is used.
+  Explicit downloads create local files chosen by the user. Browser/OS memory,
+  malicious extensions, local debuggers, and explicit downloads remain outside
+  the non-persistence claim.
+- Read limits and bounded indexes are not inference, total-memory, or disk
+  quotas. Artifact files remain after index eviction, restart, or clearing the
+  UI. Repeated local requests and concurrent bounded reads still consume resources.
+- Host/Origin controls protect against browser-based cross-site access, not
+  arbitrary local programs that can forge headers. Loopback is not authentication.
+  No public deployment, tunnel, proxy exposure, or shared-user service is approved.
+- UI errors are actionable and sanitized. The client does not automatically
+  retry synthesis or promise cancellation. It displays elapsed wait time and
+  service-wide activity, without inventing per-request progress.
+- New manifests distinguish custom, unreviewed text from exact retained
+  fixtures. A Vietnamese hash match proves identity only; the existing external
+  source/provenance procedure remains required. No language-quality claim follows.
+
+The remaining sections describe the original service controls and M5–M7
+evidence; references there to the original lack of browser support are historical.
+
 Scope: Milestone M5's loopback-only development service. This document covers
 the application boundary implemented in this repository. It does not approve a
 public deployment or replace an operating-system security review.
