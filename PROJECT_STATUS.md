@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-09-15 (UTC)
+Last updated: 2026-09-25 (UTC)
 
 ## Current development after M7
 
@@ -13,13 +13,62 @@ actual prompt provenance with schema 2; historical schema 1 records remain reada
 
 See [dashboard usage](apps/README.md) for launch and verification instructions.
 The [dashboard validation report](reports/validation/local_dashboard_validation.md)
-records 310 passing tests, 84.08% aggregate branch-aware coverage, installed
-package checks, and Chromium workflows. Real MMS inference remains unverified
-for this feature; synthetic audio was used for browser tests.
+records the historical 310 passing tests, 84.08% aggregate branch-aware coverage,
+installed package checks, and synthetic Chromium workflows. Real English
+dashboard inference was subsequently verified as described below.
 The owner subsequently authorized committing and pushing the dashboard work
 to the active branch. Package publication and deployment remain outside this work.
 The M7 release identity and approvals below remain historical records. Hmong
 support, training, recording, and public deployment remain deferred.
+
+### Evaluation preparation and research — 2026-09-25
+
+The owner authorized reversible local evaluation-pack tooling, collection/review
+preparation, bounded registered-model dashboard checks, and current Hmong model
+research. This extends preparation beyond M7; it does not approve candidate
+downloads, recruitment, recording, training, public use, or another release.
+Preparation and validation were completed before any commit or push. The owner
+subsequently authorized committing and pushing these changes to the active
+branch. Package publication and deployment remain outside this work.
+
+**Completed and validated:**
+
+- Reviewed and finished the three pre-existing untracked guide/validator/test
+  files. The offline validator preserves exact decoded text, sanitizes failures,
+  checks review metadata and exact cross-split overlap, rejects checkout-local
+  input, and fingerprints the full validated pack. Optional final-pack checks
+  require 20 development/10 held-out distinct texts and all four categories in
+  each split. Structural passes never verify human review or permission.
+- Prepared [speaker/reviewer instructions](docs/hmong_collection_review.md) and
+  an external blank 30-slot draft, all `pending`. The
+  [evaluation guide](docs/hmong_evaluation_pack.md) explains freeze records,
+  fingerprints, separate human permission checks, and held-out protection.
+- Real cached English MMS generation in Chromium on CUDA and CPU passed
+  playback, seeking, download/checksum integrity, session comparison, sanitized
+  errors, and clean shutdown. No new checkpoint was downloaded.
+- [Current primary-source research and decision plan](docs/hmong_voice_decision.md)
+  compares Hmong Orpheus, Hmong F5, Yuhalu, and MMS/VITS adaptation, with a
+  development-only experiment and recording/training decision criteria.
+- Validation: **431 tests passed**, including **121 prompt-pack tests** and
+  synthetic Chromium workflows; **84.99%** aggregate branch-aware coverage,
+  **98.20%** prompt-module coverage, **45** source files passing strict typing;
+  Ruff, lock/dependency, configuration/registry, pre-commit, and privacy checks
+  passed. See the [new validation report](reports/validation/evaluation_preparation_validation.md).
+
+**Pending human/external evidence:** the owner confirms there is no real Hmong
+pack yet. No Hmong sentence has been supplied or reviewed, and no permission
+has been verified. All 30 slots need human text, source/permission records,
+separate fluent review, near-duplicate checks, and prospective acceptance
+criteria. NV-001 through NV-008 remain open. Vietnamese dashboard inference is
+blocked by the unavailable approved external prompt and absent exact cached
+snapshot in the checked location; the owner requested documenting this gap.
+Historical M6/M7 Vietnamese success is not a pass for this dashboard run.
+
+**Proposed next work, not executed:** after human pack completion and candidate
+rights/runtime review, authorize at most two candidate trials on development
+sentences only. The Hmong-labelled Orpheus checkpoint is a research lead, not
+an accepted voice. The owner's immediate next action is to arrange completion
+of the external draft with the willing speaker and separate fluent reviewer.
 
 ## Completed M7 milestone
 
@@ -330,13 +379,15 @@ release, pull request, merge, or deployment were created.
 
 ## Scope still deferred
 
-White Hmong text handling, prompts, normalization, adaptation, evaluation,
-recording, private speaker data, consent execution, training, language-learning
-applications, and public deployment are not started or authorized by M7. The
-subsequent local engineering dashboard is described above. NV-001 through
-NV-008 remain unchanged and unresolved. Future community-language work needs
-separate authorization, community participation, licensing, and native
-validation. Retained weights/audio/prompts/caches are not public artifacts.
+M7 did not authorize White Hmong language work. The subsequent authorization
+above covers evaluation tooling, preparation, and research only. Actual human
+sentences/reviews/permissions are pending; linguistic rules and normalization,
+candidate weight access, adaptation, recording, private speaker audio, consent
+execution, training, language-learning applications, and public deployment
+remain unexecuted. NV-001 through NV-008 remain unchanged and unresolved.
+Those future activities need their applicable owner authorization, participant
+decisions, licensing, and native validation. Retained weights/audio/prompts/
+caches are not public artifacts.
 
 ## End boundary and review
 
@@ -347,9 +398,10 @@ approval to a new release candidate.
 
 [Post-M7 next steps](docs/post_m7_next_steps.md) documents maintenance,
 optional repository integration, and the proposed community scoping phase.
-This is documentation of future work; no later milestone is authorized or
-started. Additional commits/pushes and any integration or publication need
-separate authorization beyond the exhausted M7 commit allowance.
+Its dated update distinguishes the current authorized preparation from future
+community/voice execution. The historical M7 commit allowance is exhausted;
+the subsequent owner instruction separately authorizes committing and pushing
+the evaluation-preparation changes. Publication and deployment remain excluded.
 
 Next risk review: **2026-12-09**, sooner for a material security, dependency,
 licensing, or provenance issue. Retain external evidence through that review

@@ -1,13 +1,39 @@
 # Next steps after M7
 
 Documented: **2026-09-11 UTC**. Public decision owner: **benjainnsthao**.
-Status: planning documentation only; no subsequent milestone is authorized.
+Original status: planning documentation only. See the dated update below for
+the subsequent local work authorized by the owner; M7 approval is unchanged.
 
 M7 is complete. The recommended next development step is a separately
 authorized community scoping phase that establishes whose needs the project
 should serve and what evidence would justify language work. Release maintenance
 continues independently. Repository integration and publication are optional
 owner decisions.
+
+## Authorized preparation update — 2026-09-25
+
+The local dashboard was completed after this original plan. The current task
+also authorizes finishing evaluation-pack tooling, preparing White Hmong/RPA
+collection and review instructions, checking the existing registered models
+locally, and researching a Hmong voice or adaptation route. The initial task authorized no
+commit, push, publication, deployment, new candidate weights, recruitment,
+recording, or training. The owner subsequently authorized committing and
+pushing these preparation changes to the active branch. The other exclusions
+remain in effect.
+
+Completed local results and exact gaps are in
+[project status](../PROJECT_STATUS.md) and the
+[new validation report](../reports/validation/evaluation_preparation_validation.md).
+The [pack guide](hmong_evaluation_pack.md),
+[human handoff](hmong_collection_review.md), and
+[voice decision plan](hmong_voice_decision.md) are ready for owner review.
+The owner confirms there is no real pack yet. Blank external slots remain
+pending; no language or permission decisions are inferred from validation.
+
+The immediate human action is preparing and independently reviewing 20
+development and 10 held-out sentences and their permissions outside Git.
+The broader community charter below remains proposed; these materials neither
+claim participant agreement nor close the native-validation register.
 
 ## Completed M7 baseline
 
@@ -77,8 +103,9 @@ publication is required merely to proceed with community scoping.
 
 ## 3. Authorize a bounded community scoping phase
 
-Recommended next substantive phase; **not started**. The owner authorizes the
-phase, and community participants must help define its needs and decisions.
+Broader community phase: **not started**. Bounded preparation is covered by
+the dated update above. The owner must authorize the broader phase, and
+community participants must help define its needs and decisions.
 Participant and reviewer roles are not assigned by this document.
 
 The proposed phase should produce a reviewable charter covering:
@@ -112,8 +139,9 @@ Status: deferred; requires later explicit authorization.
 
 After the scoping decision, a proposed language-support phase must identify
 an appropriate licensed model or data/adaptation route and the native-speaker
-validation it requires. Model research/access beyond the current registry,
-language rules, recording, training, and adaptation remain separate work.
+validation it requires. Metadata/source research is now authorized as described
+above. Model access beyond the current registry, language rules, recording,
+training, and adaptation remain separate future work.
 Do not use the English or Vietnamese checkpoints as a claimed Hmong voice.
 
 Any later learning application must state the capability it actually depends
@@ -138,6 +166,7 @@ material is limited to covered code and permitted sanitized documentation,
 configuration, tests, notices, and factual engineering evidence; consult the
 [license matrix](license_matrix.md) before any proposed distribution.
 
-The two authorized M7 commits are already complete. This documentation task
-does not authorize another commit/push or reopen that allowance. No future
-phase, integration, publication, outreach, or deployment is executed here.
+The two authorized M7 commits are already complete. The owner's subsequent
+instruction separately authorizes committing and pushing the preparation
+changes; it does not reopen or alter the historical M7 approval. No merge,
+publication, outreach, recording, training, or deployment is authorized here.

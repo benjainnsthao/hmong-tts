@@ -78,3 +78,18 @@ the browser module is explicitly skipped. API/security/package tests still run.
 `tests/unit/test_browser_package.py` verifies the installed wheel from outside
 the checkout. Synthetic checks establish no real model or linguistic quality;
 real MMS checks require the optional runtime and approved checkpoint.
+
+The [2026-09-25 real-dashboard check](../reports/validation/evaluation_preparation_validation.md)
+used the exact cached English checkpoint with network model access disabled.
+CUDA and CPU generation, browser playback/seeking, checksum-matched downloads,
+session comparison, actual sanitized server errors, and clean shutdown passed.
+Playback means the browser decoded audio and advanced its media clock; no
+human listening or language-quality judgment is claimed.
+
+Vietnamese remains blocked in that run: the approved external prompt and exact
+cached snapshot were unavailable in the checked location. Recover the retained
+prompt and its provenance records, perform the checks in
+[M7 reproduction](../docs/m7_reproduction.md), and use only the registered
+revision before repeating that workflow. Do not substitute a newly written
+Vietnamese sentence. The real English result and synthetic error tests do not
+establish Vietnamese or White Hmong quality.
