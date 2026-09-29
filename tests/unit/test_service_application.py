@@ -681,3 +681,35 @@ def test_service_imports_are_lazy_and_no_cors_is_installed(
     importlib.invalidate_caches()
     with pytest.raises(ModuleNotFoundError):
         importlib.import_module("hmong_tts.service")
+
+
+def test_service_never_lists_or_routes_restricted_research_entries(
+    tmp_path: Path,
+    service_config: ServiceConfig,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from tests.fakes.inference import synthetic_registry_with_orpheus
+
+    registry = synthetic_registry_with_orpheus()
+    monkeypatch.setattr(application_module, "load_model_registry", lambda: registry)
+    monkeypatch.setattr(application_module, "collect_environment", service_environment)
+    monkeypatch.setattr(
+        application_module, "AtomicArtifactStore", lambda: AtomicArtifactStore(tmp_path)
+    )
+
+    runtime = application_module.production_runtime(service_config)
+
+    assert runtime.registry.schema_version == 2
+    assert [entry.model_id for entry in runtime.registry.models] == ["fixture-eng"]
+    with pytest.raises(ValueError, match="VITS"):
+        application_module._model_response(registry.by_id("fixture-orpheus"))
+    app = create_app(service_config, runtime_factory=lambda _: runtime)
+    with TestClient(app, base_url="http://127.0.0.1:8000") as client:
+        listed = client.get("/v1/models").json()
+        rejected = client.post(
+            "/v1/synthesize",
+            json={"model_id": "fixture-orpheus", "text": "synthetic", "seed": 1},
+        )
+    assert [model["model_id"] for model in listed["models"]] == ["fixture-eng"]
+    assert listed["registry_schema_version"] == 2
+    assert rejected.json()["category"] == "unknown_or_unapproved_model"

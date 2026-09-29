@@ -10,7 +10,12 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from tts_workbench.inference.prompts import PromptProvenance
-from tts_workbench.models.schema import ModelId, PromptSetReference
+from tts_workbench.models.schema import (
+    ApprovedUse,
+    ModelId,
+    PromptSetReference,
+    RegistrySchemaVersion,
+)
 
 Sha256Digest = Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]
 RunId = Annotated[
@@ -185,7 +190,7 @@ class ManifestModel(StrictContract):
     architecture: str
     documented_language_tag: Annotated[str, Field(pattern=r"^[a-z]{3}$")]
     weight_license: str
-    approved_use: Literal["local_noncommercial_inference"]
+    approved_use: ApprovedUse
     redistribution_status: Literal["weights_not_redistributed"]
     prompt_set_reference: PromptSetReference
     language_quality_status: Literal["not_evaluated"]
@@ -227,7 +232,7 @@ class RunManifest(StrictContract):
     started_at: datetime
     completed_at: datetime
     adapter: AdapterIdentity
-    registry_schema_version: Literal[1]
+    registry_schema_version: RegistrySchemaVersion
     model: ManifestModel
     prompt_sha256: Sha256Digest
     requested_device: DeviceRequest

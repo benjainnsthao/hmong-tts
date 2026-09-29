@@ -66,7 +66,10 @@ first requests an optional backend/device.
 
 ### `GET /v1/models`
 
-Lists only audited registry entries. Each response copies the immutable
+Lists only unrestricted VITS registry entries (`local_noncommercial_inference`);
+restricted research entries such as `orpheus-hmong-3b` are never listed or
+routed, and requesting one returns the unknown-model failure. The response's
+`registry_schema_version` reflects the file (2 since 2026-09-29). Each entry copies the immutable
 repository/revision identity, provider-documented language tag, architecture,
 weight license, approved use, redistribution status, prompt-set reference,
 audit provenance, and `language_quality_status: not_evaluated`. This endpoint

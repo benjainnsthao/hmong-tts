@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "owner": "benjainnsthao",
+  "recorded_on": "2026-09-29",
+  "approval_date_basis": "UTC",
+  "method": "conversational owner decision in the written task instructions for the Hmong Orpheus local trial",
+  "cryptographic_signature": false,
+  "scope": "local_noncommercial_research_only",
+  "public_use_cleared": false,
+  "decisions": {
+    "D1": {
+      "subject": "Llama 3.2 Community License and Acceptable Use Policy",
+      "license_url": "https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct/blob/0cb88a4f764b7a12671c53f0838cd831a0843b95/LICENSE.txt",
+      "statement": "I have personally reviewed the Llama 3.2 Community License and Acceptable Use Policy, and I accept them for local research inference with the Hmong Orpheus checkpoint.",
+      "accepted_for": "local research inference with Pakorn2112/Orpheus-TTS-hmong-3b",
+      "covers_public_use": false
+    },
+    "D2": {
+      "subject": "Local trials of Pakorn2112/Orpheus-TTS-hmong-3b",
+      "repository": "Pakorn2112/Orpheus-TTS-hmong-3b",
+      "revision": "464d34449a778b1a6d9506bc10bd4e00f752c5c8",
+      "statement": "The card's Apache-2.0 research/educational label, together with D1, is enough for local trials at the pinned revision.",
+      "open_risk_for_public_use": "Unknown speaker and dataset provenance.",
+      "blocks_local_listening_trials": false,
+      "output_handling": "Outputs stay outside Git and are not shared."
+    },
+    "D3": {
+      "subject": "One-time SNAC pickle-to-safetensors conversion",
+      "repository": "hubertsiuzdak/snac_24khz",
+      "revision": "d73ad176a12188fcf4f360ba3bf2c2fbbe8f58ec",
+      "permitted_method": "torch.load(..., weights_only=True) inside an isolated throwaway environment; no full unpickling and no weights_only=False fallback",
+      "required_pins": ["source pytorch_model.bin SHA-256", "converted .safetensors SHA-256"],
+      "after_conversion": "Load only from the pinned safetensors file.",
+      "if_rejected": "Stop that route and document the result.",
+      "existing_model_loading_protections_relaxed": false
+    },
+    "D4": {
+      "subject": "Other candidates",
+      "hmong_f5": "Remains blocked: the checkpoint has no license.",
+      "yuhalu": "Remains blocked: requires payment and EULA acceptance.",
+      "permitted_follow_up": "One quick check for any change in their terms."
+    },
+    "D5": {
+      "subject": "Commit and push",
+      "statement": "If the work finishes validated, commit and push to rescope/audited-tts-workbench, including the reviewed September 28 work.",
+      "excluded": ["prompt.md", "prompt-next.md", "pull request", "merge", "tag", "publication", "deployment", "payment", "speaker recording", "model training"]
+    },
+    "D6": {
+      "subject": "Contacting people",
+      "statement": "Never post, send, or open a discussion or issue. Drafts for the owner to send and reading public pages are permitted."
+    }
+  },
+  "not_covered": [
+    "public or commercial use of the checkpoint, its outputs or a hosted service",
+    "sharing or redistributing generated audio",
+    "redistribution of Orpheus, SNAC or converted weights",
+    "any claim of White Hmong language quality",
+    "independent fluent-speaker review"
+  ]
+}

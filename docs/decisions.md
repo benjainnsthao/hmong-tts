@@ -399,3 +399,29 @@
   is authorized. No package publication, tag, GitHub release, merge, PR, or
   deployment is authorized. Review remains 2026-12-09 or sooner for a material
   issue; NV-001 through NV-008 and the deferred scope remain unchanged.
+
+## D-0016 — Restricted local Hmong Orpheus research trial
+
+- Date: 2026-09-29. Public decision owner: benjainnsthao. Record:
+  [`hmong_orpheus_owner_decision.json`](hmong_orpheus_owner_decision.json).
+- D1: the owner reviewed and accepted the Llama 3.2 Community License and
+  Acceptable Use Policy for local research inference with
+  `Pakorn2112/Orpheus-TTS-hmong-3b`. D2: the card's Apache-2.0
+  research/educational label plus D1 suffices for local trials at revision
+  `464d34449a778b1a6d9506bc10bd4e00f752c5c8`; unknown speaker/dataset
+  provenance stays an open risk for public use. Outputs stay outside Git and
+  are not shared. D3: one isolated `torch.load(..., weights_only=True)`
+  conversion of SNAC to safetensors, with both SHA-256 values pinned; no
+  fallback and no relaxed loading protections. D4: Hmong F5 and Yuhalu stay
+  blocked.
+- Registry schema 2 adds a research-only entry shape (`use_restrictions`,
+  pinned codec `components`, `orpheus_llama_snac`). Schema 1 files remain
+  valid and cannot contain the new fields. The local service and dashboard
+  expose only unrestricted VITS entries; the Orpheus entry is reachable only
+  through `OrpheusAdapter` and the benchmark CLI.
+- The isolated runtime excludes Accelerate, consistent with the M7 advisory
+  decision; the adapter loads on CPU in fixed BF16 and moves to the device.
+- The trial is exploratory and development-only. Automated QC, benchmarks and
+  the ASR proxy are engineering evidence. The owner's quick check is a
+  single-listener judgment, never independent fluent review. No public Hmong
+  quality claim is made. NV-001 through NV-008 remain unchanged.

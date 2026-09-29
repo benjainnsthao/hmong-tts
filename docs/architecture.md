@@ -27,9 +27,11 @@ caller on the same host
                            |
                            +--> one TTSAdapter owner
                            |      |
-                           |      +--> MmsVitsAdapter
+                           |      +--> MmsVitsAdapter (service, dashboard, CLIs)
                            |             +--> test fake backend (tests only)
                            |             +--> lazy optional real backend
+                           |      +--> OrpheusAdapter (benchmark CLI and isolated
+                           |             research runtime only; never served)
                            |
                            +--> structural waveform validation
                            |

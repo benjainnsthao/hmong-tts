@@ -206,6 +206,8 @@ class MmsVitsAdapter:
             entry = self._registry.by_id(model_id)
         except KeyError as exc:
             raise UnknownModelError("model ID is not present in the audited registry") from exc
+        if entry.architecture != "vits":
+            raise UnknownModelError("model ID is not a VITS registry entry")
 
         if (
             self._loaded_model_id == model_id

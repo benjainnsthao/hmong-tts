@@ -101,8 +101,13 @@ def prepare_listening(
     key_path: Path,
     *,
     seed: int,
+    priority: Sequence[str] = (),
 ) -> dict[str, object]:
-    """A new packet and separate private key; input audio/text are never modified."""
+    """A new packet and separate private key; input audio/text are never modified.
+
+    ``priority`` lists development case IDs to show first, in that order; other
+    cases keep the seeded shuffle. Candidate labels stay randomized either way.
+    """
     if len(pack.cases) > 20 or any(case.split != "development" for case in pack.cases):
         raise PromptSetError("listening: require a development-only pack of at most 20 cases")
     pack_hash = str(summarize_prompt_set(pack)["pack_sha256"])
@@ -116,6 +121,9 @@ def prepare_listening(
     cases = {case.id: case for case in pack.cases}
     if any(not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,63}", key) for key in cases):
         raise PromptSetError("listening: require opaque alphanumeric case IDs for score sheets")
+    if len(set(priority)) != len(priority) or any(case_id not in cases for case_id in priority):
+        raise PromptSetError("listening: priority must list distinct development case IDs")
+    rank = {case_id: index for index, case_id in enumerate(priority)}
     identities = sorted(
         {(clip.candidate_id, clip.configuration_sha256) for clip in inventory.clips}
     )
@@ -140,6 +148,7 @@ def prepare_listening(
     labels = {identity: chr(65 + i) for i, identity in enumerate(identities)}
     clips = list(inventory.clips)
     rng.shuffle(clips)
+    clips.sort(key=lambda clip: rank.get(clip.case_id, len(rank)))
     summary: dict[str, object] = {
         "status": "exploratory" if clips else "awaiting_eligible_audio",
         "case_count": len(pack.cases),
@@ -148,6 +157,7 @@ def prepare_listening(
         "pack_sha256": pack_hash,
         "evidence_sha256": fingerprint(evidence),
         "language_acceptance": "pending_fluent_human_review",
+        "priority_case_ids": list(priority),
     }
     staging = Path(tempfile.mkdtemp(prefix=".listening-", dir=output.parent))
     key_written = False
@@ -158,7 +168,8 @@ def prepare_listening(
         # An empty inventory prepares a real text-review packet with no fake audio or ratings.
         entries: list[tuple[str, Clip | None]] = [(clip.case_id, clip) for clip in clips]
         if not entries:
-            entries = [(case.id, None) for case in pack.cases]
+            ordered = sorted(pack.cases, key=lambda case: rank.get(case.id, len(rank)))
+            entries = [(case.id, None) for case in ordered]
         for index, (case_id, clip) in enumerate(entries, 1):
             case, record = cases[case_id], records[case_id]
             clip_id = f"clip-{index:03}" if clip else f"text-{index:03}"
@@ -258,6 +269,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         parser.add_argument(f"--{name}", required=True, type=Path)
     parser.add_argument("--clips", type=Path)
     parser.add_argument("--seed", type=int)
+    parser.add_argument("--priority", help="comma-separated development case IDs to show first")
     try:
         args = parser.parse_args(argv)
         pack = load_prompt_set(args.input)
@@ -274,6 +286,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             args.output,
             args.key,
             seed=args.seed if args.seed is not None else secrets.randbits(64),
+            priority=tuple(args.priority.split(",")) if args.priority else (),
         )
     except PromptSetError as error:
         print(f"LISTENING ERROR: {error}", file=sys.stderr)

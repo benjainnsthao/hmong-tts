@@ -15,7 +15,7 @@ from tts_workbench.inference.contracts import (
     RelativeArtifactPath,
     RunId,
 )
-from tts_workbench.models.schema import ModelId, PromptSetReference
+from tts_workbench.models.schema import ModelId, PromptSetReference, RegistrySchemaVersion
 
 
 class StrictServiceContract(BaseModel):
@@ -126,7 +126,7 @@ class ModelListResponse(StrictServiceContract):
     """Metadata-only listing of approved registry entries."""
 
     schema_version: Literal[1] = 1
-    registry_schema_version: Literal[1]
+    registry_schema_version: RegistrySchemaVersion
     models: tuple[ModelMetadataResponse, ...]
 
 

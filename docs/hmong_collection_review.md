@@ -1,5 +1,14 @@
 # White Hmong collection and review handoff
 
+**Update 2026-09-29:** development audio now exists from the locally tested
+Hmong Orpheus model (research only; see the [voice decision](hmong_voice_decision.md)).
+The smallest human step is the owner's five-clip quick check,
+`review/quick-check/index.html` (about 10 minutes), saved as
+`review/quick-check/verdict.json`. The full 20-clip packet
+`review/listening-v2-audio/` is optional. That check is one listener's
+judgment, not the independent fluent review described below, which is still
+required before any quality claim. The rest of this handoff is unchanged.
+
 Updated **2026-09-28**. The published-source draft is complete: 20 development
 and 10 held-out cases, **zero human approvals**. The previous September 25 blank
 collection remains historical evidence. No participant was contacted, no speaker

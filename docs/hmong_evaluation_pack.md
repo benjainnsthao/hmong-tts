@@ -256,6 +256,16 @@ absolute external WAV path and WAV SHA-256. Bounds are 25 clips per configuratio
 50 total, and mono PCM16 at 8–48 kHz, at most 30 seconds per clip. It copies PCM
 without embedded source metadata. It does not generate or assess linguistic quality.
 
+`--priority D01,D10,...` lists distinct development case IDs to show first, in
+that order; the rest keep the seeded shuffle and candidate labels stay random.
+Unknown or duplicate IDs are rejected before any output is written.
+
+On 2026-09-29 the tool exported `review/listening-v2-audio/` from the Orpheus
+configuration-A development clips (20 clips, one candidate, blank scores,
+quick-check cases first, then descending ASR-proxy CER). The awaiting-audio
+`listening-v2/` packet is preserved. The owner's five-clip quick check is a
+separate page, `review/quick-check/index.html`, which exports `verdict.json`.
+
 With no eligible audio it creates a clearly labelled **awaiting audio** packet,
 with zero candidates/clips and unfilled scores. The current one is
 `review/listening-v2/index.html`. Source/permission checks and the proposed

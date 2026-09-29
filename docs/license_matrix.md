@@ -179,3 +179,24 @@ blanket global public-domain claim or model/output rights clearance.
 Full exact dependency/advisory inventory: `m7_dependency_audit.md`. Original
 code-license approval, proposed risk acceptance, and final release approval are
 separate records. Review again on 2026-12-09 or sooner for a material issue.
+
+## Hmong Orpheus local research trial (accessed 2026-09-29)
+
+Owner decisions D1–D4 are recorded in
+[`hmong_orpheus_owner_decision.json`](hmong_orpheus_owner_decision.json). They
+cover local, non-commercial research only. **Nothing below clears public use,
+redistribution of weights or audio, or a hosted service.** Engineering audit,
+not legal advice.
+
+| Artifact | Exact revision/version | Code license | Weight/data license | Lineage/restrictions | Output restrictions | Redistribution | Use status |
+|---|---|---|---|---|---|---|---|
+| Hmong Orpheus checkpoint | `Pakorn2112/Orpheus-TTS-hmong-3b@464d34449a778b1a6d9506bc10bd4e00f752c5c8`; shards SHA-256 `33a806b0…c968`, `87e338a3…00aa` | n/a | Card label Apache-2.0, "research & educational use"; card says commercial use may need dataset rights review | LoRA fine-tune of `unsloth/orpheus-3b-0.1-ft` → Canopy Orpheus → Llama 3.2 3B. Training data and speaker consent are not documented on the card | Local research only; not shared (D2) | Weights not redistributed | Approved for local research (D1, D2); public use not cleared |
+| Llama 3.2 base terms | `meta-llama/Llama-3.2-3B-Instruct@0cb88a4f764b7a12671c53f0838cd831a0843b95` LICENSE | n/a | Llama 3.2 Community License + Acceptable Use Policy | Attribution ("Built with Llama"), license copy and naming rules apply to distribution; AUP binds use | AUP applies to all use | Only under Llama terms | Accepted by the owner for local research (D1) |
+| SNAC 24 kHz codec weights | `hubertsiuzdak/snac_24khz@d73ad176a12188fcf4f360ba3bf2c2fbbe8f58ec`; source `pytorch_model.bin` `4b8164cc6606bfa627f1a784734c1e539891518f1191ed9194fe1e3b9b4bff40` | n/a | MIT (card) | Converted once with `torch.load(weights_only=True)` to safetensors `2db6ee7e1e206c83e7c69edbce290dcd72413f308297c907b5da1ee8d2ad138c` (269 float32 tensors, exact round trip) | None beyond MIT notice | Not redistributed; MIT notice required if ever distributed | Approved (D3); only the converted file is loaded |
+| SNAC code | `snac==1.2.1` wheel SHA-256 `96f90e22…4dc7` | MIT | n/a | `SNAC.from_pretrained` unpickles weights and is never called; the adapter constructs `SNAC(**config)` | n/a | Isolated environment only | Approved for the isolated runtime |
+| Isolated Orpheus runtime | `/root/tts-workbench-artifacts/envs/orpheus` uv lock `dcdb7047…14ff2`: torch 2.13.0, transformers 5.13.1, safetensors 0.8.0, snac 1.2.1 | Per package | n/a | Accelerate excluded (GHSA-4j2p-28q2-5m79, as in M7); the first lock that included it was replaced, with bit-identical outputs | n/a | Not bundled | Approved for local research runs |
+| Hmong Whisper ASR (proxy only) | `Pakorn2112/whisper-model-large-hmong@ad820dd7f90495cac4f74673f25e54956636de64`, `MultiSpeech/` safetensors; pickle `training_args.bin` not downloaded | n/a | Card label Apache-2.0; base `openai/whisper-large` MIT | Same publisher as the TTS; card cites localvoice.org data (1,017 files, WER 17.7). Not independent of the TTS or the sentence baseline | Transcripts are proxy data only | Not redistributed | Approved for local automated proxy only |
+| MMS-1b-all / Omnilingual ASR | `facebook/mms-1b-all@3d33597e…`; `facebookresearch/omnilingual-asr@81f51e22…` | n/a | CC BY-NC 4.0 / Apache-2.0 | Language lists checked: **no `hmn`, `mww` or `hnj`**; Omnilingual official weights are pickle `.pt` only | n/a | n/a | Not usable for Hmong |
+| Hmong-Thai speech dataset (baseline) | `Pakorn2112/hmong-dataset-audio-v1@2c058267571b12cf432b7b996860ae06dc6bb370`, two parquet shards | n/a | Curator label CC-BY-4.0 | Card credits the YouTube channel `@suabhmong` and "public sources such as YouTube"; one male speaker, one video link. Underlying recording rights are unverified | 20 clips used for a local measurement; nothing redistributed | Not redistributed | Local measurement only; relevant to Orpheus provenance questions |
+| Commons Hmong audio (baseline) | `Category:Hmong Audio`, 7 of 9 files (2 unavailable, HTTP 429) | n/a | CC0 (Jee Vang, Sheng Xiong; rpa.oneoffcoder.com) | Isolated syllables; one Green Hmong phrase | None | Not redistributed | Approved |
+| Hmong F5 / Yuhalu (D4 recheck) | F5 `c50fc0cc…` unchanged; Yuhalu EULA v1.0 (effective 2026-08-17) unchanged | — | F5: none declared; Yuhalu: paid EULA | Unchanged since 2026-09-28 | — | — | Blocked (D4) |

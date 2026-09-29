@@ -1,5 +1,50 @@
 # White Hmong voice research and recording decision
 
+## Local Orpheus trial — 2026-09-29
+
+**Status: Orpheus ran locally on the 20 development sentences. The automated
+checks did not trigger the early exit, and it now awaits the owner's quick
+listening verdict.** Under owner decisions D1–D3
+([record](hmong_orpheus_owner_decision.json)), `orpheus-hmong-3b` is registered
+for local, non-commercial research only. Its outputs stay outside Git and are not
+shared. This is exploratory development evidence; public use is not cleared and
+no White Hmong quality claim is made. D4 recheck: Hmong F5 and Yuhalu terms are
+unchanged, and both remain blocked.
+
+| Check | Result (configuration A) |
+|---|---|
+| Configuration | Upstream Orpheus reference sampling: temperature 0.6, top-p 0.95, top-k 50, repetition penalty 1.1, no voice prefix, BF16, seed 555, at most 1,024 new tokens, 256 characters and 60 s per case. The card documents no voices or sampling settings, so only one configuration was run. Fingerprint `bc458b0d…ff83`. |
+| Generation | **20/20 development cases** reached an explicit end-of-speech token; 0 failures, 0 trimmed tokens. Audio length 1.6–6.2 s. The held-out reserve was never read. |
+| Reproducibility | The final lock (no Accelerate) reproduced all 20 WAVs **bit for bit**. Same seed gives the same benchmark duration. |
+| Fit on RTX 4070 (12 GB) | BF16 fits without quantization: 6.2 GiB allocated after load, peak 6.41 GiB allocated / 6.71 GiB reserved; about 8.0 GiB device total including other processes; memory released after unload. |
+| Speed | Warm load 4–8 s; cold load about 21–22 s. Median RTF 1.82 across 20 cases (max 2.24). M4 benchmark: median 1.78, p95 1.80. Generation is slower than real time. |
+| M4 QC | Unchanged 16 kHz-only thresholds: 20/20 `structurally_invalid` on sample rate alone (SNAC is 24 kHz). Identical thresholds with 24 kHz allowed: **19/20 pass**; D07 has 0.49 s of leading silence (22% > 20%). No clipping; RMS 0.047–0.139. |
+| ASR proxy | Only Hmong-capable ASR found: the same publisher's Whisper fine-tune (not independent). Development audio: **median CER 0.086**, median WER 0.225; each transcript was closest to its own sentence in 20/20 cases (median CER 0.87 against other sentences' references). The sentence-level human baseline scored median CER 0.78 because the ASR produced fluent but unrelated text on the news clips. Under the predeclared rule, that makes the proxy uninformative as a comparator. **The proxy measures no tone correctness and replaces no listener.** |
+| Early exit | Not triggered: no silence/noise, no generation failures, and the ASR rules were inapplicable (the TTS was far below the baseline anyway). |
+
+Worst ASR case D13; ASR substitutions in D10 and D15 involve tone letters and
+consonant distinctions (retroflex, uvular). The quick check therefore covers
+D01, D10, D15, D13 and D12. Neither ASR agreement nor these substitutions show
+correct or incorrect tone; that needs listening.
+
+**Next decision:** the owner's single-listener quick check
+(`review/quick-check/index.html`, about 10 minutes). "Worth pursuing" leads to
+permission outreach drafts (the author is asked, never contacted by this
+project). "Not worth pursuing" leads to the costed own-voice plan. "Unsure" runs
+one more development-only configuration with A/B audio. A single owner check
+is not independent fluent review and cannot support a public quality claim.
+
+Provenance note for the permission question: the author's public
+`Pakorn2112/hmong-dataset-audio-v1` (curator label CC-BY-4.0) credits the YouTube
+channel `@suabhmong` and is one male speaker from one video. The Orpheus card
+does not say what it was trained on, so this dataset is a question to ask, not a
+finding.
+
+## Research refresh — 2026-09-28 (historical)
+
+The section above supersedes this section's zero-trial state for Orpheus local
+research only. Everything below is retained as dated evidence.
+
 Refreshed **2026-09-28** from current primary sources. Target: **White Hmong
 (Hmoob Dawb), RPA**. The owner authorized research, external text preparation,
 local code/tests and bounded local trials when rights, loading and resources
@@ -14,7 +59,7 @@ the closest variety-labelled research lead; do not propose recording or training
 to solve its licensing or artifact-format gaps. There is no demonstrated usable
 White Hmong voice in this project yet.
 
-## Current comparison
+### Current comparison
 
 | Route | Primary evidence and identity | Local trial | Eventual public use |
 |---|---|---|---|
@@ -35,7 +80,7 @@ again returned HTTP 401. Neither is a cleared alternative. These searches do not
 prove that no other Hmong voice exists. Publisher quality claims, demos and
 model popularity do not substitute for independent fluent evaluation.
 
-## Immutable chain and compatibility
+### Immutable chain and compatibility
 
 Metadata, exact small config/card/license files, download failures, hashes and
 access times are retained in the external `research/` folder. No authentication
@@ -65,7 +110,7 @@ Existing Python 3.12 / Torch 2.13.0 / Transformers 5.13.1 was inspected but not
 changed. Candidate dependencies were not installed into it or into a new ML
 environment, because eligibility failed before that step.
 
-## Bounded experiment procedure, ready once prerequisites clear
+### Bounded experiment procedure, ready once prerequisites clear
 
 The user's current authorization already permits qualifying local trials;
 there is no new generic authorization gate. Resolve **specific** missing model/
@@ -108,7 +153,7 @@ Inference latency, memory peaks, waveform QC, audio quality and finalist scores
 are **not measured**, not zero or passed. There is no audio requiring fluent
 listening yet; there is source text and a rubric ready for fluent review.
 
-## Next decision
+### Next decision (as of 2026-09-28)
 
 Review the [single handoff packet](hmong_collection_review.md#one-review-packet).
 Recommended disposition is **defer execution while retaining the existing-voice

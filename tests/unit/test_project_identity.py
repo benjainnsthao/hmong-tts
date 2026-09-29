@@ -61,4 +61,8 @@ def test_active_configuration_and_registry_load_from_renamed_package(
     registry = load_model_registry(repository_root=repository_root)
 
     assert set(configs) == {"benchmark", "inference", "qc"}
-    assert {model.model_id for model in registry.models} == {"mms-eng", "mms-vie"}
+    assert {model.model_id for model in registry.models} == {
+        "mms-eng",
+        "mms-vie",
+        "orpheus-hmong-3b",
+    }

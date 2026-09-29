@@ -4,11 +4,34 @@ Documented: **2026-09-11 UTC**. Public decision owner: **benjainnsthao**.
 Original status: planning documentation only. See the dated update below for
 the subsequent local work authorized by the owner; M7 approval is unchanged.
 
-M7 is complete. Current local source preparation and candidate research are
-complete as described below. The next concrete step is independent review of
-the prepared packet and resolution of specific model prerequisites. Broader
-community scoping remains proposed. Release maintenance continues independently;
-repository integration and publication are optional owner decisions.
+M7 is complete. The Hmong Orpheus local trial (Phase A) is complete and awaits
+the owner's quick listening verdict; see the dated update below. Independent
+fluent review, public-use permission and broader community scoping remain
+future steps. Release maintenance continues independently; repository
+integration and publication are optional owner decisions.
+
+## Hmong Orpheus local trial — 2026-09-29
+
+Owner decisions D1–D6 ([record](hmong_orpheus_owner_decision.json)) authorized
+a local, non-commercial research trial, commits and a push to the active
+branch. They do not authorize outreach, publication, deployment, payment,
+recording or training. Phase A generated the 20 development cases. Automated
+checks found no reason for an early exit. The
+[voice decision](hmong_voice_decision.md) and
+[validation report](../reports/validation/hmong_orpheus_trial_validation.md)
+hold the evidence.
+
+Next, in order:
+
+1. **Owner quick check (about 10 minutes):** listen, rate, export
+   `review/quick-check/verdict.json`, then say "verdict saved".
+2. **Phase B**, driven by that verdict. "Worth pursuing": read the public
+   record and draft a permission request for the owner to post; nothing is
+   sent by this project. "Not worth pursuing": record the rejection and write a
+   costed own-voice plan without executing it. "Unsure": one more
+   development-only configuration with A/B audio.
+3. Independent fluent-speaker review before any public Hmong quality claim.
+
 
 ## Authorized source preparation update — 2026-09-28
 
@@ -205,5 +228,6 @@ configuration, tests, notices, and factual engineering evidence; consult the
 The two M7 commits and the separately authorized September 25 preparation push
 are historical work. The September 28 task produced local changes only; the
 owner subsequently authorized committing and pushing them to the active branch
-on 2026-09-29. It does not reopen the M7 approval. No merge,
+on 2026-09-29 (D5), together with the validated Orpheus trial work. Neither
+reopens the M7 approval. No merge,
 publication, outreach, recording, training or deployment is authorized here.

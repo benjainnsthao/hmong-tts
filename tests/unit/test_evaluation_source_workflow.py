@@ -349,3 +349,65 @@ def test_cli_errors_do_not_disclose_private_paths(tmp_path: Path, capsys: Any) -
     assert captured.out == ""
     assert "private-missing" not in captured.err
     assert str(tmp_path) not in captured.err
+
+
+def test_priority_orders_cases_first_and_keeps_labels_blind(tmp_path: Path) -> None:
+    pack = fixture_pack(("First.", "Second.", "Third."))
+    info = evidence(tmp_path, pack)
+    clips = []
+    for index, case in enumerate(pack.cases):
+        path = tmp_path / f"clip-{index}.wav"
+        with wave.open(str(path), "wb") as audio:
+            audio.setparams((1, 2, 16000, 0, "NONE", "not compressed"))
+            audio.writeframes(b"\x10\x00" * 160)
+        clips.append(
+            listening.Clip(
+                candidate_id="private-candidate",
+                configuration_sha256="1" * 64,
+                case_id=case.id,
+                text_sha256=hashlib.sha256(case.text.encode()).hexdigest(),
+                wav_path=str(path),
+                wav_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+            )
+        )
+    inventory_ = listening.ClipInventory(
+        pack_sha256=str(summarize_prompt_set(pack)["pack_sha256"]), clips=clips
+    )
+    out, key = tmp_path / "packet", tmp_path / "key.json"
+    summary = listening.prepare_listening(
+        pack, info, inventory_, out, key, seed=5, priority=("D02", "D00")
+    )
+    assert summary["priority_case_ids"] == ["D02", "D00"]
+    with (out / "scores.csv").open() as handle:
+        assert [row["case_id"] for row in csv.DictReader(handle)] == ["D02", "D00", "D01"]
+    assert "private-candidate" not in (out / "index.html").read_text()
+    text_only = listening.prepare_listening(
+        pack,
+        info,
+        inventory(tmp_path, pack, count=0),
+        tmp_path / "text-packet",
+        tmp_path / "text-key.json",
+        seed=5,
+        priority=("D01",),
+    )
+    assert text_only["status"] == "awaiting_eligible_audio"
+    with (tmp_path / "text-packet/scores.csv").open() as handle:
+        assert [row["case_id"] for row in csv.DictReader(handle)] == ["D01", "D00", "D02"]
+
+
+@pytest.mark.parametrize("priority", [("D00", "D00"), ("H01",)])
+def test_priority_rejects_unknown_or_duplicate_ids(
+    tmp_path: Path, priority: tuple[str, ...]
+) -> None:
+    pack = fixture_pack()
+    with pytest.raises(PromptSetError, match="priority"):
+        listening.prepare_listening(
+            pack,
+            evidence(tmp_path, pack),
+            inventory(tmp_path, pack, count=0),
+            tmp_path / "packet",
+            tmp_path / "key.json",
+            seed=1,
+            priority=priority,
+        )
+    assert not (tmp_path / "packet").exists()

@@ -191,3 +191,62 @@ class FakeAdapter:
         self.unload_count += 1
         self._loaded_model_id = None
         self._runtime = None
+
+
+def orpheus_model(**overrides: Any) -> dict[str, Any]:
+    entry: dict[str, Any] = {
+        "model_id": "fixture-orpheus",
+        "provider": "Synthetic Provider",
+        "repository": "synthetic/fixture-orpheus",
+        "revision": "3" * 40,
+        "documented_language_tag": "mww",
+        "language_tag_standard": "ISO 639-3",
+        "architecture": "orpheus_llama_snac",
+        "weight_license": "Apache-2.0",
+        "approved_use": "local_noncommercial_research_inference",
+        "redistribution_status": "weights_not_redistributed",
+        "prompt_set_reference": "external:synthetic-development-fixture",
+        "language_quality_status": "not_evaluated",
+        "provenance": {
+            "model_card_url": "https://example.test/orpheus-card",
+            "license_url": "https://example.test/orpheus-license",
+            "audit_reference": "docs/license_matrix.md",
+            "audited_on": "2026-09-29",
+        },
+        "use_restrictions": {
+            "scope": "local_noncommercial_research_only",
+            "output_policy": "outputs_external_not_shared",
+            "public_use": "not_cleared",
+            "owner_decision_reference": "docs/synthetic_owner_decision.json",
+            "upstream_licenses": [
+                {
+                    "name": "Synthetic base license",
+                    "license_url": "https://example.test/base-license",
+                    "status": "owner_accepted_for_local_research",
+                }
+            ],
+            "open_risks": ["synthetic provenance gap"],
+        },
+        "components": [
+            {
+                "role": "audio_codec",
+                "repository": "synthetic/fixture-codec",
+                "revision": "4" * 40,
+                "weight_license": "MIT",
+                "license_url": "https://example.test/codec-license",
+                "source_file": "pytorch_model.bin",
+                "source_sha256": "a" * 64,
+                "conversion": "torch_load_weights_only_true_to_safetensors",
+                "loaded_format": "safetensors",
+                "loaded_sha256": "b" * 64,
+            }
+        ],
+    }
+    entry.update(overrides)
+    return entry
+
+
+def synthetic_registry_with_orpheus() -> ModelRegistry:
+    """A schema-2 registry mixing one unrestricted VITS and one research-only Orpheus entry."""
+    vits = synthetic_registry().models[0].model_dump(mode="json")
+    return ModelRegistry.model_validate({"schema_version": 2, "models": [vits, orpheus_model()]})

@@ -13,8 +13,10 @@ appropriate licensing, and native-speaker validation.
 
 Current local work has prepared a [published-source White Hmong evaluation
 draft](docs/hmong_evaluation_pack.md) and [review packet](docs/hmong_collection_review.md).
-All language acceptance remains pending; the [current voice shortlist](docs/hmong_voice_decision.md)
-has unresolved rights/loading prerequisites, so no Hmong candidate audio has been generated.
+All language acceptance remains pending. On 2026-09-29 the Hmong Orpheus
+checkpoint was [trialled locally](docs/hmong_voice_decision.md) on development
+sentences under owner-restricted research terms; its outputs are not shared, and
+no Hmong quality or public-use claim is made.
 
 The historical single-speaker project is preserved at commit
 `fd1756485b1e1b75fd1efee5e37519fa8e255415`, with a browsable record under

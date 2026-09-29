@@ -64,10 +64,22 @@ class ServiceRuntime:
     output_id_factory: OutputIdFactory = uuid4
 
 
+def service_registry(registry: ModelRegistry) -> ModelRegistry:
+    """The local service serves only VITS entries; restricted research entries stay offline."""
+    served = [
+        entry
+        for entry in registry.by_architecture("vits")
+        if entry.approved_use == "local_noncommercial_inference"
+    ]
+    if len(served) == len(registry.models):
+        return registry
+    return ModelRegistry(schema_version=registry.schema_version, models=served)
+
+
 def production_runtime(config: ServiceConfig) -> ServiceRuntime:
     """Create metadata and one runtime owner without loading a checkpoint."""
 
-    registry = load_model_registry()
+    registry = service_registry(load_model_registry())
     adapter = MmsVitsAdapter(registry)
     environment = collect_environment()
     coordinator: InferenceCoordinator | None = None
@@ -98,6 +110,8 @@ def production_runtime(config: ServiceConfig) -> ServiceRuntime:
 
 
 def _model_response(entry: ModelEntry) -> ModelMetadataResponse:
+    if entry.architecture != "vits" or entry.approved_use != "local_noncommercial_inference":
+        raise ValueError("the local service exposes only unrestricted VITS entries")
     return ModelMetadataResponse(
         model_id=entry.model_id,
         provider=entry.provider,
@@ -105,9 +119,9 @@ def _model_response(entry: ModelEntry) -> ModelMetadataResponse:
         immutable_revision=entry.revision,
         documented_language_tag=entry.documented_language_tag,
         language_tag_standard=entry.language_tag_standard,
-        architecture=entry.architecture,
+        architecture="vits",
         weight_license=entry.weight_license,
-        approved_use=entry.approved_use,
+        approved_use="local_noncommercial_inference",
         redistribution_status=entry.redistribution_status,
         prompt_set_reference=entry.prompt_set_reference,
         language_quality_status=entry.language_quality_status,

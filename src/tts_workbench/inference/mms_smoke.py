@@ -46,7 +46,7 @@ def build_parser(registry: ModelRegistry) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--model",
-        choices=sorted(model.model_id for model in registry.models),
+        choices=sorted(model.model_id for model in registry.by_architecture("vits")),
         default="mms-eng",
     )
     parser.add_argument(

@@ -177,3 +177,14 @@ def test_invalid_mms_prompt_is_sanitized_before_adapter_creation(
     assert "request validation failed" in captured.err
     assert marker.strip() not in captured.err + captured.out
     assert not list(tmp_path.rglob("*.wav"))
+
+
+def test_benchmark_selects_adapter_family_by_registered_architecture() -> None:
+    from tests.fakes.inference import synthetic_registry_with_orpheus
+    from tts_workbench.benchmark.cli import adapter_for
+    from tts_workbench.inference.mms_vits import MmsVitsAdapter
+    from tts_workbench.inference.orpheus import OrpheusAdapter
+
+    registry = synthetic_registry_with_orpheus()
+    assert isinstance(adapter_for(registry, "orpheus_llama_snac"), OrpheusAdapter)
+    assert isinstance(adapter_for(registry, "vits"), MmsVitsAdapter)

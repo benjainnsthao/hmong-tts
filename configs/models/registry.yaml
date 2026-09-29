@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 models:
   - model_id: mms-eng
     provider: Meta
@@ -35,3 +35,48 @@ models:
       license_url: https://huggingface.co/facebook/mms-tts/blob/44cc7fb408064ef9ea6e7c59130d88cac1274671/README.md
       audit_reference: docs/license_matrix.md
       audited_on: 2026-09-10
+
+  # Local non-commercial research only (owner decisions D1-D3, 2026-09-29).
+  # Not served by the local service or dashboard; outputs stay outside Git and are not shared.
+  - model_id: orpheus-hmong-3b
+    provider: LocalVoice.org (Pakorn2112)
+    repository: Pakorn2112/Orpheus-TTS-hmong-3b
+    revision: 464d34449a778b1a6d9506bc10bd4e00f752c5c8
+    documented_language_tag: mww
+    language_tag_standard: ISO 639-3
+    architecture: orpheus_llama_snac
+    weight_license: Apache-2.0 (model card label; research/educational use)
+    approved_use: local_noncommercial_research_inference
+    redistribution_status: weights_not_redistributed
+    prompt_set_reference: external:white-hmong-draft-v2-development
+    language_quality_status: not_evaluated
+    provenance:
+      model_card_url: https://huggingface.co/Pakorn2112/Orpheus-TTS-hmong-3b/blob/464d34449a778b1a6d9506bc10bd4e00f752c5c8/README.md
+      license_url: https://huggingface.co/Pakorn2112/Orpheus-TTS-hmong-3b/blob/464d34449a778b1a6d9506bc10bd4e00f752c5c8/README.md
+      audit_reference: docs/license_matrix.md
+      audited_on: 2026-09-29
+    use_restrictions:
+      scope: local_noncommercial_research_only
+      output_policy: outputs_external_not_shared
+      public_use: not_cleared
+      owner_decision_reference: docs/hmong_orpheus_owner_decision.json
+      upstream_licenses:
+        - name: Llama 3.2 Community License and Acceptable Use Policy
+          license_url: https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct/blob/0cb88a4f764b7a12671c53f0838cd831a0843b95/LICENSE.txt
+          status: owner_accepted_for_local_research
+      open_risks:
+        - speaker consent and voice provenance are undocumented
+        - fine-tuning dataset rights are undocumented
+        - public use beyond the card's research/educational wording is unconfirmed
+        - Llama attribution and naming obligations apply to any public release
+    components:
+      - role: audio_codec
+        repository: hubertsiuzdak/snac_24khz
+        revision: d73ad176a12188fcf4f360ba3bf2c2fbbe8f58ec
+        weight_license: MIT
+        license_url: https://huggingface.co/hubertsiuzdak/snac_24khz/blob/d73ad176a12188fcf4f360ba3bf2c2fbbe8f58ec/README.md
+        source_file: pytorch_model.bin
+        source_sha256: 4b8164cc6606bfa627f1a784734c1e539891518f1191ed9194fe1e3b9b4bff40
+        conversion: torch_load_weights_only_true_to_safetensors
+        loaded_format: safetensors
+        loaded_sha256: 2db6ee7e1e206c83e7c69edbce290dcd72413f308297c907b5da1ee8d2ad138c

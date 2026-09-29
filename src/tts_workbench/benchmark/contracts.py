@@ -23,7 +23,7 @@ from tts_workbench.inference.contracts import (
     ResolvedDevice,
     Sha256Digest,
 )
-from tts_workbench.models.schema import ModelId, PromptSetReference
+from tts_workbench.models.schema import ModelId, PromptSetReference, RegistrySchemaVersion
 from tts_workbench.qc.contracts import validate_relative_json_path
 
 MemoryAvailability = Literal["available", "unavailable", "not_requested"]
@@ -151,7 +151,7 @@ class BenchmarkReport(StrictM4Contract):
     report_schema_version: Literal[1] = 1
     evidence_scope: EvidenceScope = "engineering_sanity_check"
     status: Literal["completed", "partial", "failed"]
-    registry_schema_version: Literal[1]
+    registry_schema_version: RegistrySchemaVersion
     model: ManifestModel
     adapter: AdapterIdentity
     prompt_sha256: Sha256Digest

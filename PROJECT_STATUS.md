@@ -1,8 +1,46 @@
 # Project status
 
-Last updated: 2026-09-28 (UTC)
+Last updated: 2026-09-29 (UTC)
 
 ## Current development after M7
+
+### Hmong Orpheus local research trial — 2026-09-29 (Phase A complete)
+
+Owner decisions D1–D6 ([record](docs/hmong_orpheus_owner_decision.json),
+[D-0016](docs/decisions.md)) permit local, non-commercial research with
+`Pakorn2112/Orpheus-TTS-hmong-3b` at `464d3444…`, including the owner's
+acceptance of the Llama 3.2 terms for that purpose and one `weights_only=True`
+SNAC conversion. Public use is not cleared; outputs stay outside Git and are
+not shared. Hmong F5 and Yuhalu terms are unchanged and remain blocked.
+
+**Completed:** committed the reviewed September 28 work; built an isolated,
+locked Transformers + SNAC runtime without Accelerate; added `OrpheusAdapter`
+(lazy, fake-backend tested, safetensors only) and a backwards-compatible registry
+schema 2 for restricted research entries, which the service and dashboard never
+expose; generated all 20 development cases (held-out never read). Also added a
+dependency-free ASR proxy module and a `--priority` option for the listening
+exporter.
+
+**Results (exploratory):** 20/20 generations ended cleanly and reproduced bit
+for bit. BF16 fits on the RTX 4070 (peak 6.4 GiB allocated). Median RTF was
+1.8, slower than real time. M4 QC passed 19/20 with the 24 kHz rate allowed;
+the unchanged 16 kHz-only config rejects every clip on sample rate alone. The
+same publisher's Hmong Whisper transcribed the clips at median CER 0.086, with
+each transcript matching its own sentence. It scored poorly on human news
+audio, so the proxy is only weak evidence and measures no tone. The
+predeclared automatic early exit was not triggered.
+
+Validation: **526 tests and 4 browser tests passed**; **86.94%** aggregate
+branch-aware coverage; strict typing, Ruff, lock, configuration/registry,
+privacy and pre-commit passed. See the
+[trial validation report](reports/validation/hmong_orpheus_trial_validation.md)
+and the [voice decision](docs/hmong_voice_decision.md).
+
+**Waiting on the owner:** a five-clip quick check (about 10 minutes) at
+`/root/tts-workbench-artifacts/white-hmong-20260928/review/quick-check/index.html`,
+saved as `review/quick-check/verdict.json`. Phase B follows the verdict. It is a
+single-listener check, not independent fluent review; no Hmong quality claim is
+made and NV-001 through NV-008 remain open.
 
 ### Published-source White Hmong preparation — 2026-09-28
 
@@ -32,7 +70,8 @@ source/listening workflow tests; **85.38%** aggregate branch-aware coverage.
 Strict typing, Ruff, lock/dependency, configuration, privacy and synthetic native
 playback/seek checks passed. Optional browser tools were reused externally.
 
-**Current outcome:** zero candidates qualified for execution. Orpheus has
+**Outcome as of 2026-09-28 (superseded for Orpheus local research by the
+section above):** zero candidates qualified for execution. Orpheus had
 unresolved upstream Llama terms, voice/data provenance and pickle-only official
 codec weights; Hmong F5 lacks checkpoint terms and a verified runtime/voice chain;
 Yuhalu requires an entitlement/payment and agreement acceptance. Hardware was

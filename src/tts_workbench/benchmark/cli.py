@@ -32,9 +32,12 @@ from tts_workbench.benchmark.resources import DefaultResourceObserver
 from tts_workbench.benchmark.runner import BenchmarkRunError, BenchmarkRunner
 from tts_workbench.config.loader import load_config
 from tts_workbench.environment.detect import collect_environment
+from tts_workbench.inference.adapter import TTSAdapter
 from tts_workbench.inference.mms_smoke import BUILTIN_SYNTHETIC_PROMPTS
 from tts_workbench.inference.mms_vits import MmsVitsAdapter
+from tts_workbench.inference.orpheus import ORPHEUS_ARCHITECTURE, OrpheusAdapter
 from tts_workbench.models.registry import load_model_registry
+from tts_workbench.models.schema import ModelRegistry
 
 DEFAULT_BENCHMARK_CONFIG = Path("configs/benchmark/default.yaml")
 
@@ -69,6 +72,13 @@ def _config_path(path: Path) -> Path:
 
 def _load_settings(path: Path) -> BenchmarkSettings:
     return cast(BenchmarkSettings, load_config("benchmark", _config_path(path)))
+
+
+def adapter_for(registry: ModelRegistry, architecture: str) -> TTSAdapter:
+    """Select the adapter family for a registered architecture; both import lazily."""
+    if architecture == ORPHEUS_ARCHITECTURE:
+        return OrpheusAdapter(registry)
+    return MmsVitsAdapter(registry)
 
 
 def _prompt_for_model(reference: str, prompt_file: Path | None) -> str:
@@ -130,7 +140,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
         report_store = AtomicJsonReportStore()
         report_store.validate_destination(settings.report_output_path)
-        adapter = MmsVitsAdapter(registry)
+        adapter = adapter_for(registry, entry.architecture)
         report = BenchmarkRunner(
             registry=registry,
             adapter=adapter,
