@@ -4,13 +4,48 @@ Documented: **2026-09-11 UTC**. Public decision owner: **benjainnsthao**.
 Original status: planning documentation only. See the dated update below for
 the subsequent local work authorized by the owner; M7 approval is unchanged.
 
-M7 is complete. The recommended next development step is a separately
-authorized community scoping phase that establishes whose needs the project
-should serve and what evidence would justify language work. Release maintenance
-continues independently. Repository integration and publication are optional
-owner decisions.
+M7 is complete. Current local source preparation and candidate research are
+complete as described below. The next concrete step is independent review of
+the prepared packet and resolution of specific model prerequisites. Broader
+community scoping remains proposed. Release maintenance continues independently;
+repository integration and publication are optional owner decisions.
 
-## Authorized preparation update — 2026-09-25
+## Authorized source preparation update — 2026-09-28
+
+The owner authorized online research, external sentence collection, local code
+and tests, plus bounded candidate downloads/inference when rights, safe loading
+and resources permit. This extends the September 25 preparation-only boundary.
+Publication, deployment, outreach, payment, agreement acceptance, recording,
+adaptation and training remain excluded. No new generic trial-authorization
+question is needed; specific unresolved prerequisites still prevent execution.
+
+Completed: a versioned 20-development/10-held-out source draft, license and
+meaning records, fingerprints, structural and heuristic split checks, RPA and
+supplementary Google comparisons, refreshed immutable model research/resource
+preflight, and a development browser review packet with blank scores. All human
+review remains pending; the pack is not frozen. Zero models cleared the local
+gates, so no candidate weights or audio were downloaded/generated.
+
+The [single review packet](hmong_collection_review.md#one-review-packet) prioritizes
+two translation-context discrepancies, source transcription/coverage questions,
+proposed criteria and exact model-rights gaps. The
+[voice decision](hmong_voice_decision.md) recommends deferring execution while
+keeping the existing-voice route first. No recording pilot is warranted by a
+license or codec-format blocker. The
+[validation report](../reports/validation/white_hmong_source_validation.md)
+records implementation checks and artifact locations.
+
+The smallest human action is to review this prepared packet with a separate
+fluent reviewer, starting with flagged development cases and rubric acceptance.
+Source collection no longer depends on a speaker writing every sentence. Final
+held-out evaluation waits for a fixed candidate/configuration, accepted criteria,
+actual independent review and the required rights evidence. Published reserve
+text may have appeared in pretraining even though it is held out from our tuning.
+
+## Authorized preparation update — 2026-09-25 (historical)
+
+The dated update above supersedes this section's blank-pack state and its
+candidate-download exclusion. The earlier work and evidence are retained.
 
 The local dashboard was completed after this original plan. The current task
 also authorizes finishing evaluation-pack tooling, preparing White Hmong/RPA
@@ -135,13 +170,14 @@ native-validation items without their required evidence.
 
 ## 4. Gate language implementation and applications on that evidence
 
-Status: deferred; requires later explicit authorization.
+Status: language acceptance and public applications remain deferred. Bounded
+local preparation and eligible inference are authorized by the September 28 update.
 
 After the scoping decision, a proposed language-support phase must identify
 an appropriate licensed model or data/adaptation route and the native-speaker
 validation it requires. Metadata/source research is now authorized as described
-above. Model access beyond the current registry, language rules, recording,
-training, and adaptation remain separate future work.
+above. Eligible isolated model access is also authorized by the latest update;
+recording, training, adaptation and deployment remain separate future work.
 Do not use the English or Vietnamese checkpoints as a claimed Hmong voice.
 
 Any later learning application must state the capability it actually depends
@@ -166,7 +202,8 @@ material is limited to covered code and permitted sanitized documentation,
 configuration, tests, notices, and factual engineering evidence; consult the
 [license matrix](license_matrix.md) before any proposed distribution.
 
-The two authorized M7 commits are already complete. The owner's subsequent
-instruction separately authorizes committing and pushing the preparation
-changes; it does not reopen or alter the historical M7 approval. No merge,
-publication, outreach, recording, training, or deployment is authorized here.
+The two M7 commits and the separately authorized September 25 preparation push
+are historical work. The September 28 task produced local changes only; the
+owner subsequently authorized committing and pushing them to the active branch
+on 2026-09-29. It does not reopen the M7 approval. No merge,
+publication, outreach, recording, training or deployment is authorized here.

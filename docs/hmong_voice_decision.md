@@ -1,135 +1,121 @@
 # White Hmong voice research and recording decision
 
-Research date: **2026-09-25**. Target: **White Hmong (Hmoob Dawb), RPA**.
-Intended eventual use: public noncommercial speech generation. Current approval
-still covers only local English/Vietnamese checkpoints. This is a research
-shortlist and proposed experiment, not candidate approval or a training plan
-that has been executed. No new candidate weights, datasets, recordings, or
-containers were downloaded; no participant was contacted.
+Refreshed **2026-09-28** from current primary sources. Target: **White Hmong
+(Hmoob Dawb), RPA**. The owner authorized research, external text preparation,
+local code/tests and bounded local trials when rights, loading and resources
+permit. Publication, deployment, outreach, agreement acceptance, payment,
+recording, adaptation and training remain outside this task.
 
-**Recommendation:** finish the human-reviewed pack, then resolve the rights
-and runtime prerequisites for one Hmong-labelled Orpheus candidate before a
-small development-only listening experiment. Do not commit to recording a
-training corpus yet. Keep MMS/VITS adaptation as a separate fallback proposal.
-There is presently insufficient evidence to select a usable White Hmong voice.
+**Recommendation: defer voice selection and keep the existing-voice route first.**
+The published 20/10 draft and review packet are prepared. No candidate currently
+clears all local-trial prerequisites, so **zero candidates were selected for
+execution, zero weights downloaded and zero audio generated**. Keep Orpheus as
+the closest variety-labelled research lead; do not propose recording or training
+to solve its licensing or artifact-format gaps. There is no demonstrated usable
+White Hmong voice in this project yet.
 
-## Candidates and approaches
+## Current comparison
 
-| Route | Target variety/script and quality evidence | Code, model/data rights and public noncommercial fit | Hardware and data needs | Current disposition |
-|---|---|---|---|---|
-| **Pakorn2112/Orpheus-TTS-hmong-3b** | Card explicitly advertises Hmong Daw. RPA coverage and sentence-level results from independent fluent raters are not documented there. No quality has been demonstrated by this project. [Model card](https://huggingface.co/Pakorn2112/Orpheus-TTS-hmong-3b) | Weights declare Apache-2.0; card describes research/educational release and unresolved dataset rights for commercial use. No itemized Hmong training-data license or speaker authorization was located. Upstream code is Apache-2.0, but the declared base chain includes Llama; reconcile applicable base terms and data/voice rights before approving public use. [Orpheus code](https://github.com/canopyai/Orpheus-TTS), [base metadata](https://huggingface.co/canopylabs/orpheus-3b-0.1-ft), [Llama terms](https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct/blob/main/LICENSE.txt) | 3B BF16 model with SNAC 24 kHz; card claims single-GPU real-time inference without a measured VRAM minimum. No new speaker recording should be required for a fixed existing-voice trial if its voice selection and rights are documented. Training-data size is unspecified. | Best-matched research lead, **blocked pending rights/runtime review**. Do not accept the card's quality claims as evaluation results. |
-| **Local Voice / YangNobody12 Hmong F5-TTS distribution** | Advertises Hmong; the inspected deployment guide does not establish White Hmong/RPA scope, a native-review protocol, or scores. [Distribution guide](https://github.com/YangNobody12/hmong-TTS/blob/main/F5TTS-model/README.md) | Repository code is MIT and describes a commercial-permission condition. No exact bundled checkpoint identity, separate Hmong dataset license, or speaker permissions were located. Upstream F5 code is MIT; its pretrained weights have an Emilia-derived NC restriction. Those facts do not clear the derivative or its outputs. [Project](https://github.com/YangNobody12/hmong-TTS), [upstream terms](https://github.com/SWivid/F5-TTS#license) | Guide recommends NVIDIA GPU and 2–3 GB free disk, permits slower CPU use; VRAM minimum unknown. Docker packaging adds a separate dependency audit. Establish whether inference requires reference speech and what permits its use before testing; none is supplied here. | Secondary lead only after immutable artifact, data, reference-voice, and license evidence. No container pull. |
-| **Yuhalu 2.0 concatenative voice** | Manual explicitly documents White Hmong and Blue Hmong in RPA. It describes syllable/word concatenation and a tone-related substitution that needs independent fluent assessment. No controlled White Hmong sentence evaluation was located. [Manual](https://yuhalu.org/help/UserManual.html) | Proprietary software/audio resources. EULA allows lawful output under the selected plan but restricts redistribution and training/cloning from internal resources. A personal/community license does not itself establish permission to offer a public hosted TTS service. [EULA §§4–7](https://yuhalu.org/eula.php) | Java desktop application; GPU is not listed as required in the manual. No measured minimum RAM/latency was located. Existing audio bank avoids new project recordings for evaluation, but is not a reusable training corpus. | Possible non-neural comparison if the owner resolves availability and suitable licensing. The plans page calls its displayed offers testing-only/not yet purchasable. [Plans](https://yuhalu.org/plans.html) |
-| **MMS/VITS adaptation with newly permitted White Hmong data** | Current MMS collection listing contains no exact `mww`, `hnj`, or `hmn`, or Hmong-named entry. Existing `eng`/`vie` models are engineering baselines, not Hmong candidates. [Collection](https://huggingface.co/facebook/mms-tts) | Recipe MIT; MMS weights/derivatives CC BY-NC 4.0, separate from Transformers code. Base religious-reading lineage lacks itemized source rights in the inspected card. New recordings/transcripts need their own permissions; public outputs/derivative distribution need explicit review beyond the project's current local-only use. [Recipe and license note](https://github.com/ylacombe/finetune-hf-vits), [MMS-specific notice](https://github.com/facebookresearch/fairseq/blob/main/examples/mms/README.md), [CC terms](https://creativecommons.org/licenses/by-nc/4.0/legalcode) | Recipe describes one-GPU fine-tuning and discriminator conversion. Transcribed, aligned, clean White Hmong audio plus a reviewer-approved tokenizer/inventory are needed. Published small-sample recipe claims concern other demonstrated languages, not Hmong sufficiency. RTX 4070 training fit and corpus size remain unmeasured. | Plausible adaptation experiment only after approved data and frontend design. Requires separate training authorization and an isolated audited environment. |
+| Route | Primary evidence and identity | Local trial | Eventual public use |
+|---|---|---|---|
+| **Pakorn2112/Orpheus-TTS-hmong-3b** | [Pinned card](https://huggingface.co/Pakorn2112/Orpheus-TTS-hmong-3b/blob/464d34449a778b1a6d9506bc10bd4e00f752c5c8/README.md) advertises Hmong Daw and Apache-2.0 research/educational use. Two BF16 safetensors shards total **6,601,763,560 bytes**; this is artifact size, not measured peak memory. | **Blocked.** Declared Unsloth/Orpheus lineage reaches Llama 3.2; the Apache label does not reconcile its upstream obligations. No existing owner acceptance of applicable Llama terms is recorded. Official SNAC weights are pickle-format only; no verified safetensors replacement. Speaker selection and itemized voice/data permissions remain undocumented in inspected materials. | Unresolved base terms, Hmong dataset/speaker rights, output/service conditions and fluent acceptance. Research permission is not public clearance. |
+| **Pakorn2112/F5TTS-Hmong / Local Voice distribution** | [Model inventory](https://huggingface.co/Pakorn2112/F5TTS-Hmong/tree/c50fc0cc991bc0c4f22d86c7a6152730c667c0d5) identifies a **1,348,435,761-byte safetensors** checkpoint and vocabulary, with no model card/license declaration. [Distribution guide](https://github.com/YangNobody12/hmong-TTS/blob/1a88f6b9d39ed2c2772736849c240390667b96b2/F5TTS-model/README.md) names a mutable Docker tag. | **Blocked.** Repository MIT code does not grant rights to an unlicensed checkpoint. Docker-to-checkpoint identity, exact base, vocoder, reference audio/transcript, voice/data rights and complete dependencies are unresolved. White Hmong/RPA scope is not established by the generic Hmong label. | Upstream [F5 terms](https://github.com/SWivid/F5-TTS/blob/283252563dbf91be625e0c27926acfaac449186c/README.md#license) distinguish MIT code from Emilia-derived NC weights; neither clears this derivative, reference voice or outputs. |
+| **Yuhalu 2.0** | [Manual](https://yuhalu.org/help/UserManual.html) explicitly covers White and Blue Hmong/RPA and concatenative synthesis. Current [plans](https://yuhalu.org/plans.html) describe annual subscriptions and payment/activation. | **Blocked under this task.** No existing entitlement or immutable installer identity is supplied. [EULA](https://yuhalu.org/eula.php), effective August 17, 2026, requires affirmative acceptance for subscription requests. No purchase, activation or agreement was attempted. | Software/audio-bank redistribution and training/cloning are restricted; plan output permission does not automatically authorize a hosted TTS service. |
+| **MMS/VITS adaptation** | [MMS collection](https://huggingface.co/facebook/mms-tts) still lists no exact `mww`, `hnj`, `hmn` or Hmong entry. [Recipe](https://github.com/ylacombe/finetune-hf-vits/tree/6f3f51f4d667f5c3eef89484d151ffd39d2c2b89) is a possible future adaptation route. | **Not an existing Hmong voice.** Requires separately authorized training, permitted aligned audio and a reviewed frontend. Current English/Vietnamese registry entries remain engineering demonstrations. | MMS model NC terms, data/voice permissions and independent acceptance remain separate from recipe/code licensing. |
 
-These observations distinguish a publisher's support claim from demonstrated
-quality. No inspected source supplied a reproducible White Hmong sentence pack,
-independent fluent-rater protocol, per-tone error analysis, and acceptance
-decision together. That is a limit of this search, not proof that no human
-testing has occurred. Public demos, download counts, and automatic ASR scores
-cannot substitute for the project's fluent review.
+The older Yuhalu finding that displayed offers were testing-only is superseded:
+that banner is now an HTML comment, while the visible page gives subscription
+steps. No payment flow was entered. Model metadata and ordinary source documents
+were fetched; source code was inspected as text and never remotely executed.
 
-Two further checks narrowed the shortlist. The current
-[OmniVoice language table](https://github.com/k2-fsa/OmniVoice/blob/master/docs/languages.md)
-also has no exact `mww`, `hnj`, or `hmn`, or Hmong-named entry; a large language
-count is not White Hmong evidence. The indexed
-[Xuajpaj2026 Orpheus repository](https://huggingface.co/Xuajpaj2026/orpheus-hmong-tts)
-returned HTTP 401 through both page and metadata access, so its current content,
-availability, and license could not be verified. It is not a selected alternative.
-ASR and machine-translation coverage are not TTS capability.
+The [OmniVoice language table](https://github.com/k2-fsa/OmniVoice/blob/master/docs/languages.md)
+still has no exact Hmong/code match in the retained snapshot. The previously
+identified [Xuajpaj2026 repository](https://huggingface.co/Xuajpaj2026/orpheus-hmong-tts)
+again returned HTTP 401. Neither is a cleared alternative. These searches do not
+prove that no other Hmong voice exists. Publisher quality claims, demos and
+model popularity do not substitute for independent fluent evaluation.
 
-## Reproducible research identity and unresolved runtime details
+## Immutable chain and compatibility
 
-Metadata-only API observations (external copies retained; **no weight access**):
+Metadata, exact small config/card/license files, download failures, hashes and
+access times are retained in the external `research/` folder. No authentication
+was used to bypass a gated resource; base config HTTP 401 responses are recorded.
 
-| Artifact | Observed immutable revision | What remains to audit |
+| Component | Observed immutable revision | Loading/dependency observation |
 |---|---|---|
-| [Hmong Orpheus metadata](https://huggingface.co/api/models/Pakorn2112/Orpheus-TTS-hmong-3b) | `464d34449a778b1a6d9506bc10bd4e00f752c5c8` | Full license chain, dataset/voice rights, RPA/tokenizer behavior, speaker selection, complete inference recipe |
-| [Orpheus base metadata](https://huggingface.co/api/models/canopylabs/orpheus-3b-0.1-ft) | `4206a56e5a68cf6cf96900a8a78acd3370c02eb6` | Trace through the declared Unsloth base as well; this observed ancestor is not a substitute base checkpoint |
-| [SNAC codec metadata](https://huggingface.co/api/models/hubertsiuzdak/snac_24khz) | `d73ad176a12188fcf4f360ba3bf2c2fbbe8f58ec` | MIT declaration; listed weight is `pytorch_model.bin`, not safetensors; require an audited safe-loading/artifact decision before execution |
-| [Hmong F5 distribution source](https://github.com/YangNobody12/hmong-TTS/tree/1a88f6b9d39ed2c2772736849c240390667b96b2) | `1a88f6b9d39ed2c2772736849c240390667b96b2` | Mutable Docker tag is not an immutable model identity; obtain digest and component inventory |
-| [MMS fine-tuning recipe](https://github.com/ylacombe/finetune-hf-vits/tree/6f3f51f4d667f5c3eef89484d151ffd39d2c2b89) | `6f3f51f4d667f5c3eef89484d151ffd39d2c2b89` | Training discriminator/base artifacts, dependencies, text frontend, local-only data paths and disabled uploads/trackers |
+| Hmong Orpheus | `464d34449a778b1a6d9506bc10bd4e00f752c5c8` | Built-in `LlamaForCausalLM`, BF16, 28 layers; configuration uses `rope_parameters`. No checkpoint loading or compatibility pass is claimed. |
+| Unsloth Orpheus | `eae2b6e5e429c81b95ac42a883ac64f126583d43` | [Declared base chain](https://huggingface.co/unsloth/orpheus-3b-0.1-ft/blob/eae2b6e5e429c81b95ac42a883ac64f126583d43/README.md); config names Transformers 4.53.1. Hmong card suggests Unsloth with auto dtype; do not adopt auto precision silently. |
+| Canopy fine-tuned / pretrained | `4206a56e5a68cf6cf96900a8a78acd3370c02eb6` / `bf0cce99761b2f5857b3d85829691f696bf20cb0` | Gated bases; cards trace to Llama. These are provenance identities, not authorized downloads or substitute checkpoints. |
+| Llama 3.2 3B Instruct | `0cb88a4f764b7a12671c53f0838cd831a0843b95` | [Community license](https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct/blob/0cb88a4f764b7a12671c53f0838cd831a0843b95/LICENSE.txt) governs use/derivatives and carries an acceptable-use policy. Resolve applicability and owner acceptance; the task cannot accept it. |
+| SNAC 24 kHz weights | `d73ad176a12188fcf4f360ba3bf2c2fbbe8f58ec` | [MIT-labelled inventory](https://huggingface.co/hubertsiuzdak/snac_24khz/tree/d73ad176a12188fcf4f360ba3bf2c2fbbe8f58ec): `pytorch_model.bin`, **79,488,254 bytes**, no safetensors. |
+| SNAC code | `8f79a718f1ad71f94f79999f0071348227aff22e` | [Loader](https://github.com/hubertsiuzdak/snac/blob/8f79a718f1ad71f94f79999f0071348227aff22e/snac/snac.py) calls `torch.load`; requirements leave Torch, NumPy, einops and Hub unpinned. Modern Torch defaults do not satisfy this project's safetensors-only policy. No conversion/deserialization was attempted. |
+| Orpheus code | `e64661fe6d02c414fc77c53578c9d64082614861` | [Setup](https://github.com/canopyai/Orpheus-TTS/blob/e64661fe6d02c414fc77c53578c9d64082614861/orpheus_tts_pypi/setup.py) depends on unpinned SNAC/vLLM; repository license is Apache-2.0 while a packaging classifier says MIT. Resolve and lock an isolated inference stack before use. |
+| Hmong F5 / distribution | `c50fc0cc991bc0c4f22d86c7a6152730c667c0d5` / `1a88f6b9d39ed2c2772736849c240390667b96b2` | No evidence tying Docker contents to the HF artifact; no container pull. |
+| Upstream F5 | `283252563dbf91be625e0c27926acfaac449186c` | [Dependencies](https://github.com/SWivid/F5-TTS/blob/283252563dbf91be625e0c27926acfaac449186c/pyproject.toml) include Torch/torchaudio, Transformers, Vocos and many broad ranges. Upstream supports Vocos/BigVGAN, but this derivative's actual vocoder and reference-voice identity are unknown. |
 
-The [SNAC card](https://huggingface.co/hubertsiuzdak/snac_24khz) documents mono
-24 kHz speech decoding with a 19.8M-parameter codec. The current workbench only
-supports MMS/VITS and requires safetensors for that backend. Orpheus and F5 are
-not registry-compatible drop-ins; do not change registry revisions or weaken
-the existing load policy to fit a candidate.
+The inspected artifacts supply no itemized Hmong corpus rights, voice permission
+record or independent sentence-level acceptance protocol. Absence in these
+sources is a specific evidence gap, not an allegation about their creators.
 
-As a planning estimate, 3 billion BF16 parameters alone occupy about 6 GB
-(decimal), before codec, activations, KV cache, framework, and workspace. This
-arithmetic is **not a measured 12 GB fit**. Use a separate process and short
-inputs to establish memory and generation bounds in a later approved trial.
-Do not assume quantization preserves tone quality or automatically switch
-precision when a run fails. Record such a change as a different configuration.
+Resource preflight on this host: RTX 4070, **12,282 MiB VRAM, 9,996 MiB free**
+at the recorded observation; **15.52 GiB RAM, 13.92 GiB available**; approximately
+**937 GiB disk free**. Orpheus's weight files alone occupy about 6.15 GiB.
+The remaining space does not prove peak GPU/RAM fit or codec/generation speed.
+Existing Python 3.12 / Torch 2.13.0 / Transformers 5.13.1 was inspected but not
+changed. Candidate dependencies were not installed into it or into a new ML
+environment, because eligibility failed before that step.
 
-## Proposed bounded candidate experiment — not executed
+## Bounded experiment procedure, ready once prerequisites clear
 
-Prerequisites are the completed [human pack and records](hmong_collection_review.md),
-an independently agreed rubric, resolved local-evaluation permissions for the
-candidate and any reference voice, an exact artifact/code/dependency inventory,
-and owner authorization for candidate access and local execution. A future
-public-use decision is separate. Unresolved rights are a stop condition even
-if samples sound good.
+The user's current authorization already permits qualifying local trials;
+there is no new generic authorization gate. Resolve **specific** missing model/
+base/codec/voice rights and safe immutable artifacts first. Public-use clearance
+is separate. If language review is pending, label every run exploratory.
 
-1. Select the Hmong Orpheus revision above only if those gates clear. Include
-   at most one additional cleared candidate; no fallback downloading. Set a
-   maximum **one-hour GPU execution budget**, one process, and batch size one
-   on the available RTX 4070. Reserve ample memory; stop on OOM or repeated
-   generation failures and report them instead of changing configuration.
-2. The custodian supplies only the **20 development cases** and their approved
-   hashes. Confirm exact decoded text at runner input. Inspect tokenizer and
-   preprocessing behavior on development text with the fluent reviewer; never
-   silently strip tone letters, normalize, transliterate, or substitute spellings.
-   Preserve original text and record any approved model-input transformation.
-3. Fix one seed/settings/voice configuration per candidate before listening.
-   Try four preselected development cases, one per primary category. Bound each
-   generation to **60 seconds wall time and 30 seconds generated audio** in an
-   isolated worker; verify termination/unload behavior before the batch. A
-   timeout or truncated result is a failure, not a usable short sample. The
-   current non-preemptive service alone does not provide these execution caps.
-4. If runtime checks and the reviewer-defined early stop conditions pass,
-   generate the other 16 cases. Permit only five predeclared repeat cases for
-   stability, at most **25 generations per candidate, 50 total**. Keep failures
-   and every attempt; do not pick the best of many seeds. The 10 held-out cases
-   remain unopened by the experiment operator.
-5. Randomize anonymous clip order for independent listening. The separate
-   fluent reviewer judges intelligibility, meaning-changing tone/pronunciation
-   errors, acceptable variants, phrasing/punctuation, and naturalness using
-   the rubric agreed before outputs. The speaker can provide a second judgment;
-   preserve disagreement and adjudication rather than averaging it away.
-6. Retain exact model/codec revisions and hashes, settings, prompt/pack hashes,
-   runtime/device/peak memory, timing, waveform checks, failures, randomized
-   labels, and human judgments outside Git. Publish only sanitized aggregates
-   if separately authorized. Structural QC is engineering evidence only.
-7. Choose whether to use, adapt, collect data, or stop based on the table below.
-   Only after freezing the finalist, frontend, settings, rubric, and rights
-   review may the custodian authorize a **single final pass on the 10 held-out
-   cases**. If those outputs drive tuning, replace the reserve before another
-   final claim. Thirty sentences cannot establish broad community acceptance.
+1. Select at most two eligible fixed configurations. Use external artifacts and
+   a separate locked Python environment. Record model, codec, code and dependency
+   revisions/hashes, exact device/dtype, seed, voice, frontend and every setting.
+   No unreviewed remote code, pickle fallback, automatic quantization or precision
+   change. Bound download size from the inventory before fetching weights.
+2. Consume only `development/development-v1.json`. Check exact text hashes and
+   source-use conditions; retain preprocessing/tokenizer observations separately.
+   Start with one case per category, fixed before output inspection. Do not read
+   the reserve, borrow its text as reference audio, or tune from its metadata.
+3. Use one isolated worker, batch one, at most 256 input characters, 1,024 new
+   model tokens, 30 seconds of audio and 60 seconds wall time per generation;
+   allow a separate 180-second cold-load deadline and one-hour total GPU budget.
+   Verify child-process termination/unload first. Capture worker peak RSS and
+   GPU allocated/reserved peaks; keep unavailable observations as unavailable.
+4. Stop on OOM or repeated failures. A timeout, token-cap truncation or audio-cap
+   truncation is a failed attempt, not a usable clipped sample. Record a changed
+   configuration separately instead of retrying silently. Complete at most 20
+   unique development cases and five predeclared repeats per configuration,
+   50 total attempts including failures. No best-seed selection.
+5. Record load/inference latency, generated duration/RTF, resource peaks,
+   waveform hashes and provenance, every failure and the unchanged workbench
+   waveform QC results. QC/ASR can flag defects; neither proves pronunciation,
+   tone, intelligibility, naturalness or White Hmong support.
+6. Use the [listening exporter](hmong_evaluation_pack.md#source-audit-and-listening-preparation)
+   to randomize candidate labels and clip order with a retained separate key.
+   Review against the prospectively accepted rubric, preserving disagreements.
+   The existing external packet has texts and empty scores but **no audio**.
+7. After development-only selection, fix the candidate, environment, configuration,
+   frontend and accepted criteria. Reconcile the complete reviewed pack and its
+   permissions, record the freeze and release a single ten-case held-out pass.
+   Report all ten results/failures. Tuning from those outputs retires this reserve.
 
-## Recording and training decision
+Inference latency, memory peaks, waveform QC, audio quality and finalist scores
+are **not measured**, not zero or passed. There is no audio requiring fluent
+listening yet; there is source text and a rubric ready for fluent review.
 
-| Route | Evidence that would justify the next proposal | Required human decisions, permissions, resources, and quality criteria |
-|---|---|---|
-| Use an existing voice | Development results meet the prospectively agreed fluent-review criteria, show no unresolved critical error, and run within owner-set latency/memory bounds. A frozen finalist subsequently meets held-out criteria. | Fluent reviewers accept the stated variety/uses and document limits; owner accepts rights and voice provenance for the intended public service/output, operational costs, and attribution. Public deployment still needs its own security/authorization review. No recording is needed just to change voice identity unless explicitly requested. |
-| Adapt a model | A cleared base shows useful development intelligibility but repeatable, well-characterized deficits that a reviewed frontend or specific data can plausibly address. A bounded pilot can compare before/after on development cases. | Reviewer-approved RPA inventory and error taxonomy; separately permitted paired speech/text with actual speaker choices for adaptation and intended outputs; base/discriminator/codec licenses; isolated training stack, GPU/memory/time/storage budget; owner-defined pilot stop rule. Any frontend rules need language evidence. Keep evaluation cases out of training/reference material. |
-| Collect recordings for a pilot | No cleared existing voice meets needs, or adaptation fails for identifiable coverage/data reasons and no suitable permitted corpus exists. Participants and reviewers decide that the gap merits new data. | Explicit recording and model-training permissions, separate choices for public synthetic audio, real samples, and weights; compensation, credit/anonymity, retention, access, withdrawal limits, and voice-misuse expectations. A willing speaker and separate reviewer, quiet space, microphone/interface, editing/transcription time, storage, and GPU budget are required. |
-| Defer or stop | Rights remain unresolved, fluent review cannot support acceptance, critical distinctions remain unreliable, or cost exceeds the agreed bounds. | Owner and participants document the reason; preserve the evidence, avoid capability claims, and decide whether a narrower use case is worthwhile. Do not use more recordings as an automatic answer to a licensing or language-scope problem. |
+## Next decision
 
-If recording is later chosen, propose a **small separately approved pilot of
-30–60 minutes of usable aligned speech** as a budget hypothesis, not an
-established sufficiency threshold. Use separate recording prompts selected by
-humans from observed development gaps, excluding all evaluation cases and near
-duplicates. Measure usable yield, transcription accuracy, coverage, and learning
-progress before proposing hours of data. The reviewer must decide acceptable
-linguistic coverage and accuracy; no numerical tone, pronunciation, naturalness,
-or MOS pass threshold is imposed here. The owner must approve the actual amount
-of effort, and the speaker can decline. Full training from scratch is not
-justified by this evidence or the 30-sentence evaluation sample.
-
-NV-001 through NV-008 remain open. The next owner action is completing the
-external 20/10 pack and its records with the willing speaker and separate
-reviewer, then reviewing this bounded candidate-access proposal and its
-unresolved rights questions. Research authorization has not authorized any
-candidate-weight download, recruitment, recording, training, public output, or deployment.
+Review the [single handoff packet](hmong_collection_review.md#one-review-packet).
+Recommended disposition is **defer execution while retaining the existing-voice
+lead**. An owner rights decision alone cannot resolve missing codec artifacts or
+publisher data/voice evidence; do not present it as sufficient to start a trial.
+No adaptation or recording pilot is justified by the current licensing blockers.
+If a later cleared voice has repeatable linguistic deficits, propose bounded
+adaptation with permitted separate data. A recording pilot is a separate later
+proposal only if a demonstrated coverage/data gap warrants it; no training or
+recording begins here. M7 approvals/manifests and NV-001 through NV-008 are unchanged.

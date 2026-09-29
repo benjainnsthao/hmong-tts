@@ -1,8 +1,61 @@
 # Project status
 
-Last updated: 2026-09-25 (UTC)
+Last updated: 2026-09-28 (UTC)
 
 ## Current development after M7
+
+### Published-source White Hmong preparation — 2026-09-28
+
+The owner extended the earlier preparation-only boundary to online research,
+external sentence collection, local implementation/tests and bounded candidate
+trials when rights, safe loading and resources permit. No outreach, agreement
+acceptance, payment, publication, deployment, recording or training was authorized.
+
+**Completed:** selected an external 20/10 draft from 136 collected items,
+including 53 with retained published meanings. Wiktionary contributes 14 cases,
+Clark's licensed linguistic study 8, and Tatoeba 8. Source snapshots, dates,
+revisions, licenses, attribution, exact source text/meaning and transcription
+notes remain outside Git. The final draft v2 passes the unchanged target-shape
+validator and source audit; 44 related within-split pairs and zero cross-split
+heuristic flags were found. No case is human-reviewed or frozen for final use.
+
+Added offline source-evidence auditing and development-only listening export,
+without changing review-field meanings, model loading, registry, dependencies
+or M7 records. Published RPA references and nine development lexical comparisons
+support provisional checks. Four Google Translate UI checks yielded two meaning
+agreements and two tense/aspect discrepancies, retained separately from source
+text. Google documents `hmn` as Hmong, without an exclusive White Hmong promise.
+The held-out set was not sent to Google or used for candidate selection.
+
+Validation: **454 core tests and 4 browser tests passed**, including 27 new
+source/listening workflow tests; **85.38%** aggregate branch-aware coverage.
+Strict typing, Ruff, lock/dependency, configuration, privacy and synthetic native
+playback/seek checks passed. Optional browser tools were reused externally.
+
+**Current outcome:** zero candidates qualified for execution. Orpheus has
+unresolved upstream Llama terms, voice/data provenance and pickle-only official
+codec weights; Hmong F5 lacks checkpoint terms and a verified runtime/voice chain;
+Yuhalu requires an entitlement/payment and agreement acceptance. Hardware was
+measured, but no candidate weights, dependencies or audio were produced. No
+latency, waveform-QC or language-quality result is claimed for Hmong.
+
+External evidence: `/root/tts-workbench-artifacts/white-hmong-20260928/`.
+Start at `review/REVIEW_PACKET.md`; the master is `custodian/draft-v2.json` and
+the 20-case browser packet is `review/listening-v2/index.html`, explicitly
+awaiting audio with unfilled scores. Full draft SHA-256:
+`36ac5a2023b19843aa52e26f70c45a426b238bf32711e7d5a886bde5de83bc8e`.
+
+See the [pack guide](docs/hmong_evaluation_pack.md),
+[single review handoff](docs/hmong_collection_review.md),
+[refreshed voice decision](docs/hmong_voice_decision.md) and
+[validation report](reports/validation/white_hmong_source_validation.md).
+**Recommendation:** defer execution while retaining the existing-voice lead;
+do not start adaptation or a recording pilot to bypass rights gaps. The smallest
+human step is independent review of the prepared packet and prospective rubric,
+starting with ambiguous cases. No one needs to author thirty new sentences.
+Final fluent acceptance and NV-001 through NV-008 remain pending.
+
+### Local dashboard (completed earlier)
 
 The owner authorized a local browser dashboard, now implemented in the shared
 FastAPI service with text input, fixture loading, generation, playback/seek,
@@ -21,7 +74,10 @@ to the active branch. Package publication and deployment remain outside this wor
 The M7 release identity and approvals below remain historical records. Hmong
 support, training, recording, and public deployment remain deferred.
 
-### Evaluation preparation and research — 2026-09-25
+### Evaluation preparation and research — 2026-09-25 (historical)
+
+The September 28 update above supersedes the blank-pack state and candidate-access
+boundary in this dated record. Its validation observations remain historical.
 
 The owner authorized reversible local evaluation-pack tooling, collection/review
 preparation, bounded registered-model dashboard checks, and current Hmong model
@@ -83,7 +139,7 @@ of the external draft with the willing speaker and separate fluent reviewer.
 - Protected historical baseline: `fd1756485b1e1b75fd1efee5e37519fa8e255415`.
   The local preservation branch was absent at M7 discovery.
 
-## Approved scope
+## Approved M7 scope (historical release)
 
 Build reusable TTS infrastructure using properly licensed public non-Hmong
 checkpoints. The long-term purpose is useful speech technology for the Hmong community.

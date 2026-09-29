@@ -6,10 +6,15 @@ registered English and Vietnamese demonstrations. Recruiters are a secondary
 audience for its engineering methods and evidence.
 
 M7 does **not** establish Hmong support, pronunciation accuracy, linguistic
-correctness, perceptual quality, or application readiness. White Hmong work
+correctness, perceptual quality, or application readiness. White Hmong voice acceptance
 and NV-001 through NV-008 remain deferred **[NV]**. Community-language support
 requires a separately authorized phase with community participation,
 appropriate licensing, and native-speaker validation.
+
+Current local work has prepared a [published-source White Hmong evaluation
+draft](docs/hmong_evaluation_pack.md) and [review packet](docs/hmong_collection_review.md).
+All language acceptance remains pending; the [current voice shortlist](docs/hmong_voice_decision.md)
+has unresolved rights/loading prerequisites, so no Hmong candidate audio has been generated.
 
 The historical single-speaker project is preserved at commit
 `fd1756485b1e1b75fd1efee5e37519fa8e255415`, with a browsable record under

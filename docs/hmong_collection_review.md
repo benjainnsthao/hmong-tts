@@ -1,152 +1,117 @@
 # White Hmong collection and review handoff
 
-Prepared **2026-09-25** for a willing speaker, a separate fluent reviewer, and
-the project owner. **Preparation only: zero real sentences supplied, zero
-human approvals or permissions verified.** These are proposed tasks, not
-participant commitments. The owner confirmed that there is no real pack yet.
-No outreach, recording, or participant decision occurred during preparation.
+Updated **2026-09-28**. The published-source draft is complete: 20 development
+and 10 held-out cases, **zero human approvals**. The previous September 25 blank
+collection remains historical evidence. No participant was contacted, no speaker
+was recorded, and no participant commitment has been inferred.
 
-Use [the pack format and validator](hmong_evaluation_pack.md). Keep completed
-materials, prompts, meanings, participant details, and all records outside Git.
-Share this blank guide with participants only through the owner's chosen
-private process. Do not paste completed records into issues or pull requests.
+The owner no longer needs to arrange authorship of thirty sentences. Start with
+[this prepared pack and source evidence](hmong_evaluation_pack.md). The remaining
+human work is language acceptance, specific ambiguities and eventual model rights.
+Keep sentences, translations, identities, decisions and scores outside Git.
 
-## Collection target and provisional allocation
+## One review packet
 
-Collect **30 distinct human-supplied White Hmong (Hmoob Dawb) sentences in
-RPA**, divided into 20 development and 10 held-out cases before model testing.
-The allocation below is an organizational proposal, not a validated linguistic
-inventory. The reviewer may redistribute categories while retaining coverage
-of all four categories in each split. Record that decision externally.
+External root: `/root/tts-workbench-artifacts/white-hmong-20260928/`.
+Open `review/REVIEW_PACKET.md` first and `review/listening-v2/index.html` for the
+20 development texts, published meanings and blank score sheet. There are
+**zero audio clips** because no model cleared its prerequisites. The page says
+it is awaiting eligible audio; it is not a listening result.
 
-| Primary category | Development slots | Held-out slots | What humans supply and check |
-|---|---|---|---|
-| Everyday | D01–D08 (8) | H01–H04 (4) | Natural ordinary interactions and statements, with intended meaning/context |
-| Tone | D09–D14 (6) | H05–H06 (2) | Meaningful reviewer-selected contrasts in sentences; exact spellings and expected distinctions |
-| Pronunciation | D15–D18 (4) | H07–H08 (2) | Reviewer-selected difficult or important sound sequences in natural sentences |
-| Punctuation | D19–D20 (2) | H09–H10 (2) | Statements, questions, pauses, and the intended phrasing across the pack |
-| Total | **20** | **10** | No quota itself demonstrates sufficient coverage |
+| Decision | Prepared evidence and recommended choice | Acceptance still needed |
+|---|---|---|
+| Local model route | [Current shortlist](hmong_voice_decision.md): keep Orpheus as a research lead, but defer execution until its Llama terms, voice/data provenance and safe codec artifacts are resolved. F5 lacks model terms; Yuhalu requires payment/agreement. | Owner disposition of the concrete rights questions. No agreement acceptance or outreach is delegated by this task. |
+| Ambiguous meanings | D04 and D09 have Google tense/aspect differences from published English glosses. Preserve both observations; assess context instead of changing Hmong spelling automatically. | Fluent judgment of the intended reading and acceptable alternatives. |
+| Transcription and pronunciation | Prioritize Clark page transcriptions, D11's published loanword/number form and D12's emphatic reduplication. Retain source hyphens and record tokenizer changes in any later trial. | Independent confirmation of exact text, variety, intended reading and critical sound distinctions. |
+| Coverage and split | Counts/categories pass; related families stay together; zero cross-split heuristic flags. Reserve source concentration is 8/10 Wiktionary. No selected `-d` token or independently validated minimal-tone-pair inventory. | Decide whether a source-backed replacement is needed for contextual `-d` or a specific contrast, and check paraphrases. Do not invent filler or reopen established RPA conventions. |
+| Rubric | Use the proposed anchors below and reject unresolved meaning-changing errors. Agree criteria before hearing any model audio. | Actual reviewer/owner acceptance, recorded prospectively; blank decisions mean pending. |
+| Final listening | No audio yet. After development review selects a fixed permitted configuration, run one final held-out pass. | A separate fluent reviewer must accept language quality; engineering QC and translation agreement cannot do so. |
 
-Each case has one primary category in JSON. Secondary coverage, contrast-group
-IDs, intended readings, and human explanations belong in the companion record.
-Keep all members of a contrast family or closely related sentence template in
-one split. The held-out examples should cover similar skills with different
-content, not a punctuation change or paraphrase of a development case.
+All 30 exact cases still require final independent review. Priority flags reduce
+repetitive investigation; they do not exempt the unflagged cases. The owner can
+supply this packet privately to an existing willing fluent reviewer. This task
+does not contact them or require a recording speaker to create new material.
 
-No Hmong sentences, translations, spelling rules, or tone inventories have been
-generated by this guide. The external preparation folder contains a blank
-`collection-draft.json` with these 30 slots, empty text/references, and all
-statuses `pending`. It deliberately fails validation until humans supply the
-required material. It is not a real or reviewed evaluation pack.
+## Coverage and custody
 
-## Instructions for the willing speaker
+| Primary category | Development | Held-out |
+|---|---|---|
+| Everyday | 8 | 4 |
+| Tone | 6 | 2 |
+| Pronunciation | 4 | 2 |
+| Punctuation | 2 | 2 |
+| Total | **20** | **10** |
 
-1. Confirm with the reviewer what White Hmong variety and RPA conventions you
-   intend to use. Note regional or personal variants without assuming that one
-   is wrong. Leave unresolved cases pending.
-2. Supply sentences you would naturally say. For sourced text, give the owner
-   enough information to establish origin and permitted use. Avoid personal
-   names, contact details, private events, or sensitive material. Do not copy
-   material merely because it is publicly readable.
-3. For each sentence, privately describe its meaning, context, and intended
-   reading. Identify the contrast or punctuation behavior if relevant. Do not
-   alter another contributor's exact text without retaining the prior version.
-4. Clarify readings with the separate reviewer in the agreed private process.
-   This text-preparation task requires no recording and gives no permission to
-   record you, clone your voice, train a model, or publish your contribution.
-5. Tell the owner which activities you agree to or decline, and what credit,
-   anonymity, access, retention, and withdrawal arrangements you want. The owner
-   must document the actual choices separately; this guide makes none for you.
+These are screening labels, not proof of a complete linguistic inventory.
+Martha Ratliff's [White Hmong RPA description](https://wold.clld.org/vocabulary/25)
+and [Clark's study](https://doi.org/10.15144/PL-A77.175) are the starting references.
+They describe tone spellings, consonant distinctions, spacing/hyphen conventions
+and contextual emphasis; different descriptions of `-d` should be interpreted
+in context, not treated as evidence that established spelling needs redesign.
 
-## Instructions for the separate fluent reviewer
+The protected master is `custodian/draft-v2.json`; its companion source records
+are `draft-v2-evidence-v2.json`. The reserve and its meanings remain in that directory.
+The operator receives only `development/development-v1.json` and
+`development-v1-evidence-v3.json`. The collection operation saw source candidates
+before assigning the split; no reserve text has been used for model selection,
+inference or Google checks. Mode 0700 protects against other users, not processes
+running as the same user. An actual human custodian and access decisions are
+still unassigned. The listening tool independently rejects any held-out case.
 
-1. Review the speaker's exact UTF-8 text and intended meaning. Confirm the
-   variety and script, naturalness, spelling, intended pronunciation, and
-   usefulness of the category. Supply the language evidence; software cannot
-   make these judgments.
-2. Record acceptable alternative readings, meaningful errors, ambiguous cases,
-   and secondary coverage. Explain any proposed revision to the speaker. A
-   changed sentence needs review again, including whitespace or punctuation
-   changes that affect the agreed input.
-3. Check the entire pack for exact repeats, near duplicates, paraphrases,
-   shared templates, and contrast families across the two splits. Also check
-   against any future training/reference material. Keep related cases together
-   and replace redundant cases before freezing. The validator only detects
-   exact decoded-text overlap; case, spacing, and Unicode variants can pass it.
-4. Review independently before discussing disagreements with the speaker.
-   Record both judgments and how differences were resolved. If unresolved,
-   keep the case pending, revise it, or remove it and obtain a replacement.
-   Availability does not prove independence or a completed review.
-5. Before hearing candidate outputs, write the evaluation rubric and acceptable
-   variants. Decide which errors change meaning, how to judge intelligibility,
-   tone, pronunciation, pauses, and naturalness, and which results would require
-   rejection or revision. Leave thresholds unset until you can justify them.
+Published sentences can occur in training corpora. This reserve is held out
+from **our** tuning, not certified absent from pretraining. If its outputs later
+guide tuning, retire it and obtain a fresh reviewed reserve before a final claim.
 
-## External record forms
+## Proposed listening rubric — human acceptance pending
 
-Copy these fields into private records; blanks mean unresolved. Do not put
-extra fields into the strict pack JSON. Opaque references must resolve to the
-actual records locally, without including names or contact information in IDs.
+Listen once without consulting the English meaning, then compare against the
+published meaning and accepted variants. Score each dimension separately:
 
-| Record | Fields to complete outside Git |
+| Dimension | What to judge |
 |---|---|
-| Source | Opaque reference; case ID; original contributor/source; origin/date; exact contributed version; any source restrictions |
-| Text permission | Opaque reference; authorized decision maker; actual scope and date; evidence; granted/declined/pending for text collection, local synthesis, private reviewer sharing, and any later public output; restrictions and expiry |
-| Case review | Opaque reference; case ID; exact `text_sha256`; reviewer role/independence evidence; variety/script; intended meaning/reading; acceptable variants; coverage; approve/revise/reject/uncertain; reasons; date; speaker clarification and resolution |
-| Split review | All case IDs and text hashes; contrast groups; near-duplicate comparison within/across splits; future training/reference overlap check; unresolved items; actual reviewer decision/date |
-| Rubric | Dimensions and rating anchors; critical-error definitions; acceptable equivalence rules; numeric/qualitative thresholds if agreed; uncertainty/disagreement procedure; stop rule; decision/date before outputs |
-| Freeze | Pack version; validator summary and `pack_sha256`; checks reconciled to review/permission records; 20/10 counts; split custodian; authorized readers; freeze date; actual owner and reviewer decisions |
+| Intelligibility | Is the exact sentence understandable without guessing from the gloss? |
+| Tone and meaning | Are lexical distinctions and contextual tone/phonation acceptable? Identify the affected syllable and any meaning change. |
+| Pronunciation | Consonants, aspiration/prenasalization, vowels, nasalization, omissions and repetitions. Accept documented regional variants. |
+| Phrasing | Sentence endings, questions, pauses and emphasis match the accepted reading. |
+| Naturalness | Ease of listening, rhythm and consistency, without substituting voice preference for correctness. |
 
-Keep participant identity mapping and completed permission documents separately
-with restricted access, following the [external artifact policy](../artifacts/README.md).
-Text permission, voice/recording permission, training permission, public audio,
-and weight redistribution are separate decisions. A reference can point to a
-pending tracking record; neither its presence nor `reviewed` grants any rights.
-The current intended public noncommercial use describes the goal, not consent.
+Proposed common anchors: **1** major problems; **2** repeated problems;
+**3** understandable with effort; **4** minor problems; **5** no noticed problems.
+Add a separate critical-error/uncertainty field. A missing or failed clip stays a
+failure, never a zero quality score or a silently omitted observation.
 
-## Owner/custodian procedure
+Recommended acceptance rule for review: no unresolved meaning-changing error,
+no missing final cases, and fluent confirmation that each final sentence is
+usable for the agreed purpose. Numeric pass thresholds remain unset until the
+reviewer justifies and accepts them. Preserve independent judgments and
+adjudication; do not average away a critical disagreement. These criteria derive
+from the reference distinctions but have **not** been accepted by a human.
 
-1. Agree the roles, review process, access, compensation if applicable, and
-   activity-specific permissions with the willing participants. No new
-   recruitment is part of this task. Keep unresolved decisions visible.
-2. Enter only human-supplied sentences into the external draft. Preserve exact
-   decoded text; disable editor auto-correction/normalization and review diffs.
-   Do not fill empty slots with generated examples to make validation pass.
-3. Run ordinary validation and give the reviewer the exact version and hashes.
-   Maintain `pending` and a null/absent `review_reference` until actual human
-   approval. Pending review notes can live in the source record. After approval,
-   enter `reviewed` and the corresponding opaque review reference.
-4. Reconcile every case to the external records, complete human near-duplicate
-   review, and agree the evaluation rubric before model outputs are inspected.
-   Run both `--require-reviewed` and `--require-target-shape`; inspect the counts
-   and hashes. Check permissions independently before synthesis or sharing.
-5. Retain the frozen master and summary with the review records. Give the
-   experiment operator only a development-only copy containing the same 20
-   texts/IDs; check its per-text hashes against the master. Ordinary validation
-   accepts that subset; the target-shape gate applies to the full master only.
-6. Keep the 10 held-out sentences and their meanings/notes in a separate
-   restricted file under the custodian's control. Do not mount that file in the
-   development runner, use it as reference audio, or expose it during tuning.
-   Release it only for a frozen finalist and a prospective final-evaluation plan.
-7. Any text/split/rubric change creates a new recorded version and renewed human
-   checks. If held-out outputs guide revisions, retire that set from final-test
-   status and obtain a fresh independently reviewed reserve before final claims.
+## Complete the evidence, then freeze
 
-The 30 sentences are an evaluation sample, **not a training corpus** or evidence
-of general language coverage. Model scores, WAV validity, hash matches, and
-schema validation do not close NV-001 through NV-008.
+1. Review the exact decoded text and its hash against the published source.
+   Source records already contain attribution, license, access date and meaning.
+   Where transcription is flagged, compare the retained image, not just OCR.
+2. Record reviewer role and independence, actual date, variety/RPA scope,
+   intended meaning, accepted alternatives, coverage, approve/revise/reject/
+   uncertain, and reasons. Keep private identities in a separate restricted map.
+3. Keep `review_status: pending` and no review reference until actual approval.
+   After approval, record `reviewed` with its real external reference. A text
+   change creates a new version and renewed review; never rewrite the source.
+4. Reconcile permission records separately: current text-license evidence
+   supports local text synthesis subject to conditions. It does not license a
+   model, voice, recordings, training, public audio or a hosted service.
+5. Independently check semantic duplicates, templates, contrast families and
+   source concentration, then agree the rubric before listening to outputs.
+6. Run both final pack flags, verify the source/evidence fingerprints, and record
+   the actual owner/reviewer freeze decisions. Structural flags only validate
+   claims in records; they do not authenticate the decisions.
+7. For final evaluation, freeze candidate and codec revisions, configuration,
+   frontend, seed, dependency environment and rubric first. The custodian then
+   releases only that final reserve pass; log all attempts and failures. Any
+   change after seeing reserve errors requires a new reserve for a final claim.
 
-## Precisely what is still needed
-
-- All 30 human-supplied sentences and their intended readings/context.
-- Actual source and text-permission records for the intended local evaluation;
-  later public, recording, and training permissions remain separate.
-- Separate fluent review of each exact case, supported variety/RPA scope,
-  coverage decisions, and resolution of disagreements.
-- A human near-duplicate/split review and a protected held-out custodian.
-- A reviewer-defined rubric, critical errors, acceptance criteria, and an
-  owner decision about budget and later candidate access.
-
-The owner's next action is to arrange completion of this external draft with
-the willing speaker and separate reviewer. No completed pack or linguistic
-approval is claimed until their actual evidence is available.
+No pack is frozen yet. NV-001 through NV-008 remain open. The smallest human
+step is one independent review of the prepared packet, beginning with the
+flagged development cases and proposed criteria; no sentence-authoring or
+recording session is needed to start that review.
